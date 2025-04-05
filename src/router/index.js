@@ -24,6 +24,14 @@ const routes = [
     // route level code-splitting
     component: () => import(/* webpackChunkName: "song-detail" */ '../views/SongDetailView.vue'),
     props: true // Pass route params as component props
+  },
+  {
+    path: '/admin/taylor-swift',
+    name: 'taylor-swift-manager',
+    component: () => import(/* webpackChunkName: "taylor-swift-manager" */ '../components/admin/TaylorSwiftDataManager.vue'),
+    meta: {
+      requiresAuth: true // This route requires authentication
+    }
   }
 ]
 
