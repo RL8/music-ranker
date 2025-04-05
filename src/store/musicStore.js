@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia'
-// Import commented out until actually used
-// import { supabaseService } from '../services/supabaseService'
+import { supabaseService } from '../services/supabaseService'
 
 // Define a store for managing music data
 export const useMusicStore = defineStore('music', {
@@ -35,20 +34,20 @@ export const useMusicStore = defineStore('music', {
     async fetchSongs() {
       this.loading = true
       try {
-        // In a real app with Supabase connection, use:
-        // const songs = await supabaseService.songs.getAll()
+        // Use Supabase service to fetch songs
+        const songs = await supabaseService.songs.getAll()
+        this.songs = songs
+        this.error = null
+      } catch (error) {
+        this.error = error.message || 'Failed to fetch songs'
         
-        // For now, use sample data
-        await new Promise(resolve => setTimeout(resolve, 500))
-        
+        // Fallback to sample data if there's an error
+        console.warn('Using sample data due to error:', error)
         this.songs = [
           { id: '1', title: 'Bohemian Rhapsody', artist: 'Queen', rating: 4.9 },
           { id: '2', title: 'Imagine', artist: 'John Lennon', rating: 4.8 },
           { id: '3', title: 'Hotel California', artist: 'Eagles', rating: 4.7 }
         ]
-        this.error = null
-      } catch (error) {
-        this.error = error.message || 'Failed to fetch songs'
       } finally {
         this.loading = false
       }
@@ -57,20 +56,20 @@ export const useMusicStore = defineStore('music', {
     async fetchArtists() {
       this.loading = true
       try {
-        // In a real app with Supabase connection, use:
-        // const artists = await supabaseService.artists.getAll()
+        // Use Supabase service to fetch artists
+        const artists = await supabaseService.artists.getAll()
+        this.artists = artists
+        this.error = null
+      } catch (error) {
+        this.error = error.message || 'Failed to fetch artists'
         
-        // For now, use sample data
-        await new Promise(resolve => setTimeout(resolve, 500))
-        
+        // Fallback to sample data if there's an error
+        console.warn('Using sample data due to error:', error)
         this.artists = [
           { id: '1', name: 'Queen', genre: 'Rock' },
           { id: '2', name: 'John Lennon', genre: 'Rock' },
           { id: '3', name: 'Eagles', genre: 'Rock' }
         ]
-        this.error = null
-      } catch (error) {
-        this.error = error.message || 'Failed to fetch artists'
       } finally {
         this.loading = false
       }
@@ -81,19 +80,19 @@ export const useMusicStore = defineStore('music', {
       
       this.loading = true
       try {
-        // In a real app with Supabase connection, use:
-        // const ratings = await supabaseService.ratings.getUserRatings(userId)
+        // Use Supabase service to fetch user ratings
+        const ratings = await supabaseService.ratings.getUserRatings(userId)
+        this.userRatings = ratings
+        this.error = null
+      } catch (error) {
+        this.error = error.message || 'Failed to fetch user ratings'
         
-        // For now, use sample data
-        await new Promise(resolve => setTimeout(resolve, 500))
-        
+        // Fallback to sample data if there's an error
+        console.warn('Using sample data due to error:', error)
         this.userRatings = [
           { id: '1', user_id: userId, song_id: '1', rating: 4.5 },
           { id: '2', user_id: userId, song_id: '2', rating: 5.0 }
         ]
-        this.error = null
-      } catch (error) {
-        this.error = error.message || 'Failed to fetch user ratings'
       } finally {
         this.loading = false
       }
@@ -104,14 +103,14 @@ export const useMusicStore = defineStore('music', {
       
       this.loading = true
       try {
-        // In a real app with Supabase connection, use:
-        // await supabaseService.ratings.rateSong({
-        //   user_id: userId,
-        //   song_id: songId,
-        //   rating
-        // })
+        // Use Supabase service to rate a song
+        await supabaseService.ratings.rateSong({
+          user_id: userId,
+          song_id: songId,
+          rating
+        })
         
-        // For now, update local state
+        // Update local state after successful API call
         const existingRating = this.userRatings.find(r => r.song_id === songId)
         
         if (existingRating) {
@@ -125,7 +124,7 @@ export const useMusicStore = defineStore('music', {
           })
         }
         
-        // Also update the song's overall rating for demo purposes
+        // Also update the song's overall rating for UI purposes
         const song = this.songs.find(s => s.id === songId)
         if (song) {
           song.rating = (song.rating + rating) / 2 // Simple average for demo
@@ -142,16 +141,10 @@ export const useMusicStore = defineStore('music', {
     async addSong(song) {
       this.loading = true
       try {
-        // In a real app with Supabase connection, use:
-        // const newSong = await supabaseService.songs.add(song)
+        // Use Supabase service to add a song
+        const newSong = await supabaseService.songs.add(song)
         
-        // For now, add to local state
-        const newSong = {
-          id: Date.now().toString(),
-          ...song,
-          rating: song.rating || 0
-        }
-        
+        // Add to local state after successful API call
         this.songs.push(newSong)
         this.error = null
         return newSong

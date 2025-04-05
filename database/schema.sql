@@ -1,10 +1,6 @@
 -- Music Ranker Database Schema
 -- Based on previous project structure but optimized for Music Ranker app
 
--- Enable Row Level Security
-alter database postgres set "anon.role" to 'anon';
-alter database postgres set "service_role.role" to 'service_role';
-
 -- Create necessary extensions
 create extension if not exists "uuid-ossp";
 create extension if not exists pgcrypto;
