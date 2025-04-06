@@ -3,19 +3,22 @@
  * 
  * This service provides functions to fetch Taylor Swift's music data from the MusicBrainz API.
  * It includes methods for retrieving artist information, albums, and songs.
+ * Implementation uses Axios with a proxy server to avoid CORS issues.
  */
 
-import { MusicBrainzApi } from 'musicbrainz-api';
-
-// Configure the MusicBrainz API client with proper rate limiting and user agent
-const mbApi = new MusicBrainzApi({
-  appName: 'MusicRanker',
-  appVersion: '1.0.0',
-  appContactInfo: 'your-email@example.com' // Replace with your contact info
-});
+import axios from 'axios';
 
 // Taylor Swift's MusicBrainz ID
 const TAYLOR_SWIFT_MBID = '20244d07-534f-4eff-b4d4-930878889970';
+
+// Use the local proxy server to avoid CORS issues
+const API_BASE_URL = 'http://localhost:3001/api';
+
+// Create an axios instance for the proxy server
+const apiClient = axios.create({
+  baseURL: API_BASE_URL,
+  timeout: 10000
+});
 
 /**
  * Fetch Taylor Swift's artist information from MusicBrainz
@@ -23,7 +26,8 @@ const TAYLOR_SWIFT_MBID = '20244d07-534f-4eff-b4d4-930878889970';
  */
 export async function fetchTaylorSwiftInfo() {
   try {
-    return await mbApi.lookupArtist(TAYLOR_SWIFT_MBID, ['url-rels', 'aliases']);
+    const response = await apiClient.get(`/artist/${TAYLOR_SWIFT_MBID}`);
+    return response.data;
   } catch (error) {
     console.error('Error fetching Taylor Swift info:', error);
     throw error;
@@ -36,14 +40,15 @@ export async function fetchTaylorSwiftInfo() {
  */
 export async function fetchTaylorSwiftAlbums() {
   try {
-    // Browse release-groups by artist to get albums
-    const result = await mbApi.browseReleaseGroups({
-      artist: TAYLOR_SWIFT_MBID,
-      type: 'album',
-      limit: 100
+    const response = await apiClient.get('/release-groups', {
+      params: {
+        artist: TAYLOR_SWIFT_MBID,
+        type: 'album',
+        limit: 100
+      }
     });
     
-    return result['release-groups'];
+    return response.data['release-groups'];
   } catch (error) {
     console.error('Error fetching Taylor Swift albums:', error);
     throw error;
@@ -57,27 +62,37 @@ export async function fetchTaylorSwiftAlbums() {
  */
 export async function fetchAlbumSongs(releaseGroupId) {
   try {
-    // First get the releases in this release group
-    const releases = await mbApi.browseReleases({
-      releaseGroup: releaseGroupId,
-      limit: 1 // Just get the first release (main release)
-    });
+    // First, get the releases in this release group
+    const releaseResponse = await apiClient.get(`/release-group/${releaseGroupId}`);
     
-    if (releases.releases && releases.releases.length > 0) {
-      const releaseId = releases.releases[0].id;
+    // Use the first release to get the tracks
+    if (releaseResponse.data.releases && releaseResponse.data.releases.length > 0) {
+      const releaseId = releaseResponse.data.releases[0].id;
       
-      // Then get the recordings (songs) in this release
-      const result = await mbApi.lookupRelease(releaseId, ['recordings']);
+      // Get recordings (songs) for this release
+      const recordingsResponse = await apiClient.get(`/release/${releaseId}`);
       
       // Extract and format the songs
-      if (result.media && result.media.length > 0) {
-        return result.media[0].tracks.map(track => ({
-          title: track.title,
-          position: track.position,
-          length: track.length,
-          recordingId: track.recording.id
-        }));
+      const songs = [];
+      if (recordingsResponse.data.media && recordingsResponse.data.media.length > 0) {
+        recordingsResponse.data.media.forEach(medium => {
+          if (medium.tracks && medium.tracks.length > 0) {
+            medium.tracks.forEach(track => {
+              songs.push({
+                id: track.recording.id,
+                title: track.recording.title,
+                length: track.recording.length,
+                position: track.position,
+                discNumber: medium.position,
+                releaseId: releaseId,
+                releaseGroupId: releaseGroupId
+              });
+            });
+          }
+        });
       }
+      
+      return songs;
     }
     
     return [];
@@ -89,31 +104,30 @@ export async function fetchAlbumSongs(releaseGroupId) {
 
 /**
  * Fetch all Taylor Swift songs across all her albums
- * This is a convenience method that fetches all albums and then all songs
  * @returns {Promise<Array>} List of all songs with album information
  */
 export async function fetchAllTaylorSwiftSongs() {
   try {
-    // Get all albums
+    // Get all albums first
     const albums = await fetchTaylorSwiftAlbums();
     
-    // For each album, get the songs
+    // Fetch songs for each album
     const songsPromises = albums.map(async album => {
       const songs = await fetchAlbumSongs(album.id);
       
       // Add album information to each song
       return songs.map(song => ({
         ...song,
-        album: {
-          id: album.id,
-          title: album.title,
-          releaseDate: album['first-release-date']
-        }
+        albumTitle: album.title,
+        albumId: album.id,
+        firstReleaseDate: album['first-release-date']
       }));
     });
     
-    // Wait for all promises to resolve and flatten the array
+    // Wait for all songs to be fetched
     const songsArrays = await Promise.all(songsPromises);
+    
+    // Flatten the array of arrays into a single array of songs
     return songsArrays.flat();
   } catch (error) {
     console.error('Error fetching all Taylor Swift songs:', error);
@@ -128,15 +142,23 @@ export async function fetchAllTaylorSwiftSongs() {
  */
 export async function fetchAlbumArtwork(releaseId) {
   try {
-    const url = `https://coverartarchive.org/release/${releaseId}/front`;
-    const response = await fetch(url, { method: 'HEAD' });
+    const response = await apiClient.get(`/cover-art/${releaseId}`);
     
-    if (response.ok) {
-      return url;
+    if (response.data.images && response.data.images.length > 0) {
+      // Return the front image if available
+      const frontImage = response.data.images.find(image => image.front);
+      if (frontImage) {
+        return frontImage.image;
+      }
+      
+      // Otherwise return the first image
+      return response.data.images[0].image;
     }
+    
     return null;
   } catch (error) {
     console.error(`Error fetching artwork for release ${releaseId}:`, error);
+    // Don't throw the error, just return null for missing artwork
     return null;
   }
 }

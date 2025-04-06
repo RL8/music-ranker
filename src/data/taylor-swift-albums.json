@@ -1,0 +1,718 @@
+[
+  {
+    "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc",
+    "first-release-date": "2023-07-07",
+    "id": "0441b1b2-de57-4a9a-b007-1f6e159921d5",
+    "secondary-types": [],
+    "primary-type": "Album",
+    "secondary-type-ids": [],
+    "disambiguation": "",
+    "title": "Speak Now (Taylor’s version)"
+  },
+  {
+    "secondary-type-ids": [
+      "dd2a21e1-0c00-3729-a7a0-de60b84eb5d1"
+    ],
+    "id": "0510cede-f1a3-4e90-9e1f-f2212224cfc8",
+    "primary-type": "Album",
+    "secondary-types": [
+      "Compilation"
+    ],
+    "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc",
+    "first-release-date": "2015",
+    "disambiguation": "",
+    "title": "Greatest Hits"
+  },
+  {
+    "first-release-date": "2017",
+    "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc",
+    "id": "06a75f07-80b2-469d-8ce4-11d5aaad3853",
+    "primary-type": "Album",
+    "secondary-types": [
+      "Compilation"
+    ],
+    "secondary-type-ids": [
+      "dd2a21e1-0c00-3729-a7a0-de60b84eb5d1"
+    ],
+    "disambiguation": "",
+    "title": "Reputation Car High Resolution"
+  },
+  {
+    "first-release-date": "2023",
+    "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc",
+    "secondary-type-ids": [
+      "dd2a21e1-0c00-3729-a7a0-de60b84eb5d1",
+      "6fd474e2-6b58-3102-9d17-d6f7eb7da0a0"
+    ],
+    "primary-type": "Album",
+    "secondary-types": [
+      "Compilation",
+      "Live"
+    ],
+    "id": "087ebf5d-c956-4a96-a78e-ab8261e2a5ba",
+    "title": "Taylor Swift at the BBC",
+    "disambiguation": ""
+  },
+  {
+    "disambiguation": "",
+    "title": "reputation Stadium Tour Surprise Song Playlist",
+    "first-release-date": "2018-11-30",
+    "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc",
+    "id": "0a5a4bb3-3b68-4ab4-b36d-7523b5beff16",
+    "secondary-types": [
+      "Compilation"
+    ],
+    "primary-type": "Album",
+    "secondary-type-ids": [
+      "dd2a21e1-0c00-3729-a7a0-de60b84eb5d1"
+    ]
+  },
+  {
+    "secondary-types": [],
+    "primary-type": "Album",
+    "id": "0dcc84fb-c592-46e9-ba92-a52bb44dd553",
+    "secondary-type-ids": [],
+    "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc",
+    "first-release-date": "2022-10-21",
+    "title": "Midnights",
+    "disambiguation": ""
+  },
+  {
+    "first-release-date": "",
+    "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc",
+    "id": "0debfb8e-7a5a-4881-97b1-0f57258473f9",
+    "primary-type": "Album",
+    "secondary-types": [],
+    "secondary-type-ids": [],
+    "disambiguation": "",
+    "title": "Taylor Swift (Taylor’s version)"
+  },
+  {
+    "title": "One Red Night: The Red Tour in Japan",
+    "disambiguation": "",
+    "first-release-date": "2014",
+    "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc",
+    "secondary-type-ids": [
+      "6fd474e2-6b58-3102-9d17-d6f7eb7da0a0"
+    ],
+    "secondary-types": [
+      "Live"
+    ],
+    "primary-type": "Album",
+    "id": "104cc9a7-86af-48e3-8be7-34c29137e161"
+  },
+  {
+    "disambiguation": "",
+    "title": "1989 (Taylor’s version)",
+    "first-release-date": "2023-10-27",
+    "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc",
+    "secondary-type-ids": [],
+    "id": "1c4770b3-b7a3-4d44-a7a9-8e2dbb74b85a",
+    "secondary-types": [],
+    "primary-type": "Album"
+  },
+  {
+    "disambiguation": "",
+    "title": "Speak Now: World Tour Live",
+    "id": "2a8d9df8-c23f-456c-9153-12ab1ced21ce",
+    "primary-type": "Album",
+    "secondary-types": [
+      "Live"
+    ],
+    "secondary-type-ids": [
+      "6fd474e2-6b58-3102-9d17-d6f7eb7da0a0"
+    ],
+    "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc",
+    "first-release-date": "2011-11-21"
+  },
+  {
+    "secondary-types": [],
+    "primary-type": "Album",
+    "id": "2c049f28-a4e0-41c9-b7d8-e0a98951f357",
+    "secondary-type-ids": [],
+    "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc",
+    "first-release-date": "2021-03-16",
+    "title": "The Vault (deluxe)",
+    "disambiguation": ""
+  },
+  {
+    "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc",
+    "first-release-date": "2015",
+    "id": "2c56e608-62ad-4ebe-abd0-3086c7f096c7",
+    "primary-type": "Album",
+    "secondary-types": [
+      "DJ-mix"
+    ],
+    "secondary-type-ids": [
+      "0d47f47a-3fe5-3d69-ac9d-d566c23968bf"
+    ],
+    "disambiguation": "",
+    "title": "The Taylor Swift Megamix"
+  },
+  {
+    "disambiguation": "",
+    "title": "Nationwide Arena, Columbus 2015",
+    "first-release-date": "2015-09-18",
+    "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc",
+    "id": "2e3c4b80-875a-4824-90e6-820c59eecc55",
+    "primary-type": "Album",
+    "secondary-types": [
+      "Live"
+    ],
+    "secondary-type-ids": [
+      "6fd474e2-6b58-3102-9d17-d6f7eb7da0a0"
+    ]
+  },
+  {
+    "id": "30e9785b-7b50-4d29-b3d1-96fb55e3397f",
+    "secondary-types": [],
+    "primary-type": "Album",
+    "secondary-type-ids": [],
+    "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc",
+    "first-release-date": "2019-08-23",
+    "disambiguation": "",
+    "title": "Lover"
+  },
+  {
+    "first-release-date": "2008",
+    "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc",
+    "id": "412b9414-280a-485d-b505-3182865a3a6f",
+    "primary-type": "Album",
+    "secondary-types": [
+      "Compilation"
+    ],
+    "secondary-type-ids": [
+      "dd2a21e1-0c00-3729-a7a0-de60b84eb5d1"
+    ],
+    "disambiguation": "",
+    "title": "Selects"
+  },
+  {
+    "first-release-date": "2014-10-24",
+    "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc",
+    "secondary-type-ids": [],
+    "primary-type": "Album",
+    "secondary-types": [],
+    "id": "4d9ec1c2-58ec-48a4-aa0a-916718adead0",
+    "title": "1989",
+    "disambiguation": ""
+  },
+  {
+    "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc",
+    "first-release-date": "2008-11-11",
+    "secondary-type-ids": [],
+    "primary-type": "Album",
+    "secondary-types": [],
+    "id": "63eba062-847c-3b73-8b0f-6baf27bba6fa",
+    "title": "Fearless",
+    "disambiguation": ""
+  },
+  {
+    "disambiguation": "",
+    "title": "Red (Taylor’s version)",
+    "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc",
+    "first-release-date": "2021-11-11",
+    "secondary-type-ids": [],
+    "id": "67727253-f1c0-4243-9270-f9f1401c3b8c",
+    "secondary-types": [],
+    "primary-type": "Album"
+  },
+  {
+    "primary-type": "Album",
+    "secondary-types": [
+      "Live"
+    ],
+    "id": "680ffacf-e1d5-4549-9f8f-c3c72c7b4dfd",
+    "secondary-type-ids": [
+      "6fd474e2-6b58-3102-9d17-d6f7eb7da0a0"
+    ],
+    "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc",
+    "first-release-date": "2025-01-17",
+    "title": "One Night Only",
+    "disambiguation": ""
+  },
+  {
+    "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc",
+    "first-release-date": "2019",
+    "id": "6e50b2ac-8b6b-4256-96d0-60214a829c7d",
+    "primary-type": "Album",
+    "secondary-types": [
+      "Live"
+    ],
+    "secondary-type-ids": [
+      "6fd474e2-6b58-3102-9d17-d6f7eb7da0a0"
+    ],
+    "disambiguation": "",
+    "title": "reputation: Tokyo Dome 2nd Night"
+  },
+  {
+    "secondary-type-ids": [],
+    "primary-type": "Album",
+    "secondary-types": [],
+    "id": "71c3eed6-466c-4aef-ad12-65a36d19467a",
+    "first-release-date": "2024-04-19",
+    "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc",
+    "title": "THE TORTURED POETS DEPARTMENT",
+    "disambiguation": ""
+  },
+  {
+    "disambiguation": "",
+    "title": "The Red Tour Live",
+    "secondary-type-ids": [
+      "6fd474e2-6b58-3102-9d17-d6f7eb7da0a0"
+    ],
+    "id": "77807c57-20f6-43ae-82d1-80969ce78faf",
+    "secondary-types": [
+      "Live"
+    ],
+    "primary-type": "Album",
+    "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc",
+    "first-release-date": "2014"
+  },
+  {
+    "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc",
+    "first-release-date": "2017",
+    "primary-type": "Album",
+    "secondary-types": [
+      "Compilation"
+    ],
+    "id": "81593389-6a8c-447a-8a22-3fa466045294",
+    "secondary-type-ids": [
+      "dd2a21e1-0c00-3729-a7a0-de60b84eb5d1"
+    ],
+    "title": "Greatest Songs",
+    "disambiguation": ""
+  },
+  {
+    "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc",
+    "first-release-date": "2020-04-24",
+    "secondary-type-ids": [
+      "6fd474e2-6b58-3102-9d17-d6f7eb7da0a0"
+    ],
+    "id": "81a20a2d-e9cb-40ce-9e22-178337f381a0",
+    "primary-type": "Album",
+    "secondary-types": [
+      "Live"
+    ],
+    "disambiguation": "",
+    "title": "Live from Clear Channel Stripped 2008"
+  },
+  {
+    "disambiguation": "",
+    "title": "Golden Collection",
+    "id": "88dcb61a-c3ba-4c96-a986-99ef98acdd85",
+    "primary-type": "Album",
+    "secondary-types": [
+      "Compilation"
+    ],
+    "secondary-type-ids": [
+      "dd2a21e1-0c00-3729-a7a0-de60b84eb5d1"
+    ],
+    "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc",
+    "first-release-date": ""
+  },
+  {
+    "secondary-types": [
+      "Live"
+    ],
+    "primary-type": "Album",
+    "id": "9d8ee40d-075a-4cfe-b079-abfbe7002a21",
+    "secondary-type-ids": [
+      "6fd474e2-6b58-3102-9d17-d6f7eb7da0a0"
+    ],
+    "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc",
+    "first-release-date": "2020-05-19",
+    "title": "Lover (live from Paris)",
+    "disambiguation": ""
+  },
+  {
+    "title": "Volume Two",
+    "disambiguation": "",
+    "primary-type": "Album",
+    "secondary-types": [
+      "Demo"
+    ],
+    "id": "9e941303-b8d5-44e2-b0bb-761df6ff8860",
+    "secondary-type-ids": [
+      "81598169-0d6c-3bce-b4be-866fa658eda3"
+    ],
+    "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc",
+    "first-release-date": "2003"
+  },
+  {
+    "id": "a73cecde-0923-40ad-aad1-e8c24ba6c3d2",
+    "secondary-types": [],
+    "primary-type": "Album",
+    "secondary-type-ids": [],
+    "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc",
+    "first-release-date": "2012-08-10",
+    "disambiguation": "",
+    "title": "Red"
+  },
+  {
+    "secondary-type-ids": [
+      "0c60f497-ff81-3818-befd-abfc84a4858b"
+    ],
+    "id": "aed4c905-be53-4eb7-9392-25d7c3e33a90",
+    "primary-type": "Album",
+    "secondary-types": [
+      "Remix"
+    ],
+    "first-release-date": "2018-03-09",
+    "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc",
+    "disambiguation": "",
+    "title": "Taylor Swift Karaoke: reputation"
+  },
+  {
+    "title": "The Story of Budokan",
+    "disambiguation": "",
+    "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc",
+    "first-release-date": "2011",
+    "secondary-types": [
+      "Live"
+    ],
+    "primary-type": "Album",
+    "id": "af5deb0c-a1da-44e8-952a-6b4cd195e093",
+    "secondary-type-ids": [
+      "6fd474e2-6b58-3102-9d17-d6f7eb7da0a0"
+    ]
+  },
+  {
+    "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc",
+    "first-release-date": "2003",
+    "secondary-type-ids": [
+      "81598169-0d6c-3bce-b4be-866fa658eda3"
+    ],
+    "id": "af69ef42-aff3-4ae6-af8c-5a951df58ca7",
+    "primary-type": "Album",
+    "secondary-types": [
+      "Demo"
+    ],
+    "disambiguation": "",
+    "title": "Taylor Swift Demo"
+  },
+  {
+    "title": "Taylor Swift Karaoke: Speak Now",
+    "disambiguation": "",
+    "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc",
+    "first-release-date": "2010-12-20",
+    "secondary-types": [
+      "Remix"
+    ],
+    "primary-type": "Album",
+    "id": "af8d8484-cd0b-4ccb-9a1c-afe6a1e81817",
+    "secondary-type-ids": [
+      "0c60f497-ff81-3818-befd-abfc84a4858b"
+    ]
+  },
+  {
+    "title": "reputation (Taylor’s version)",
+    "disambiguation": "",
+    "first-release-date": "",
+    "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc",
+    "secondary-type-ids": [],
+    "primary-type": "Album",
+    "secondary-types": [],
+    "id": "b37e5d20-2faa-4eda-b115-3caa5a9ea5a3"
+  },
+  {
+    "disambiguation": "TS1 - Red",
+    "title": "Complete Album Collection",
+    "secondary-type-ids": [
+      "dd2a21e1-0c00-3729-a7a0-de60b84eb5d1"
+    ],
+    "id": "b58e2837-7645-496c-a28f-9a5a9f6af02f",
+    "secondary-types": [
+      "Compilation"
+    ],
+    "primary-type": "Album",
+    "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc",
+    "first-release-date": "2013-11-22"
+  },
+  {
+    "title": "МЕ! [Chinese Import]",
+    "disambiguation": "",
+    "secondary-type-ids": [
+      "dd2a21e1-0c00-3729-a7a0-de60b84eb5d1"
+    ],
+    "secondary-types": [
+      "Compilation"
+    ],
+    "primary-type": "Album",
+    "id": "b88a27d9-612e-4818-8f56-dab5bf5dcd38",
+    "first-release-date": "2019",
+    "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc"
+  },
+  {
+    "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc",
+    "first-release-date": "2010-10-25",
+    "secondary-type-ids": [],
+    "secondary-types": [],
+    "primary-type": "Album",
+    "id": "ba1259eb-d41e-41c5-a70c-0e6fa73e6708",
+    "title": "Speak Now",
+    "disambiguation": ""
+  },
+  {
+    "disambiguation": "",
+    "title": "Taylor Swift",
+    "id": "ba1d0c2a-bb07-38bc-835c-a880f76f1309",
+    "primary-type": "Album",
+    "secondary-types": [],
+    "secondary-type-ids": [],
+    "first-release-date": "2006-10-24",
+    "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc"
+  },
+  {
+    "disambiguation": "",
+    "title": "Voice Memos",
+    "secondary-type-ids": [
+      "dd2a21e1-0c00-3729-a7a0-de60b84eb5d1"
+    ],
+    "id": "bc6d9aac-bcaa-49cf-bb9a-89ccb101e88d",
+    "primary-type": "Album",
+    "secondary-types": [
+      "Compilation"
+    ],
+    "first-release-date": "2021",
+    "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc"
+  },
+  {
+    "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc",
+    "first-release-date": "2015-01-12",
+    "id": "c24c86ef-868f-44d9-bede-20cdaf976776",
+    "primary-type": "Album",
+    "secondary-types": [
+      "Remix"
+    ],
+    "secondary-type-ids": [
+      "0c60f497-ff81-3818-befd-abfc84a4858b"
+    ],
+    "disambiguation": "",
+    "title": "Taylor Swift Karaoke: 1989"
+  },
+  {
+    "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc",
+    "first-release-date": "2013-02-05",
+    "primary-type": "Album",
+    "secondary-types": [
+      "Remix"
+    ],
+    "id": "c30adad6-0b2c-4a4b-a557-655b1d28fd4a",
+    "secondary-type-ids": [
+      "0c60f497-ff81-3818-befd-abfc84a4858b"
+    ],
+    "title": "Taylor Swift Karaoke: Red",
+    "disambiguation": ""
+  },
+  {
+    "title": "The Diary Of Me (The Vault, II)",
+    "disambiguation": "",
+    "secondary-type-ids": [
+      "dd2a21e1-0c00-3729-a7a0-de60b84eb5d1"
+    ],
+    "primary-type": "Album",
+    "secondary-types": [
+      "Compilation"
+    ],
+    "id": "c4d79e99-b410-4798-8de3-a0afd4564f3f",
+    "first-release-date": "2021-12-13",
+    "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc"
+  },
+  {
+    "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc",
+    "first-release-date": "2021-03-18",
+    "secondary-types": [
+      "Compilation"
+    ],
+    "primary-type": "Album",
+    "id": "c560cfbd-f7a5-4798-b546-978be71f5ead",
+    "secondary-type-ids": [
+      "dd2a21e1-0c00-3729-a7a0-de60b84eb5d1"
+    ],
+    "title": "covered by taylor",
+    "disambiguation": ""
+  },
+  {
+    "secondary-type-ids": [
+      "81598169-0d6c-3bce-b4be-866fa658eda3"
+    ],
+    "primary-type": "Album",
+    "secondary-types": [
+      "Demo"
+    ],
+    "id": "c6ed79c5-1932-4cbd-b677-70a9344458e8",
+    "first-release-date": "2004",
+    "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc",
+    "title": "2004 Demo CD",
+    "disambiguation": ""
+  },
+  {
+    "secondary-type-ids": [
+      "6fd474e2-6b58-3102-9d17-d6f7eb7da0a0"
+    ],
+    "id": "c7064b42-b806-4366-9505-e433fe3c3505",
+    "secondary-types": [
+      "Live"
+    ],
+    "primary-type": "Album",
+    "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc",
+    "first-release-date": "2019",
+    "disambiguation": "",
+    "title": "reputation: Tokyo Dome 1st Night"
+  },
+  {
+    "secondary-type-ids": [
+      "81598169-0d6c-3bce-b4be-866fa658eda3"
+    ],
+    "primary-type": "Album",
+    "secondary-types": [
+      "Demo"
+    ],
+    "id": "cf94ac57-e1a9-4c9d-9220-47b26826f54e",
+    "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc",
+    "first-release-date": "2005",
+    "title": "2005 Demo CD",
+    "disambiguation": ""
+  },
+  {
+    "id": "d2e4838d-90e1-471c-bda0-fd816dabb2d4",
+    "secondary-types": [],
+    "primary-type": "Album",
+    "secondary-type-ids": [],
+    "first-release-date": "2021-04-09",
+    "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc",
+    "disambiguation": "",
+    "title": "Fearless (Taylor’s version)"
+  },
+  {
+    "title": "folklore: the long pond studio sessions",
+    "disambiguation": "",
+    "first-release-date": "2020-11-25",
+    "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc",
+    "secondary-type-ids": [
+      "6fd474e2-6b58-3102-9d17-d6f7eb7da0a0"
+    ],
+    "secondary-types": [
+      "Live"
+    ],
+    "primary-type": "Album",
+    "id": "d931fda7-8710-4212-85c1-b1568d0617fd"
+  },
+  {
+    "secondary-type-ids": [
+      "81598169-0d6c-3bce-b4be-866fa658eda3"
+    ],
+    "primary-type": "Album",
+    "secondary-types": [
+      "Demo"
+    ],
+    "id": "dec08bb7-dae5-4613-a2a6-ea78797e95ad",
+    "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc",
+    "first-release-date": "2003",
+    "title": "Taylor’s Songs",
+    "disambiguation": ""
+  },
+  {
+    "secondary-type-ids": [
+      "dd2a21e1-0c00-3729-a7a0-de60b84eb5d1",
+      "6fd474e2-6b58-3102-9d17-d6f7eb7da0a0"
+    ],
+    "id": "e1aa2adc-3cc7-43a9-9a38-06d3d66e4004",
+    "primary-type": "Album",
+    "secondary-types": [
+      "Compilation",
+      "Live"
+    ],
+    "first-release-date": "2024-03-03",
+    "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc",
+    "disambiguation": "",
+    "title": "Taylor Swift Live (One for the Swifties)"
+  },
+  {
+    "title": "Taylor Swift Karaoke: Fearless",
+    "disambiguation": "",
+    "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc",
+    "first-release-date": "2009-03-31",
+    "primary-type": "Album",
+    "secondary-types": [
+      "Remix"
+    ],
+    "id": "e227abf9-eb09-4908-bf7b-1aa3dd8725cd",
+    "secondary-type-ids": [
+      "0c60f497-ff81-3818-befd-abfc84a4858b"
+    ]
+  },
+  {
+    "disambiguation": "",
+    "title": "evermore",
+    "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc",
+    "first-release-date": "2020-12-11",
+    "secondary-type-ids": [],
+    "id": "e86d6219-f5a2-4edd-bf2b-3f9eab190ae0",
+    "primary-type": "Album",
+    "secondary-types": []
+  },
+  {
+    "secondary-type-ids": [],
+    "secondary-types": [],
+    "primary-type": "Album",
+    "id": "f060c8fd-bec9-426e-800e-8efc040a71e6",
+    "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc",
+    "first-release-date": "2017-11-10",
+    "title": "reputation",
+    "disambiguation": ""
+  },
+  {
+    "title": "Taylor Swift Karaoke",
+    "disambiguation": "",
+    "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc",
+    "first-release-date": "2009-01-27",
+    "secondary-type-ids": [
+      "0c60f497-ff81-3818-befd-abfc84a4858b"
+    ],
+    "primary-type": "Album",
+    "secondary-types": [
+      "Remix"
+    ],
+    "id": "f153b0ac-0816-4966-a4f6-70176dd4c301"
+  },
+  {
+    "secondary-type-ids": [],
+    "primary-type": "Album",
+    "secondary-types": [],
+    "id": "f1d08326-c23b-4b43-be3b-20b33ab10bf6",
+    "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc",
+    "first-release-date": "2020-07-24",
+    "title": "folklore",
+    "disambiguation": ""
+  },
+  {
+    "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc",
+    "first-release-date": "2016-08-14",
+    "secondary-type-ids": [
+      "dd2a21e1-0c00-3729-a7a0-de60b84eb5d1"
+    ],
+    "primary-type": "Album",
+    "secondary-types": [
+      "Compilation"
+    ],
+    "id": "f1e9d095-6b33-4565-8d71-0160835650da",
+    "title": "Hot Champion",
+    "disambiguation": ""
+  },
+  {
+    "disambiguation": "",
+    "title": "Unreleased Songs",
+    "secondary-type-ids": [
+      "dd2a21e1-0c00-3729-a7a0-de60b84eb5d1"
+    ],
+    "id": "fb5e3b2c-9291-4c83-a5ae-02201e0e20e3",
+    "primary-type": "Album",
+    "secondary-types": [
+      "Compilation"
+    ],
+    "first-release-date": "2012",
+    "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc"
+  }
+]

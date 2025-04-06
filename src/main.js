@@ -35,6 +35,15 @@ if (process.env.NODE_ENV !== 'production') {
   console.log('Vue DevTools enabled:', Vue.config.devtools)
 }
 
+// Global error handler to ensure errors are captured
+Vue.config.errorHandler = function(err, vm, info) {
+  console.error('Vue Error Handler:', err)
+  console.error('Component:', vm)
+  console.error('Error Info:', info)
+  
+  // You can also report errors to a monitoring service here
+}
+
 Vue.config.productionTip = false
 
 new Vue({
