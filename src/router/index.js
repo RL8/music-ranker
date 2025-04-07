@@ -32,6 +32,16 @@ const routes = [
     meta: {
       requiresAuth: true // This route requires authentication
     }
+  },
+  {
+    path: '/visualizations/sunburst',
+    name: 'sunburst-demo',
+    component: () => import(/* webpackChunkName: "sunburst-demo" */ '../views/SunburstDemo.vue')
+  },
+  {
+    path: '/visualizations/taylor-swift',
+    name: 'taylor-swift-sunburst',
+    component: () => import(/* webpackChunkName: "taylor-swift-sunburst" */ '../views/TaylorSwiftSunburst.vue')
   }
 ]
 

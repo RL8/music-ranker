@@ -1,0 +1,55 @@
+{
+  "name": "Taylor Swift",
+  "children": [
+    {
+      "name": "Primary Studio Albums",
+      "children": [
+        {"name": "Taylor Swift (2006)", "size": 2006},
+        {"name": "Fearless (2008)", "size": 2008},
+        {"name": "Speak Now (2010)", "size": 2010},
+        {"name": "Red (2012)", "size": 2012},
+        {"name": "1989 (2014)", "size": 2014},
+        {"name": "reputation (2017)", "size": 2017},
+        {"name": "Lover (2019)", "size": 2019},
+        {"name": "folklore (2020)", "size": 2020},
+        {"name": "evermore (2020)", "size": 2020},
+        {"name": "Midnights (2022)", "size": 2022},
+        {"name": "The Tortured Poets Department (2024)", "size": 2024}
+      ]
+    },
+    {
+      "name": "Secondary Albums",
+      "children": [
+        {
+          "name": "Re-recordings",
+          "children": [
+            {"name": "Fearless (Taylor's version) (2021)", "size": 2021},
+            {"name": "Red (Taylor's version) (2021)", "size": 2021},
+            {"name": "Speak Now (Taylor's version) (2023)", "size": 2023},
+            {"name": "1989 (Taylor's version) (2023)", "size": 2023}
+          ]
+        },
+        {
+          "name": "Live Albums",
+          "children": [
+            {"name": "Speak Now: World Tour Live (2011)", "size": 2011},
+            {"name": "Live from Clear Channel Stripped 2008 (2020)", "size": 2020},
+            {"name": "Lover (live from Paris) (2020)", "size": 2020},
+            {"name": "folklore: the long pond studio sessions (2020)", "size": 2020}
+          ]
+        },
+        {
+          "name": "Karaoke Albums",
+          "children": [
+            {"name": "Taylor Swift Karaoke (2009)", "size": 2009},
+            {"name": "Taylor Swift Karaoke: Fearless (2009)", "size": 2009},
+            {"name": "Taylor Swift Karaoke: Speak Now (2010)", "size": 2010},
+            {"name": "Taylor Swift Karaoke: Red (2013)", "size": 2013},
+            {"name": "Taylor Swift Karaoke: 1989 (2015)", "size": 2015},
+            {"name": "Taylor Swift Karaoke: reputation (2018)", "size": 2018}
+          ]
+        }
+      ]
+    }
+  ]
+}
