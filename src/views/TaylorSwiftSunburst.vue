@@ -127,6 +127,7 @@
               :colorScheme="colorScheme"
               :inAnimationDuration="inAnimationDuration"
               :outAnimationDuration="outAnimationDuration"
+              @clickNode="onNodeClick"
             >
               <breadcrumbTrail
                 slot="legend"
@@ -138,25 +139,35 @@
                 :width="width"
               />
 
-              <nodeInfoDisplayer
-                slot="top"
-                slot-scope="{ nodes }"
-                :current="nodes.mouseOver"
-                :root="nodes.root"
-                :clicked="nodes.clicked"
-                description="of Taylor Swift's discography"
-              />
-
-              <template slot="pop-up" slot-scope="{ data }">
-                <div class="pop-up">{{data.name}}</div>
-              </template>
-
               <template slot-scope="{ on, actions }">
                 <highlightOnHover v-bind="{ on, actions }" />
                 <zoomOnClick v-bind="{ on, actions }" />
-                <popUpOnHover v-bind="{ on, actions }"/>
               </template>
             </sunburst>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Album Notes Section -->
+    <div class="row mt-3">
+      <div class="col-12">
+        <div class="card album-notes-card" :class="{ 'has-content': selectedNode.name }">
+          <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">{{ selectedNode.name || 'Tap on an album for details' }}</h5>
+            <button v-if="selectedNode.name" type="button" class="btn-close" aria-label="Close" @click="clearSelectedNode">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="card-body">
+            <transition name="fade">
+              <div v-if="selectedNode.name">
+                <p>{{ selectedNode.note || 'No additional information available.' }}</p>
+              </div>
+              <div v-else class="text-center text-muted">
+                <p><i class="fa fa-info-circle"></i> Tap on any section of the chart to see detailed information.</p>
+              </div>
+            </transition>
           </div>
         </div>
       </div>
@@ -168,10 +179,8 @@
 import {
   breadcrumbTrail,
   highlightOnHover,
-  nodeInfoDisplayer,
   sunburst,
-  zoomOnClick,
-  popUpOnHover
+  zoomOnClick
 } from 'vue-d3-sunburst';
 import "vue-d3-sunburst/dist/vue-d3-sunburst.css";
 import taylorSwiftData from '@/data/taylor-swift-sunburst.json';
@@ -199,11 +208,9 @@ export default {
   name: 'TaylorSwiftSunburst',
   components: {
     sunburst,
-    nodeInfoDisplayer,
     breadcrumbTrail,
     highlightOnHover,
-    zoomOnClick,
-    popUpOnHover
+    zoomOnClick
   },
   data() {
     return {
@@ -214,7 +221,12 @@ export default {
       inAnimationDuration: 100,
       outAnimationDuration: 1000,
       centralCircleRelativeSize: 20,
-      showLabels: false
+      showLabels: false,
+      // Properties for album notes
+      selectedNode: {
+        name: '',
+        note: ''
+      }
     };
   },
   methods: {
@@ -227,6 +239,32 @@ export default {
         return null;
       }
       return data.name;
+    },
+    // Methods for handling node clicks and notes display
+    onNodeClick({ node }) {
+      if (node && node.data) {
+        // Smooth scroll to the notes section on mobile
+        this.selectedNode = {
+          name: node.data.name,
+          note: node.data.note || ''
+        };
+        
+        // On mobile, scroll to the notes section
+        if (window.innerWidth < 768) {
+          this.$nextTick(() => {
+            const notesCard = document.querySelector('.album-notes-card');
+            if (notesCard) {
+              notesCard.scrollIntoView({ behavior: 'smooth' });
+            }
+          });
+        }
+      }
+    },
+    clearSelectedNode() {
+      this.selectedNode = {
+        name: '',
+        note: ''
+      };
     }
   }
 };
@@ -247,21 +285,12 @@ export default {
     text-align: left;
   }
 
-  .pop-up {
-    background-color: white;
-    border: 1px solid black;
-    border-radius: 4px;
-    padding: 4px 8px;
-    pointer-events: none;
-    opacity: 0.92;
-  }
-
   .main-row {
-    min-height: 700px;
+    min-height: 600px;
   }
 
   .control-middle {
-    height: 600px;
+    height: 500px;
   }
 
   .control-left {
@@ -285,6 +314,78 @@ export default {
   .form-group {
     margin-bottom: 1rem;
     text-align: left;
+  }
+  
+  // Album notes card styles
+  .album-notes-card {
+    transition: all 0.3s ease;
+    min-height: 100px;
+    
+    &.has-content {
+      border-left: 4px solid #1DB954; // Spotify green as an accent
+    }
+    
+    .card-header {
+      background-color: rgba(240, 240, 240, 0.5);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    }
+    
+    .card-body {
+      text-align: left;
+      padding: 1.25rem;
+      
+      p {
+        margin-bottom: 0.5rem;
+        line-height: 1.6;
+      }
+    }
+    
+    .btn-close {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      line-height: 1;
+      padding: 0;
+      cursor: pointer;
+      opacity: 0.5;
+      
+      &:hover {
+        opacity: 1;
+      }
+    }
+  }
+  
+  // Transitions
+  .fade-enter-active, .fade-leave-active {
+    transition: opacity 0.5s;
+  }
+  
+  .fade-enter, .fade-leave-to {
+    opacity: 0;
+  }
+  
+  // Mobile optimizations
+  @media (max-width: 767px) {
+    .main-row {
+      min-height: 400px;
+    }
+    
+    .control-middle {
+      height: 350px;
+    }
+    
+    .col-3, .col-9 {
+      flex: 0 0 100%;
+      max-width: 100%;
+    }
+    
+    .control-left {
+      margin-bottom: 1rem;
+    }
+    
+    .album-notes-card {
+      margin-top: 1rem;
+    }
   }
 }
 </style>

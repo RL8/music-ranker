@@ -1,52 +1,58 @@
 {
   "name": "Taylor Swift",
+  "note": "American singer-songwriter known for narrative songs about her personal life. One of the best-selling music artists of all time with over 200 million records sold worldwide.",
   "children": [
     {
       "name": "Primary Studio Albums",
+      "note": "Taylor Swift's main studio albums, representing her core discography and artistic evolution.",
       "children": [
-        {"name": "Taylor Swift (2006)", "size": 2006},
-        {"name": "Fearless (2008)", "size": 2008},
-        {"name": "Speak Now (2010)", "size": 2010},
-        {"name": "Red (2012)", "size": 2012},
-        {"name": "1989 (2014)", "size": 2014},
-        {"name": "reputation (2017)", "size": 2017},
-        {"name": "Lover (2019)", "size": 2019},
-        {"name": "folklore (2020)", "size": 2020},
-        {"name": "evermore (2020)", "size": 2020},
-        {"name": "Midnights (2022)", "size": 2022},
-        {"name": "The Tortured Poets Department (2024)", "size": 2024}
+        {"name": "Taylor Swift (2006)", "size": 2006, "note": "Taylor Swift's self-titled debut studio album, released on October 24, 2006. It blends country music with pop sensibilities and established her as a rising star."},
+        {"name": "Fearless (2008)", "size": 2008, "note": "Her second studio album, released on November 11, 2008. It won Album of the Year at the 52nd Grammy Awards, making Swift the youngest artist to win the category at that time."},
+        {"name": "Speak Now (2010)", "size": 2010, "note": "Her third studio album, released on October 25, 2010. Swift wrote all the songs on the album without co-writers, responding to critics who questioned her songwriting abilities."},
+        {"name": "Red (2012)", "size": 2012, "note": "Her fourth studio album, released on October 22, 2012. It marked Swift's first official move from country to pop and explored various genres including electronic, dubstep, and rock."},
+        {"name": "1989 (2014)", "size": 2014, "note": "Her fifth studio album, released on October 27, 2014. Named after Swift's birth year, it was her first official pop album and won Album of the Year at the 58th Grammy Awards."},
+        {"name": "reputation (2017)", "size": 2017, "note": "Her sixth studio album, released on November 10, 2017. It was a response to media controversies and featured a darker, more electronic sound than her previous work."},
+        {"name": "Lover (2019)", "size": 2019, "note": "Her seventh studio album, released on August 23, 2019. It marked a return to a brighter, more colorful aesthetic after the darker tone of 'reputation'."},
+        {"name": "folklore (2020)", "size": 2020, "note": "Her eighth studio album, released as a surprise on July 24, 2020. It showcased a shift to alternative and indie folk styles and won Album of the Year at the 63rd Grammy Awards."},
+        {"name": "evermore (2020)", "size": 2020, "note": "Her ninth studio album, released as a surprise on December 11, 2020. It was described as a 'sister album' to 'folklore' and continued its alternative folk sound."},
+        {"name": "Midnights (2022)", "size": 2022, "note": "Her tenth studio album, released on October 21, 2022. It's a concept album about insomnia and the thoughts that keep Swift awake at night, returning to a more pop-oriented sound."},
+        {"name": "The Tortured Poets Department (2024)", "size": 2024, "note": "Her eleventh studio album, released on April 19, 2024. It explores themes of heartbreak, reflection, and moving on, with a surprise double album release."}
       ]
     },
     {
       "name": "Secondary Albums",
+      "note": "Additional albums that complement Taylor Swift's main discography, including re-recordings, live performances, and karaoke versions.",
       "children": [
         {
           "name": "Re-recordings",
+          "note": "Albums that Swift re-recorded to gain ownership of her masters after her original recordings were sold without her consent.",
           "children": [
-            {"name": "Fearless (Taylor's version) (2021)", "size": 2021},
-            {"name": "Red (Taylor's version) (2021)", "size": 2021},
-            {"name": "Speak Now (Taylor's version) (2023)", "size": 2023},
-            {"name": "1989 (Taylor's version) (2023)", "size": 2023}
+            {"name": "Fearless (Taylor's version) (2021)", "size": 2021, "note": "Re-recording of her 2008 album 'Fearless', released on April 9, 2021. It includes all original tracks plus six previously unreleased songs 'from the vault'."},
+            {"name": "Red (Taylor's version) (2021)", "size": 2021, "note": "Re-recording of her 2012 album 'Red', released on November 12, 2021. It includes a 10-minute version of 'All Too Well' and several previously unreleased tracks."},
+            {"name": "Speak Now (Taylor's version) (2023)", "size": 2023, "note": "Re-recording of her 2010 album 'Speak Now', released on July 7, 2023. It includes six previously unreleased songs 'from the vault'."},
+            {"name": "1989 (Taylor's version) (2023)", "size": 2023, "note": "Re-recording of her 2014 album '1989', released on October 27, 2023. It includes five previously unreleased songs 'from the vault'."}
           ]
         },
         {
           "name": "Live Albums",
+          "note": "Albums featuring Taylor Swift's live performances from various tours and special events.",
           "children": [
-            {"name": "Speak Now: World Tour Live (2011)", "size": 2011},
-            {"name": "Live from Clear Channel Stripped 2008 (2020)", "size": 2020},
-            {"name": "Lover (live from Paris) (2020)", "size": 2020},
-            {"name": "folklore: the long pond studio sessions (2020)", "size": 2020}
+            {"name": "Speak Now: World Tour Live (2011)", "size": 2011, "note": "Live album recorded during the Speak Now World Tour, released on November 21, 2011. It showcases Swift's growth as a live performer."},
+            {"name": "Live from Clear Channel Stripped 2008 (2020)", "size": 2020, "note": "Acoustic performance released on May 17, 2020. It was recorded in 2008 and features stripped-down versions of songs from 'Fearless'."},
+            {"name": "Lover (live from Paris) (2020)", "size": 2020, "note": "EP released on May 17, 2020, featuring live performances from the City of Lover concert in Paris in September 2019."},
+            {"name": "folklore: the long pond studio sessions (2020)", "size": 2020, "note": "Live album accompanying the documentary film of the same name, released on November 25, 2020. It features intimate performances of songs from 'folklore'."}
           ]
         },
         {
           "name": "Karaoke Albums",
+          "note": "Instrumental versions of Taylor Swift's albums released for karaoke purposes.",
           "children": [
-            {"name": "Taylor Swift Karaoke (2009)", "size": 2009},
-            {"name": "Taylor Swift Karaoke: Fearless (2009)", "size": 2009},
-            {"name": "Taylor Swift Karaoke: Speak Now (2010)", "size": 2010},
-            {"name": "Taylor Swift Karaoke: Red (2013)", "size": 2013},
-            {"name": "Taylor Swift Karaoke: 1989 (2015)", "size": 2015},
-            {"name": "Taylor Swift Karaoke: reputation (2018)", "size": 2018}
+            {"name": "Taylor Swift Karaoke (2009)", "size": 2009, "note": "Karaoke version of selected songs from her debut album, released on January 27, 2009."},
+            {"name": "Taylor Swift Karaoke: Fearless (2009)", "size": 2009, "note": "Karaoke version of selected songs from 'Fearless', released on August 18, 2009."},
+            {"name": "Taylor Swift Karaoke: Speak Now (2010)", "size": 2010, "note": "Karaoke version of selected songs from 'Speak Now', released on December 15, 2010."},
+            {"name": "Taylor Swift Karaoke: Red (2013)", "size": 2013, "note": "Karaoke version of selected songs from 'Red', released on March 5, 2013."},
+            {"name": "Taylor Swift Karaoke: 1989 (2015)", "size": 2015, "note": "Karaoke version of selected songs from '1989', released on April 14, 2015."},
+            {"name": "Taylor Swift Karaoke: reputation (2018)", "size": 2018, "note": "Karaoke version of selected songs from 'reputation', released on March 9, 2018."}
           ]
         }
       ]
