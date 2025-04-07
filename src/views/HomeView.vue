@@ -59,7 +59,7 @@
       <div class="swipe-demo">
         <p class="text-muted mb-3">Try swiping left or right on items below:</p>
         
-        <div v-for="(song, index) in topRatedSongs.slice(0, 3)" :key="song.id" class="mb-2">
+        <div v-for="song in topRatedSongs.slice(0, 3)" :key="song.id" class="mb-2">
           <swipe-action
             :left-actions="[
               { label: 'Favorite', type: 'default', handler: () => toggleFavorite(song) }

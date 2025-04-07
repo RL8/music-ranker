@@ -5,86 +5,31 @@ import { createClient } from '@supabase/supabase-js'
  * 
  * This creates a Supabase client instance using environment variables.
  * The client is used throughout the application for database operations.
- * 
- * TEMPORARY: Using mock implementation until sunburst feature is complete
  */
 
-// Get environment variables based on the build system
-// Support both Vue CLI (process.env) and Vite (import.meta.env) formats
-const getEnvVar = (name) => {
-  if (typeof process !== 'undefined' && process.env) {
-    return process.env[name] || ''
-  } else if (typeof import.meta !== 'undefined' && import.meta.env) {
-    return import.meta.env[name] || ''
-  }
-  return ''
-}
-
 // Supabase connection details
-const supabaseUrl = getEnvVar('VUE_APP_SUPABASE_URL') || getEnvVar('VITE_SUPABASE_URL') || ''
-const supabaseAnonKey = getEnvVar('VUE_APP_SUPABASE_ANON_KEY') || getEnvVar('VITE_SUPABASE_ANON_KEY') || ''
+// Using direct values from .env.local
+const supabaseUrl = 'https://zfujellgwbznmosjuenq.supabase.co'
+const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpmdWplbGxnd2J6bm1vc2p1ZW5xIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM5ODM1MzYsImV4cCI6MjA1OTU1OTUzNn0.Yn3SJ7Vxnyv__XF6LPUIAuwOzOnRcRy47s5LA_9NlcQ'
 
-// Create a mock Supabase client if credentials are missing
-// This prevents errors when environment variables aren't set
-let supabase;
+// Create the Supabase client
+const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+  auth: {
+    persistSession: true,
+    autoRefreshToken: true
+  }
+});
 
-if (supabaseUrl && supabaseAnonKey) {
-  // Use actual Supabase client if credentials are available
-  supabase = createClient(supabaseUrl, supabaseAnonKey, {
-    auth: {
-      persistSession: true,
-      autoRefreshToken: true
-    }
-  });
-} else {
-  // Create a mock client to prevent errors
-  console.warn('Using mock Supabase client. Database functionality will be limited.');
-  
-  // Mock implementation that returns empty results instead of throwing errors
-  supabase = {
-    from: () => ({
-      select: () => ({
-        eq: () => ({
-          order: () => ({
-            then: (callback) => callback({ data: [], error: null })
-          }),
-          then: (callback) => callback({ data: [], error: null })
-        }),
-        order: () => ({
-          then: (callback) => callback({ data: [], error: null })
-        }),
-        then: (callback) => callback({ data: [], error: null })
-      }),
-      insert: () => ({
-        then: (callback) => callback({ data: null, error: null })
-      }),
-      update: () => ({
-        eq: () => ({
-          then: (callback) => callback({ data: null, error: null })
-        })
-      }),
-      delete: () => ({
-        eq: () => ({
-          then: (callback) => callback({ data: null, error: null })
-        })
-      })
-    }),
-    auth: {
-      signIn: () => Promise.resolve({ user: null, session: null, error: null }),
-      signOut: () => Promise.resolve({ error: null }),
-      onAuthStateChange: () => ({ data: null, error: null })
-    }
-  };
-}
-
-// Export the client (real or mock)
+// Export the client
 export { supabase };
 
-// Helper for handling Supabase errors consistently
-export const handleSupabaseError = (error, context = 'operation') => {
-  if (error) {
-    console.error(`Supabase ${context} error:`, error)
-    return { error: error.message || `Error during ${context}` }
-  }
-  return null
+/**
+ * Helper for handling Supabase errors consistently
+ * @param {Error} error - The error object from Supabase
+ * @param {string} context - Context where the error occurred
+ * @returns {string} Formatted error message
+ */
+export function handleSupabaseError(error, context = 'operation') {
+  console.error(`Supabase ${context} error:`, error);
+  return `Error during ${context}: ${error.message || 'Unknown error'}`;
 }
