@@ -3,8 +3,7 @@
     <nav>
       <router-link to="/">Home</router-link> |
       <router-link to="/about">About</router-link> |
-      <router-link to="/admin/taylor-swift">Taylor Swift Data</router-link> |
-      <router-link to="/visualizations/sunburst">Sunburst Visualization</router-link>
+      <router-link to="/admin/taylor-swift">Taylor Swift Data</router-link>
     </nav>
     <router-view/>
   </div>

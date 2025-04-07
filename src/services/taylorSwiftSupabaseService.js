@@ -537,82 +537,6 @@ export const taylorSwiftSupabaseService = {
    */
   visualizations: {
     /**
-     * Get data structured for sunburst visualization
-     * @param {string} era - Optional era to filter by
-     * @returns {Promise} - Data in sunburst format
-     */
-    getSunburstData: async (era = null) => {
-      try {
-        // Get albums (filtered by era if provided)
-        const albumsQuery = supabase
-          .from('taylor_swift_albums')
-          .select('id, title, era, release_date')
-          .order('release_date', { ascending: true })
-        
-        if (era) {
-          albumsQuery.eq('era', era)
-        }
-        
-        const { data: albums, error: albumsError } = await albumsQuery
-        
-        if (albumsError) {
-          return { error: `Error fetching albums for visualization: ${albumsError.message}` }
-        }
-        
-        // Get songs for each album
-        const albumsWithSongs = await Promise.all(
-          albums.map(async (album) => {
-            const { data: songs, error: songsError } = await supabase
-              .from('taylor_swift_song_appearances')
-              .select(`
-                position,
-                disc_number,
-                version_type,
-                taylor_swift_songs (
-                  id,
-                  title,
-                  duration_ms
-                )
-              `)
-              .eq('album_id', album.id)
-              .order('disc_number', { ascending: true })
-              .order('position', { ascending: true })
-            
-            if (songsError) {
-              console.error(`Error fetching songs for album ${album.id}:`, songsError)
-              return {
-                ...album,
-                songs: []
-              }
-            }
-            
-            // Transform the songs data
-            const formattedSongs = songs.map(appearance => ({
-              id: appearance.taylor_swift_songs.id,
-              title: appearance.taylor_swift_songs.title,
-              duration_ms: appearance.taylor_swift_songs.duration_ms,
-              position: appearance.position,
-              disc_number: appearance.disc_number,
-              version_type: appearance.version_type
-            }))
-            
-            return {
-              ...album,
-              songs: formattedSongs
-            }
-          })
-        )
-        
-        // Format the data for sunburst visualization
-        const sunburstData = formatForSunburst(albumsWithSongs, era)
-        return { data: sunburstData }
-      } catch (error) {
-        console.error('Unexpected error generating sunburst data:', error)
-        return { error: 'Unexpected error generating sunburst data' }
-      }
-    },
-    
-    /**
      * Get album songs formatted for visualization
      * @param {string} albumId - Album ID
      * @returns {Promise} - Array of songs
@@ -674,44 +598,6 @@ export const taylorSwiftSupabaseService = {
       }
     }
   }
-}
-
-/**
- * Format albums and songs for sunburst visualization
- * @param {Array} albumsWithSongs - Albums with their songs
- * @param {string} era - Optional era name for the root node
- * @returns {Object} - Hierarchical data structure for sunburst
- */
-function formatForSunburst(albumsWithSongs, era = null) {
-  // Group albums by era
-  const albumsByEra = albumsWithSongs.reduce((acc, album) => {
-    if (!acc[album.era]) {
-      acc[album.era] = []
-    }
-    acc[album.era].push(album)
-    return acc
-  }, {})
-  
-  // If a specific era is requested, only include that era
-  const eras = era ? [era] : Object.keys(albumsByEra).sort()
-  
-  // Create the root node
-  const root = {
-    name: 'Taylor Swift',
-    children: eras.map(eraName => ({
-      name: eraName,
-      children: albumsByEra[eraName].map(album => ({
-        name: album.title,
-        children: album.songs.map(song => ({
-          name: song.title,
-          value: song.duration_ms / 1000, // Convert to seconds for better visualization
-          songId: song.id
-        }))
-      }))
-    }))
-  }
-  
-  return root
 }
 
 export default taylorSwiftSupabaseService
