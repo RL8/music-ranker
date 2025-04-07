@@ -19,7 +19,16 @@
     </header>
     
     <!-- Main Content Area (Scrollable) -->
-    <main class="app-content" :class="{ 'has-bottom-nav': isMobileView }">
+    <pull-to-refresh 
+      v-if="supportsPullToRefresh"
+      class="app-content" 
+      :class="{ 'has-bottom-nav': isMobileView }"
+      @refresh="handleRefresh"
+    >
+      <router-view/>
+    </pull-to-refresh>
+    
+    <main v-else class="app-content" :class="{ 'has-bottom-nav': isMobileView }">
       <router-view/>
     </main>
     
@@ -32,26 +41,38 @@
     
     <!-- Bottom Navigation (Mobile Only) -->
     <bottom-navigation v-if="isMobileView" />
+    
+    <!-- Offline Status Indicator -->
+    <offline-status />
   </div>
 </template>
 
 <script>
 import BottomNavigation from './components/ui/BottomNavigation.vue';
+import OfflineStatus from './components/ui/OfflineStatus.vue';
+import PullToRefresh from './components/ui/PullToRefresh.vue';
 
 export default {
   components: {
-    BottomNavigation
+    BottomNavigation,
+    OfflineStatus,
+    PullToRefresh
   },
   data() {
     return {
       menuOpen: false,
       isMobileView: false,
-      windowWidth: 0
+      windowWidth: 0,
+      supportsPullToRefresh: false
     }
   },
   created() {
     window.addEventListener('resize', this.checkScreenSize);
     this.checkScreenSize();
+  },
+  mounted() {
+    // Check if device supports touch events for pull-to-refresh
+    this.supportsPullToRefresh = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
   },
   beforeDestroy() {
     window.removeEventListener('resize', this.checkScreenSize);
@@ -69,6 +90,33 @@ export default {
     checkScreenSize() {
       this.windowWidth = window.innerWidth;
       this.isMobileView = this.windowWidth < 768;
+    },
+    handleRefresh(completeCallback) {
+      // Reload current route data
+      const currentRoute = this.$router.currentRoute;
+      
+      // If the current component has a refresh method, call it
+      const currentComponent = this.$router.app.$children[0].$children[0];
+      
+      if (currentComponent && typeof currentComponent.refresh === 'function') {
+        // Component has a refresh method
+        Promise.resolve(currentComponent.refresh())
+          .then(() => {
+            completeCallback();
+          })
+          .catch(() => {
+            completeCallback();
+          });
+      } else {
+        // No refresh method, just reload the route
+        this.$router.replace({
+          name: currentRoute.name,
+          params: { ...currentRoute.params },
+          query: { ...currentRoute.query, _t: Date.now() }
+        }).finally(() => {
+          setTimeout(completeCallback, 500);
+        });
+      }
     }
   }
 }
@@ -212,6 +260,11 @@ body {
   &.hidden-mobile {
     display: none;
   }
+}
+
+// Active state for touch elements
+.touch-active {
+  background-color: rgba(0, 0, 0, 0.05);
 }
 
 // Media queries for larger screens
