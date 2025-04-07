@@ -116,34 +116,49 @@
         <div class="card control-middle">
           <div class="card-header">Taylor Swift Discography</div>
           <div class="card-body father">
-            <sunburst
-              id="ts-sunburst"
-              class="sunburst"
-              :data="data"
-              :max-label-text="20"
-              :centralCircleRelativeSize="centralCircleRelativeSize"
-              :showLabels="showLabels"
-              :minAngleDisplayed="minAngleDisplayed"
-              :colorScheme="colorScheme"
-              :inAnimationDuration="inAnimationDuration"
-              :outAnimationDuration="outAnimationDuration"
-              @clickNode="onNodeClick"
-            >
-              <breadcrumbTrail
-                slot="legend"
-                slot-scope="{ nodes, colorGetter, width }"
-                :current="nodes.mouseOver"
-                :root="nodes.root"
-                :colorGetter="colorGetter"
-                :from="nodes.zoomed"
-                :width="width"
-              />
+            <div ref="sunburstContainer" class="sunburst-container">
+              <sunburst
+                id="ts-sunburst"
+                ref="sunburst"
+                class="sunburst"
+                :data="data"
+                :max-label-text="20"
+                :centralCircleRelativeSize="centralCircleRelativeSize"
+                :showLabels="showLabels"
+                :minAngleDisplayed="minAngleDisplayed"
+                :colorScheme="colorScheme"
+                :inAnimationDuration="inAnimationDuration"
+                :outAnimationDuration="outAnimationDuration"
+                @clickNode="onNodeClick"
+              >
+                <breadcrumbTrail
+                  slot="legend"
+                  slot-scope="{ nodes, colorGetter, width }"
+                  :current="nodes.mouseOver"
+                  :root="nodes.root"
+                  :colorGetter="colorGetter"
+                  :from="nodes.zoomed"
+                  :width="width"
+                />
 
-              <template slot-scope="{ on, actions }">
-                <highlightOnHover v-bind="{ on, actions }" />
-                <zoomOnClick v-bind="{ on, actions }" />
-              </template>
-            </sunburst>
+                <template slot-scope="{ on, actions }">
+                  <highlightOnHover v-bind="{ on, actions }" />
+                  <zoomOnClick v-bind="{ on, actions }" />
+                </template>
+              </sunburst>
+              
+              <!-- Gesture feedback indicator -->
+              <div v-if="gestureActive" class="gesture-indicator" :class="gestureType">
+                <span v-if="gestureType === 'pinch'">
+                  <i class="fas fa-search-plus" v-if="gestureDirection === 'in'"></i>
+                  <i class="fas fa-search-minus" v-else></i>
+                </span>
+                <span v-else-if="gestureType === 'swipe'">
+                  <i class="fas fa-undo" v-if="gestureDirection === 'left'"></i>
+                  <i class="fas fa-home" v-else></i>
+                </span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -184,6 +199,7 @@ import {
 } from 'vue-d3-sunburst';
 import "vue-d3-sunburst/dist/vue-d3-sunburst.css";
 import taylorSwiftData from '@/data/taylor-swift-sunburst.json';
+import Hammer from 'hammerjs';
 
 // Define color schemes
 const colorSchemes = {
@@ -226,8 +242,26 @@ export default {
       selectedNode: {
         name: '',
         note: ''
-      }
+      },
+      // Properties for mobile gestures
+      hammer: null,
+      currentZoomNode: null,
+      zoomHistory: [],
+      gestureActive: false,
+      gestureType: '',
+      gestureDirection: '',
+      gestureTimeout: null
     };
+  },
+  mounted() {
+    this.$nextTick(() => {
+      this.initializeHammerGestures();
+    });
+  },
+  beforeDestroy() {
+    if (this.hammer) {
+      this.hammer.destroy();
+    }
   },
   methods: {
     showLabelsFunction(d) {
@@ -243,7 +277,16 @@ export default {
     // Methods for handling node clicks and notes display
     onNodeClick({ node }) {
       if (node && node.data) {
-        // Smooth scroll to the notes section on mobile
+        // Update the current zoom node for gesture navigation
+        this.currentZoomNode = node;
+        
+        // Add to zoom history for navigation
+        if (this.zoomHistory.length === 0 || 
+            this.zoomHistory[this.zoomHistory.length - 1] !== node) {
+          this.zoomHistory.push(node);
+        }
+        
+        // Update the selected node info
         this.selectedNode = {
           name: node.data.name,
           note: node.data.note || ''
@@ -265,6 +308,138 @@ export default {
         name: '',
         note: ''
       };
+    },
+    
+    // Mobile gesture methods
+    initializeHammerGestures() {
+      const sunburstEl = this.$refs.sunburstContainer;
+      if (!sunburstEl) return;
+      
+      // Initialize Hammer
+      this.hammer = new Hammer(sunburstEl);
+      
+      // Configure recognizers
+      this.hammer.get('pinch').set({ enable: true });
+      this.hammer.get('swipe').set({ direction: Hammer.DIRECTION_HORIZONTAL });
+      
+      // Add gesture handlers
+      this.hammer.on('pinch', this.handlePinch);
+      this.hammer.on('swipe', this.handleSwipe);
+      this.hammer.on('tap', this.handleTap);
+    },
+    
+    handlePinch(event) {
+      // Determine pinch direction (in or out)
+      const isPinchIn = event.scale > 1;
+      
+      // Show gesture feedback
+      this.showGestureFeedback('pinch', isPinchIn ? 'in' : 'out');
+      
+      // Only trigger on pinch end to avoid multiple zooms
+      if (event.eventType === Hammer.INPUT_END) {
+        if (isPinchIn) {
+          // Pinch in - zoom into the current node if available
+          if (this.currentZoomNode) {
+            this.zoomToNode(this.currentZoomNode);
+          }
+        } else {
+          // Pinch out - zoom out to parent
+          this.zoomOut();
+        }
+      }
+    },
+    
+    handleSwipe(event) {
+      // Determine swipe direction
+      const isSwipeLeft = event.direction === Hammer.DIRECTION_LEFT;
+      
+      // Show gesture feedback
+      this.showGestureFeedback('swipe', isSwipeLeft ? 'left' : 'right');
+      
+      if (isSwipeLeft) {
+        // Swipe left - go back to previous view
+        this.goBack();
+      } else {
+        // Swipe right - reset to root view
+        this.resetZoom();
+      }
+    },
+    
+    handleTap() {
+      // Single tap is already handled by the sunburst component
+      // We could add double-tap functionality here if needed
+    },
+    
+    zoomToNode(node) {
+      if (!node) return;
+      
+      // Access the sunburst component's internal API
+      const sunburstComponent = this.$refs.sunburst;
+      if (sunburstComponent && sunburstComponent.actions && sunburstComponent.actions.zoomToNode) {
+        sunburstComponent.actions.zoomToNode(node);
+        
+        // Update current node and history
+        this.currentZoomNode = node;
+        if (this.zoomHistory.length === 0 || 
+            this.zoomHistory[this.zoomHistory.length - 1] !== node) {
+          this.zoomHistory.push(node);
+        }
+      }
+    },
+    
+    zoomOut() {
+      // If we have a history, go back one level
+      if (this.zoomHistory.length > 1) {
+        // Remove current node
+        this.zoomHistory.pop();
+        // Get parent node
+        const parentNode = this.zoomHistory[this.zoomHistory.length - 1];
+        // Zoom to parent
+        this.zoomToNode(parentNode);
+      } else {
+        // If at root already, do nothing or provide feedback
+        this.resetZoom();
+      }
+    },
+    
+    goBack() {
+      // Similar to zoomOut but with different user intent
+      if (this.zoomHistory.length > 1) {
+        this.zoomHistory.pop();
+        const previousNode = this.zoomHistory[this.zoomHistory.length - 1];
+        this.zoomToNode(previousNode);
+      }
+    },
+    
+    resetZoom() {
+      // Reset to root view
+      const sunburstComponent = this.$refs.sunburst;
+      if (sunburstComponent && sunburstComponent.actions && sunburstComponent.actions.zoomToNode) {
+        // Get the root node
+        const rootNode = sunburstComponent.nodes ? sunburstComponent.nodes.root : null;
+        if (rootNode) {
+          sunburstComponent.actions.zoomToNode(rootNode);
+          this.currentZoomNode = rootNode;
+          this.zoomHistory = [rootNode];
+        }
+      }
+    },
+    
+    showGestureFeedback(type, direction) {
+      // Clear any existing timeout
+      if (this.gestureTimeout) {
+        clearTimeout(this.gestureTimeout);
+      }
+      
+      // Show the gesture indicator
+      this.gestureActive = true;
+      this.gestureType = type;
+      this.gestureDirection = direction;
+      
+      // Hide after a short delay
+      this.gestureTimeout = setTimeout(() => {
+        this.gestureActive = false;
+      }, 800);
     }
   }
 };
@@ -304,19 +479,61 @@ export default {
     display: flex;
     justify-content: center;
   }
+  
+  .sunburst-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    touch-action: none; /* Important for Hammer.js */
+  }
 
   .sunburst {
     width: 100%;
     height: 100%;
     position: relative;
   }
-
-  .form-group {
-    margin-bottom: 1rem;
-    text-align: left;
+  
+  // Gesture indicator styles
+  .gesture-indicator {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    z-index: 100;
+    pointer-events: none;
+    opacity: 0.8;
+    transition: all 0.3s ease;
+    
+    &.pinch {
+      animation: pulse 0.8s ease-out;
+    }
+    
+    &.swipe {
+      animation: slide 0.8s ease-out;
+    }
   }
   
-  // Album notes card styles
+  @keyframes pulse {
+    0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0; }
+    50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.8; }
+    100% { transform: translate(-50%, -50%) scale(1); opacity: 0; }
+  }
+  
+  @keyframes slide {
+    0% { transform: translate(-70%, -50%); opacity: 0; }
+    50% { transform: translate(-50%, -50%); opacity: 0.8; }
+    100% { transform: translate(-30%, -50%); opacity: 0; }
+  }
+
   .album-notes-card {
     transition: all 0.3s ease;
     min-height: 100px;

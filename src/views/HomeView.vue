@@ -1,96 +1,146 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <b-container>
-      <b-row class="my-4">
-        <b-col>
-          <h2>Music Ranker</h2>
-          <p>A simple application to rank your favorite music</p>
-          <b-button variant="primary" @click="loadData">Load Music Data</b-button>
-        </b-col>
-      </b-row>
+    <mobile-card>
+      <template #header-actions>
+        <b-button size="sm" variant="primary" @click="loadData">
+          <span v-if="!musicStore.loading">Load Music</span>
+          <b-spinner v-else small></b-spinner>
+        </b-button>
+      </template>
       
-      <!-- Loading indicator -->
-      <b-row v-if="musicStore.loading">
-        <b-col class="text-center">
-          <b-spinner label="Loading..."></b-spinner>
-          <p>Loading music data...</p>
-        </b-col>
-      </b-row>
+      <div class="app-intro">
+        <img alt="Vue logo" src="../assets/logo.png" class="app-logo">
+        <h2>Music Ranker</h2>
+        <p>A simple application to rank your favorite music</p>
+      </div>
+    </mobile-card>
       
-      <!-- Error message -->
-      <b-row v-if="musicStore.error">
-        <b-col>
-          <b-alert show variant="danger">{{ musicStore.error }}</b-alert>
-        </b-col>
-      </b-row>
+    <!-- Error message -->
+    <b-alert v-if="musicStore.error" show variant="danger" class="mb-3">
+      {{ musicStore.error }}
+    </b-alert>
+    
+    <!-- Top rated songs -->
+    <mobile-list
+      v-if="musicStore.songs.length > 0"
+      :items="topRatedSongs"
+      title="Top Rated Songs"
+      item-key="id"
+      show-arrow
+      @item-click="viewSongDetails"
+    >
+      <template #item="{ item }">
+        <div class="d-flex justify-content-between align-items-center w-100">
+          <div class="song-info">
+            <div class="song-title">{{ item.title }}</div>
+            <div class="song-artist">{{ item.artist }}</div>
+          </div>
+          <b-badge variant="primary" pill>{{ item.rating }}</b-badge>
+        </div>
+      </template>
       
-      <!-- Top rated songs -->
-      <b-row v-if="musicStore.songs.length > 0">
-        <b-col>
-          <h3>Top Rated Songs</h3>
-          <b-list-group>
-            <b-list-group-item 
-              v-for="song in topRatedSongs" 
-              :key="song.id"
-              class="song-item"
-              @click="viewSongDetails(song.id)"
-            >
-              <div class="d-flex justify-content-between align-items-center">
-                <div>
-                  <strong>{{ song.title }}</strong> by {{ song.artist }}
-                </div>
-                <b-badge variant="primary" pill>{{ song.rating }}</b-badge>
-              </div>
-            </b-list-group-item>
-          </b-list-group>
-        </b-col>
-      </b-row>
-    </b-container>
+      <template #empty>
+        <div class="text-center py-4">
+          <p>No songs found. Click "Load Music" to get started.</p>
+        </div>
+      </template>
+    </mobile-list>
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
 import { useMusicStore } from '@/store'
-import { mapState } from 'pinia'
+import MobileCard from '@/components/ui/MobileCard.vue'
+import MobileList from '@/components/ui/MobileList.vue'
 
 export default {
   name: 'HomeView',
-  computed: {
-    ...mapState(useMusicStore, ['songs', 'artists', 'loading', 'error']),
-    topRatedSongs() {
-      return this.musicStore.topRatedSongs
-    }
+  components: {
+    MobileCard,
+    MobileList
   },
-  data() {
-    return {
-      musicStore: useMusicStore()
+  setup() {
+    const musicStore = useMusicStore()
+    return { musicStore }
+  },
+  computed: {
+    topRatedSongs() {
+      return this.musicStore.songs
+        .slice()
+        .sort((a, b) => b.rating - a.rating)
+        .slice(0, 10)
     }
   },
   methods: {
     loadData() {
       this.musicStore.fetchSongs()
-      this.musicStore.fetchArtists()
     },
-    viewSongDetails(songId) {
-      this.$router.push({ name: 'song-detail', params: { id: songId } })
+    viewSongDetails(song) {
+      this.$router.push({ name: 'song-detail', params: { id: song.id } })
     }
   }
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .home {
-  padding: 20px;
+  max-width: 100%;
+  padding: 0 0.5rem;
 }
 
-.song-item {
-  cursor: pointer;
-  transition: background-color 0.2s;
+.app-intro {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 1rem;
+  
+  .app-logo {
+    max-width: 80px;
+    margin-bottom: 1rem;
+  }
+  
+  h2 {
+    margin-bottom: 0.5rem;
+    font-size: 1.5rem;
+  }
+  
+  p {
+    margin-bottom: 0;
+    color: #666;
+  }
 }
 
-.song-item:hover {
-  background-color: #f8f9fa;
+.song-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  
+  .song-title {
+    font-weight: 500;
+  }
+  
+  .song-artist {
+    font-size: 0.875rem;
+    color: #666;
+  }
+}
+
+// Media queries for larger screens
+@media (min-width: 768px) {
+  .home {
+    max-width: 768px;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+  
+  .app-intro {
+    .app-logo {
+      max-width: 100px;
+    }
+    
+    h2 {
+      font-size: 1.75rem;
+    }
+  }
 }
 </style>
