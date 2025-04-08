@@ -20,60 +20,68 @@
 </template>
 
 <script>
-import { ServiceWorkerEventBus, getOfflineStatus } from '@/registerServiceWorker';
+import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { ServiceWorkerEventBus, getOfflineStatus } from '@/registerServiceWorker'
 
 export default {
   name: 'OfflineStatus',
-  data() {
-    return {
-      isOffline: getOfflineStatus(),
-      showStatus: false,
-      hideTimeout: null
-    }
-  },
-  created() {
-    // Listen for connectivity changes
-    this.unsubscribe = ServiceWorkerEventBus.on('connectivity', ({ isOffline }) => {
-      this.isOffline = isOffline;
-      this.showStatusWithTimeout();
-    });
+  setup() {
+    const isOffline = ref(getOfflineStatus())
+    const showStatus = ref(false)
+    const hideTimeout = ref(null)
+    let unsubscribe = null
     
-    // Show initial status if offline
-    if (this.isOffline) {
-      this.showStatus = true;
-    }
-  },
-  beforeDestroy() {
-    // Clean up event listener
-    if (this.unsubscribe) {
-      this.unsubscribe();
-    }
-    
-    // Clear any pending timeouts
-    if (this.hideTimeout) {
-      clearTimeout(this.hideTimeout);
-    }
-  },
-  methods: {
-    showStatusWithTimeout() {
+    const showStatusWithTimeout = () => {
       // Always show the status when connectivity changes
-      this.showStatus = true;
+      showStatus.value = true
       
       // Clear any existing timeout
-      if (this.hideTimeout) {
-        clearTimeout(this.hideTimeout);
+      if (hideTimeout.value) {
+        clearTimeout(hideTimeout.value)
       }
       
       // Auto-hide the online status after 3 seconds
       // Keep offline status visible
-      if (!this.isOffline) {
-        this.hideTimeout = setTimeout(() => {
-          this.showStatus = false;
-        }, 3000);
+      if (!isOffline.value) {
+        hideTimeout.value = setTimeout(() => {
+          showStatus.value = false
+        }, 3000)
       }
-    },
-    hideStatus() {
-      this.showStatus = false;
+    }
+    
+    const hideStatus = () => {
+      showStatus.value = false
+    }
+    
+    onMounted(() => {
+      // Listen for connectivity changes
+      unsubscribe = ServiceWorkerEventBus.on('connectivity', ({ isOffline: offline }) => {
+        isOffline.value = offline
+        showStatusWithTimeout()
+      })
+      
+      // Show initial status if offline
+      if (isOffline.value) {
+        showStatus.value = true
+      }
+    })
+    
+    onBeforeUnmount(() => {
+      // Clean up event listener
+      if (unsubscribe) {
+        unsubscribe()
+      }
+      
+      // Clear any pending timeouts
+      if (hideTimeout.value) {
+        clearTimeout(hideTimeout.value)
+      }
+    })
+    
+    return {
+      isOffline,
+      showStatus,
+      hideStatus
     }
   }
 }

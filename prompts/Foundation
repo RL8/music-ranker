@@ -1,0 +1,303 @@
+Okay, let's lay out a detailed plan for establishing the **foundational elements** of the Swifties.io app, based on upgrading the existing `music-ranker` codebase. This plan focuses *only* on getting the core structure and dependencies in place, ready for iterative feature development.
+
+**Prerequisites:**
+
+*   **Source Control:** Ensure the entire `music-ranker` project is under Git version control. Create a new branch for this upgrade (e.g., `feature/foundation-upgrade`).
+*   **Node.js/npm/yarn:** Make sure you have up-to-date versions installed.
+
+**Implementation Plan: Foundational Setup**
+
+**Phase 1: Core Framework Upgrade (Vue 2 -> Vue 3 & Vite)**
+
+*   **Objective:** Migrate the project to Vue 3 and the Vite build tool for better performance and developer experience.
+*   **Rationale:** Vue 3's Composition API is better suited for complex components (ranking, visualizations). Vite offers significantly faster development server start times and builds.
+*   **Key Files:** `package.json`, `public/index.html`, `src/main.js`, component `.vue` files.
+*   **Actions:**
+    1.  **Remove Vue 2 Dependencies:**
+        ```bash
+        yarn remove vue vue-router@3 vue-template-compiler bootstrap-vue vue-d3-sunburst pinia@2 # Remove Vue 2 versions and incompatible libs
+        yarn remove @vue/cli-plugin-babel @vue/cli-plugin-eslint @vue/cli-plugin-pwa @vue/cli-plugin-router @vue/cli-service @babel/eslint-parser # Remove CLI specific plugins
+        # Note: vue-d3-sunburst is likely incompatible, will need replacement later
+        ```
+    2.  **Install Vue 3 & Vite Dependencies:**
+        ```bash
+        yarn add vue@next vue-router@next pinia # Install Vue 3, Router v4, latest Pinia
+        yarn add -D vite @vitejs/plugin-vue eslint-plugin-vue@next # Install Vite and Vue 3 ESLint plugin
+        # Keep existing relevant dependencies like @supabase/supabase-js, axios, d3-scale, etc.
+        ```
+    3.  **Update `package.json` Scripts:**
+        *   Replace `"serve": "vue-cli-service serve"` with `"dev": "vite"`.
+        *   Replace `"build": "vue-cli-service build"` with `"build": "vite build"`.
+        *   Add `"preview": "vite preview"`.
+        *   Remove `"lint": "vue-cli-service lint"`. Configure ESLint separately if needed (recommended).
+    4.  **Create `vite.config.js`:** Create this file in the project root:
+        ```javascript
+        import { defineConfig } from 'vite'
+        import vue from '@vitejs/plugin-vue'
+        import path from 'path' // Import path module
+
+        // https://vitejs.dev/config/
+        export default defineConfig({
+          plugins: [vue()],
+          resolve: {
+            alias: { // Configure '@' alias like Vue CLI
+              '@': path.resolve(__dirname, './src'),
+            },
+          },
+          server: { // Optional: Configure dev server port, proxy if needed later
+            port: 8080,
+            // proxy: { '/api': 'http://localhost:3001' } // Add if still using separate proxy server
+          }
+        })
+        ```
+    5.  **Update `public/index.html`:**
+        *   Change the `<div id="app"></div>` location if needed (Vite expects it in `<body>`).
+        *   Add `<script type="module" src="/src/main.js"></script>` inside `<body>`.
+        *   Remove Vue CLI specific placeholders (`<%= BASE_URL %>`, `<%= htmlWebpackPlugin.options.title %>`). Use Vite's environment variables if needed later (`import.meta.env.BASE_URL`).
+        *   Remove the explicit Vue Devtools script tags; Vite handles this better.
+    6.  **Update `src/main.js`:** Change the Vue initialization:
+        ```javascript
+        import { createApp } from 'vue'
+        import App from './App.vue'
+        import router from './router' // Ensure router is updated for Vue 3
+        import { createPinia } from 'pinia'
+        // Removed BootstrapVue import - needs replacement decision
+
+        // Import global CSS if needed (e.g., if using Tailwind later)
+        // import './assets/main.css'
+
+        const app = createApp(App)
+        const pinia = createPinia()
+
+        app.use(pinia)
+        app.use(router)
+
+        // Removed BootstrapVue usage
+
+        // Mount the app
+        app.mount('#app')
+        ```
+    7.  **Update Component Syntax:** Gradually refactor components to use Vue 3 syntax (Composition API `setup()` function is recommended). Remove Vue 2 specific APIs.
+        *   *Initial Focus:* Get `App.vue` and basic views loading. Refactor others iteratively.
+    8.  **Remove Vue CLI Config:** Delete `babel.config.js` and `vue.config.js`.
+    9.  **Update ESLint Config (`.eslintrc.js` or new file):** Configure for Vue 3 using `eslint-plugin-vue@next`. Remove `@babel/eslint-parser`.
+
+**Phase 2: Update Routing & State Management**
+
+*   **Objective:** Ensure Vue Router and Pinia are configured correctly for Vue 3.
+*   **Rationale:** Core app structure depends on these.
+*   **Key Files:** `src/router/index.js`, `src/store/` files, `src/main.js`.
+*   **Actions:**
+    1.  **Update `src/router/index.js`:** Use Vue Router v4 API:
+        ```javascript
+        import { createRouter, createWebHistory } from 'vue-router'
+        import HomeView from '../views/HomeView.vue'
+
+        const routes = [
+          { path: '/', name: 'home', component: HomeView },
+          { path: '/about', name: 'about', component: () => import('../views/AboutView.vue') },
+          // *** Add placeholders for NEW routes specified in Swifties.io spec ***
+          { path: '/music', name: 'dashboard', component: () => import(/* webpackChunkName: "dashboard" */ '../views/DashboardView.vue') }, // Placeholder
+          { path: '/rank/albums', name: 'album-ranking', component: () => import(/* webpackChunkName: "album-ranking" */ '../views/AlbumRankingView.vue') }, // Placeholder
+          { path: '/rank/songs', name: 'song-ranking', component: () => import(/* webpackChunkName: "song-ranking" */ '../views/SongRankingView.vue') }, // Placeholder
+          { path: '/profile', name: 'profile', component: () => import(/* webpackChunkName: "profile" */ '../views/ProfileView.vue') }, // Placeholder
+          { path: '/settings', name: 'settings', component: () => import(/* webpackChunkName: "settings" */ '../views/SettingsView.vue') }, // Placeholder
+          // Remove/update old routes like song-detail, taylor-swift-manager, sunburst-demo if not directly needed initially
+        ]
+
+        const router = createRouter({
+          history: createWebHistory(import.meta.env.BASE_URL), // Use Vite env var
+          routes
+        })
+
+        export default router
+        ```
+    2.  **Verify Pinia Setup (`src/main.js`):** The code snippet in Phase 1 already includes the correct `createPinia()` and `app.use(pinia)` setup.
+    3.  **Update Pinia Stores (`src/store/`):** Refactor existing stores (like `musicStore.js`) to use the recommended `setup` store syntax if desired, although the options API still works. Create placeholders for new stores (`userStore`, `rankingStore`, `uiStore`). Example `setup` store:
+        ```javascript
+        // src/store/userStore.js (New File)
+        import { ref } from 'vue'
+        import { defineStore } from 'pinia'
+        // import { supabase } from '@/lib/supabase/client' // Import later when needed
+
+        export const useUserStore = defineStore('user', () => {
+          const user = ref(null)
+          const profile = ref(null)
+          const isAuthenticated = ref(false)
+
+          async function fetchUser() { /* ... Supabase logic later ... */ }
+          async function fetchProfile() { /* ... Supabase logic later ... */ }
+          // ... other actions like login, logout, updateProfile
+
+          return { user, profile, isAuthenticated, fetchUser, fetchProfile }
+        })
+        ```
+
+**Phase 3: Backend Schema Expansion**
+
+*   **Objective:** Add the necessary tables and columns to the Supabase database to support rankings, profiles, etc.
+*   **Rationale:** The application features rely on this data structure.
+*   **Key Files:** New SQL script or direct execution in Supabase SQL Editor.
+*   **Actions:**
+    1.  **Connect to Supabase:** Access your Supabase project dashboard.
+    2.  **Execute SQL:** Run the following SQL commands (or similar, adjusted as needed) in the Supabase SQL Editor. **BACK UP YOUR DB FIRST if it contains valuable data.**
+        ```sql
+        -- 1. Extend Profiles Table
+        ALTER TABLE public.profiles
+          ADD COLUMN IF NOT EXISTS bio TEXT,
+          ADD COLUMN IF NOT EXISTS profile_image_url TEXT;
+          -- Add other profile fields from spec if needed
+
+        -- 2. Create Album Ranking Table
+        CREATE TABLE IF NOT EXISTS public.user_album_rankings (
+          id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+          user_id UUID NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
+          album_id UUID NOT NULL REFERENCES public.taylor_swift_albums(id) ON DELETE CASCADE, -- Assuming taylor_swift_albums exists
+          tier INTEGER NOT NULL CHECK (tier >= 1 AND tier <= 5),
+          rank_in_tier INTEGER NOT NULL, -- Position within the tier (1, 2, or 3)
+          created_at TIMESTAMPTZ DEFAULT NOW(),
+          updated_at TIMESTAMPTZ DEFAULT NOW(),
+          UNIQUE(user_id, album_id), -- User can rank an album only once
+          UNIQUE(user_id, tier, rank_in_tier) -- Only one album per rank slot per user
+        );
+        ALTER TABLE public.user_album_rankings ENABLE ROW LEVEL SECURITY;
+        CREATE POLICY "Users can manage their own album rankings" ON public.user_album_rankings
+          FOR ALL USING (auth.uid() = user_id);
+
+        -- 3. Create Song Ranking Table
+        CREATE TABLE IF NOT EXISTS public.user_song_rankings (
+          id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+          user_id UUID NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
+          song_id UUID NOT NULL REFERENCES public.taylor_swift_songs(id) ON DELETE CASCADE, -- Assuming taylor_swift_songs exists
+          -- Optional: Include album_appearance_id if ranking specific versions
+          -- album_appearance_id UUID REFERENCES public.taylor_swift_song_appearances(id) ON DELETE CASCADE,
+          album_context_id UUID NOT NULL REFERENCES public.taylor_swift_albums(id) ON DELETE CASCADE, -- Which album's list is this ranking for?
+          tier INTEGER NOT NULL CHECK (tier >= 1),
+          rank_in_tier INTEGER NOT NULL,
+          created_at TIMESTAMPTZ DEFAULT NOW(),
+          updated_at TIMESTAMPTZ DEFAULT NOW(),
+          UNIQUE(user_id, song_id, album_context_id) -- User ranks a song once per album context
+          -- Add constraint for rank_in_tier if needed based on tier structure
+        );
+        ALTER TABLE public.user_song_rankings ENABLE ROW LEVEL SECURITY;
+        CREATE POLICY "Users can manage their own song rankings" ON public.user_song_rankings
+          FOR ALL USING (auth.uid() = user_id);
+
+        -- 4. Create Premium Status Table (Example)
+        CREATE TABLE IF NOT EXISTS public.user_premium_status (
+           user_id UUID PRIMARY KEY REFERENCES public.profiles(id) ON DELETE CASCADE,
+           is_premium BOOLEAN DEFAULT FALSE NOT NULL,
+           subscription_type TEXT, -- e.g., 'annual', 'lifetime_1989'
+           expires_at TIMESTAMPTZ,
+           stripe_customer_id TEXT, -- Store Stripe Customer ID
+           updated_at TIMESTAMPTZ DEFAULT NOW()
+        );
+        ALTER TABLE public.user_premium_status ENABLE ROW LEVEL SECURITY;
+        CREATE POLICY "Users can view their own premium status" ON public.user_premium_status
+           FOR SELECT USING (auth.uid() = user_id);
+        -- Add policies for service role updates via webhooks
+
+        -- 5. Create Ranking History Table (Example - Needs Refinement based on exact needs)
+        CREATE TABLE IF NOT EXISTS public.ranking_history (
+          id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+          user_id UUID NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
+          session_timestamp TIMESTAMPTZ DEFAULT NOW(),
+          ranking_type TEXT NOT NULL, -- 'album' or 'song'
+          -- Store snapshot of rankings? Could be JSONB or link to separate snapshot tables
+          rankings_snapshot JSONB,
+          created_at TIMESTAMPTZ DEFAULT NOW()
+        );
+        ALTER TABLE public.ranking_history ENABLE ROW LEVEL SECURITY;
+        CREATE POLICY "Users can view their own ranking history" ON public.ranking_history
+          FOR SELECT USING (auth.uid() = user_id);
+        -- Premium users might have different SELECT policies
+
+        -- Add necessary INDEXES for performance on foreign keys and frequently queried columns
+        CREATE INDEX IF NOT EXISTS idx_user_album_rankings_user_id ON public.user_album_rankings(user_id);
+        CREATE INDEX IF NOT EXISTS idx_user_song_rankings_user_id ON public.user_song_rankings(user_id);
+        -- etc.
+        ```
+    3.  **Verify Schema:** Use the Supabase Table Editor to confirm the new tables and columns exist.
+
+**Phase 4: UI Framework Setup (Example: Tailwind CSS)**
+
+*   **Objective:** Integrate Tailwind CSS for utility-first styling.
+*   **Rationale:** Provides maximum design flexibility required for the "visually engaging" spec, replacing BootstrapVue.
+*   **Key Files:** `package.json`, `tailwind.config.js`, `postcss.config.js`, `src/assets/main.css` (new), `src/main.js`.
+*   **Actions:**
+    1.  **Install Tailwind:**
+        ```bash
+        yarn add -D tailwindcss postcss autoprefixer
+        npx tailwindcss init -p
+        ```
+    2.  **Configure `tailwind.config.js`:**
+        ```javascript
+        /** @type {import('tailwindcss').Config} */
+        export default {
+          content: [
+            "./index.html",
+            "./src/**/*.{vue,js,ts,jsx,tsx}", // Scan Vue files
+          ],
+          theme: {
+            extend: {},
+          },
+          plugins: [],
+        }
+        ```
+    3.  **Create `src/assets/main.css`:** (Or choose another CSS entry point)
+        ```css
+        @tailwind base;
+        @tailwind components;
+        @tailwind utilities;
+
+        /* Add any global base styles here */
+        body {
+          /* Example */
+          font-family: 'Avenir', Helvetica, Arial, sans-serif;
+        }
+        ```
+    4.  **Import CSS:** In `src/main.js`, add `import './assets/main.css'`.
+    5.  **Remove BootstrapVue:** Ensure all `import` and `Vue.use(BootstrapVue)` lines are removed from `src/main.js`. Remove Bootstrap CSS imports if any remain.
+    6.  **Refactor UI:** Start replacing BootstrapVue components (`<b-card>`, `<b-button>`, etc.) and classes in existing components (`App.vue`, `HomeView.vue`) with Tailwind utility classes. This will be an ongoing process during feature development. Remove the `src/components/ui` BootstrapVue wrappers unless you adapt them heavily for Tailwind.
+
+**Phase 5: Update Core App Structure & Navigation**
+
+*   **Objective:** Align `App.vue` and `BottomNavigation.vue` with the spec's structure.
+*   **Rationale:** Provides the main app shell and navigation defined in the spec.
+*   **Key Files:** `src/App.vue`, `src/components/ui/BottomNavigation.vue`.
+*   **Actions:**
+    1.  **Refactor `App.vue`:**
+        *   Remove the old mobile menu toggle logic/HTML if using only bottom nav for mobile.
+        *   Ensure it correctly renders the fixed footer (`BottomNavigation`) and the main content area using `<router-view>`.
+        *   Adapt styling (likely using Tailwind now).
+        *   Add placeholders/logic for the fixed header with logo and potentially info icons later.
+    2.  **Update `src/components/ui/BottomNavigation.vue`:**
+        *   Change the `<router-link>` `to` paths to match the *new* routes (e.g., `/music`, `/profile`, `/settings`).
+        *   Update the icons and labels to match the spec:
+            *   Music (Music Note icon) -> `/music`
+            *   Profile (Person icon) -> `/profile`
+            *   Settings (Gear icon) -> `/settings`
+            *   About/Contact (Info Symbol icon) -> `/settings` (or a dedicated `/about` if preferred, linking to the Settings->About tab).
+        *   Replace the placeholder SVG backgrounds with actual icons (e.g., using an icon library like Heroicons or Material Symbols, integrated via components or classes).
+
+**Phase 6: Verify/Update Minor Configs**
+
+*   **Objective:** Ensure PWA, Axios, and linting work with the new setup.
+*   **Rationale:** Housekeeping for a stable foundation.
+*   **Key Files:** `src/registerServiceWorker.js`, service files using Axios, `.eslintrc.js`.
+*   **Actions:**
+    1.  **PWA:** Review `src/registerServiceWorker.js`. The existing logic is likely fine, but ensure it integrates correctly with Vite's build output if you migrated. Test the PWA features (offline, install prompt).
+    2.  **Axios:** Check any existing Axios usage. Consider creating a centralized Axios instance (`src/plugins/axios.js`?) with base URLs and potentially interceptors for auth tokens later. Update any direct `axios` calls to use this instance.
+    3.  **Linting:** Ensure ESLint runs correctly with Vue 3 and your chosen config (`eslint . --ext .vue,.js`).
+
+---
+
+This detailed plan sets up the core **foundation**. You now have:
+
+*   Vue 3 with Vite (or Vue CLI if you skipped that part).
+*   Updated Router and Pinia.
+*   Expanded Supabase schema ready for data.
+*   A chosen UI framework (Tailwind example) integrated.
+*   Basic App shell and Navigation structure.
+
+The next step is to pick the first **vertical feature slice** (e.g., fetching and displaying albums in a simple list on the `/music` route for logged-in users, or building the basic album ranking UI) and start implementing it, adding specific Supabase service calls and UI components as needed.

@@ -1,8 +1,6 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
-
-Vue.use(VueRouter)
+import { BASE_URL } from '../utils/env'
 
 const routes = [
   {
@@ -14,21 +12,20 @@ const routes = [
     path: '/about',
     name: 'about',
     // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
+    // this generates a separate chunk for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
+    component: () => import('../views/AboutView.vue')
   },
   {
     path: '/song/:id',
     name: 'song-detail',
-    // route level code-splitting
-    component: () => import(/* webpackChunkName: "song-detail" */ '../views/SongDetailView.vue'),
+    component: () => import('../views/SongDetailView.vue'),
     props: true // Pass route params as component props
   },
   {
     path: '/admin/taylor-swift',
     name: 'taylor-swift-manager',
-    component: () => import(/* webpackChunkName: "taylor-swift-manager" */ '../components/admin/TaylorSwiftDataManager.vue'),
+    component: () => import('../components/admin/TaylorSwiftDataManager.vue'),
     meta: {
       requiresAuth: true // This route requires authentication
     }
@@ -36,18 +33,46 @@ const routes = [
   {
     path: '/visualizations/sunburst',
     name: 'sunburst-demo',
-    component: () => import(/* webpackChunkName: "sunburst-demo" */ '../views/SunburstDemo.vue')
+    component: () => import('../views/SunburstDemo.vue')
   },
   {
     path: '/visualizations/taylor-swift',
     name: 'taylor-swift-sunburst',
-    component: () => import(/* webpackChunkName: "taylor-swift-sunburst" */ '../views/TaylorSwiftSunburst.vue')
+    component: () => import('../views/TaylorSwiftSunburst.vue')
+  },
+  // New routes for the updated application structure
+  {
+    path: '/music',
+    name: 'dashboard',
+    component: () => import('../views/DashboardView.vue')
+  },
+  {
+    path: '/rank/albums',
+    name: 'album-ranking',
+    component: () => import('../views/AlbumRankingView.vue')
+  },
+  {
+    path: '/rank/songs',
+    name: 'song-ranking',
+    component: () => import('../views/SongRankingView.vue')
+  },
+  {
+    path: '/profile',
+    name: 'profile',
+    component: () => import('../views/ProfileView.vue'),
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/settings',
+    name: 'settings',
+    component: () => import('../views/SettingsView.vue')
   }
 ]
 
-const router = new VueRouter({
-  mode: 'history',
-  base: process.env.BASE_URL,
+const router = createRouter({
+  history: createWebHistory(BASE_URL),
   routes
 })
 

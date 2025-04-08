@@ -26,6 +26,8 @@
 </template>
 
 <script>
+import { ref, computed } from 'vue'
+
 export default {
   name: 'PullToRefresh',
   props: {
@@ -42,82 +44,90 @@ export default {
       default: false
     }
   },
-  data() {
-    return {
-      startY: 0,
-      currentY: 0,
-      isPulling: false,
-      isRefreshing: false,
-      pullDistance: 0,
-      indicatorHeight: 0
-    }
-  },
-  computed: {
-    contentStyle() {
-      if (!this.isPulling && !this.isRefreshing) return {};
+  setup(props, { emit }) {
+    const container = ref(null)
+    const startY = ref(0)
+    const currentY = ref(0)
+    const isPulling = ref(false)
+    const isRefreshing = ref(false)
+    const pullDistance = ref(0)
+    const indicatorHeight = ref(0)
+    
+    const contentStyle = computed(() => {
+      if (!isPulling.value && !isRefreshing.value) return {}
       
       return {
-        transform: `translateY(${this.indicatorHeight}px)`,
-        transition: this.isPulling ? 'none' : 'transform 0.3s ease'
-      };
-    }
-  },
-  methods: {
-    onTouchStart(e) {
-      if (this.disabled || this.isRefreshing) return;
+        transform: `translateY(${indicatorHeight.value}px)`,
+        transition: isPulling.value ? 'none' : 'transform 0.3s ease'
+      }
+    })
+    
+    const onTouchStart = (e) => {
+      if (props.disabled || isRefreshing.value) return
       
       // Only enable pull-to-refresh when at the top of the container
-      if (this.$el.scrollTop > 0) return;
+      if (container.value && container.value.scrollTop > 0) return
       
-      this.startY = e.touches[0].clientY;
-      this.isPulling = true;
-    },
+      startY.value = e.touches[0].clientY
+      isPulling.value = true
+    }
     
-    onTouchMove(e) {
-      if (!this.isPulling || this.disabled || this.isRefreshing) return;
+    const onTouchMove = (e) => {
+      if (!isPulling.value || props.disabled || isRefreshing.value) return
       
-      this.currentY = e.touches[0].clientY;
-      this.pullDistance = Math.max(0, this.currentY - this.startY);
+      currentY.value = e.touches[0].clientY
+      pullDistance.value = Math.max(0, currentY.value - startY.value)
       
       // Apply resistance to the pull
-      this.indicatorHeight = Math.min(
-        this.maxPullDistance,
-        this.pullDistance * 0.5
-      );
+      indicatorHeight.value = Math.min(
+        props.maxPullDistance,
+        pullDistance.value * 0.5
+      )
       
       // Prevent default scrolling when pulling
-      if (this.pullDistance > 0) {
-        e.preventDefault();
+      if (pullDistance.value > 0) {
+        e.preventDefault()
       }
-    },
+    }
     
-    onTouchEnd() {
-      if (!this.isPulling || this.disabled) return;
+    const onTouchEnd = () => {
+      if (!isPulling.value || props.disabled) return
       
-      if (this.pullDistance >= this.threshold) {
-        this.refresh();
+      if (pullDistance.value >= props.threshold) {
+        refresh()
       } else {
-        this.reset();
+        reset()
       }
-    },
+    }
     
-    refresh() {
-      this.isRefreshing = true;
-      this.indicatorHeight = 60; // Show indicator while refreshing
+    const refresh = () => {
+      isRefreshing.value = true
+      indicatorHeight.value = 60 // Show indicator while refreshing
       
       // Emit refresh event
-      this.$emit('refresh', this.onRefreshComplete);
-    },
+      emit('refresh', onRefreshComplete)
+    }
     
-    onRefreshComplete() {
-      this.isRefreshing = false;
-      this.reset();
-    },
+    const onRefreshComplete = () => {
+      isRefreshing.value = false
+      reset()
+    }
     
-    reset() {
-      this.isPulling = false;
-      this.pullDistance = 0;
-      this.indicatorHeight = 0;
+    const reset = () => {
+      isPulling.value = false
+      pullDistance.value = 0
+      indicatorHeight.value = 0
+    }
+    
+    return {
+      container,
+      isPulling,
+      isRefreshing,
+      indicatorHeight,
+      contentStyle,
+      onTouchStart,
+      onTouchMove,
+      onTouchEnd
     }
   }
 }

@@ -52,6 +52,24 @@ The Music Ranker database includes the following tables:
 - `playlists`: User-created playlists
 - `playlist_songs`: Junction table for songs in playlists
 
+### Schema Expansion (Vue 3 Migration)
+
+The `schema-expansion.sql` file contains additional tables and columns needed for the Vue 3 version of the application:
+
+- Extended `profiles` table with bio and profile image fields
+- `user_album_rankings`: For storing user album tier rankings
+- `user_song_rankings`: For storing user song tier rankings within album contexts
+- `user_premium_status`: For tracking premium subscription status
+- `ranking_history`: For maintaining historical snapshots of rankings
+
+To apply these changes:
+
+1. **IMPORTANT**: Back up your database first
+2. In the Supabase dashboard, navigate to the "SQL Editor" section
+3. Create a new query
+4. Copy and paste the contents of the `schema-expansion.sql` file
+5. Review the changes carefully before running the query
+
 Each table has appropriate Row Level Security (RLS) policies to ensure data privacy and security.
 
 ## Next Steps

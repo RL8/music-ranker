@@ -1,39 +1,95 @@
 <template>
-  <div id="app">
+  <div class="flex flex-col h-screen w-full">
     <!-- Fixed Header -->
-    <header class="app-header">
-      <div class="header-content">
-        <h1 class="app-title">Music Ranker</h1>
-        <button class="menu-toggle" @click="toggleMenu" aria-label="Toggle menu">
-          <span class="menu-icon"></span>
-        </button>
+    <header class="flex-none bg-white shadow-md z-50">
+      <div class="flex justify-between items-center p-4">
+        <div class="flex items-center">
+          <div class="w-8 h-8 mr-2 bg-green-600 rounded-full flex items-center justify-center text-white">
+            <span class="text-lg font-bold">M</span>
+          </div>
+          <h1 class="text-2xl font-medium m-0">Music Ranker</h1>
+        </div>
+        <div class="flex items-center">
+          <button 
+            class="block bg-transparent border-0 w-8 h-8 relative cursor-pointer md:hidden"
+            @click="toggleMenu" 
+            aria-label="Toggle menu"
+          >
+            <span class="menu-icon"></span>
+          </button>
+        </div>
       </div>
       <!-- Mobile Navigation Menu -->
-      <nav class="mobile-nav" :class="{ 'is-open': menuOpen }">
-        <router-link to="/" @click.native="closeMenu">Home</router-link>
-        <router-link to="/about" @click.native="closeMenu">About</router-link>
-        <router-link to="/admin/taylor-swift" @click.native="closeMenu">Taylor Swift Data</router-link>
-        <router-link to="/visualizations/sunburst" @click.native="closeMenu">Sunburst Visualization</router-link>
-        <router-link to="/visualizations/taylor-swift" @click.native="closeMenu">Taylor Swift Albums</router-link>
+      <nav 
+        class="flex flex-col bg-white overflow-hidden transition-all duration-300 md:flex-row md:max-h-full md:justify-center md:py-2"
+        :class="{ 'max-h-screen shadow-md': menuOpen, 'max-h-0': !menuOpen && !isMobileView }"
+      >
+        <router-link 
+          to="/music" 
+          @click="closeMenu"
+          class="block p-4 no-underline text-gray-800 font-bold border-b border-gray-100 hover:text-green-600 md:border-b-0 md:py-2 md:px-4"
+          :class="{ 'text-green-600': $route.path.startsWith('/music') }"
+        >
+          Music
+        </router-link>
+        <router-link 
+          to="/rank/albums" 
+          @click="closeMenu"
+          class="block p-4 no-underline text-gray-800 font-bold border-b border-gray-100 hover:text-green-600 md:border-b-0 md:py-2 md:px-4"
+          :class="{ 'text-green-600': $route.path === '/rank/albums' }"
+        >
+          Rank Albums
+        </router-link>
+        <router-link 
+          to="/rank/songs" 
+          @click="closeMenu"
+          class="block p-4 no-underline text-gray-800 font-bold border-b border-gray-100 hover:text-green-600 md:border-b-0 md:py-2 md:px-4"
+          :class="{ 'text-green-600': $route.path === '/rank/songs' }"
+        >
+          Rank Songs
+        </router-link>
+        <router-link 
+          to="/visualizations/taylor-swift" 
+          @click="closeMenu"
+          class="block p-4 no-underline text-gray-800 font-bold border-b border-gray-100 hover:text-green-600 md:border-b-0 md:py-2 md:px-4"
+          :class="{ 'text-green-600': $route.path === '/visualizations/taylor-swift' }"
+        >
+          Taylor Swift
+        </router-link>
+        <router-link 
+          to="/about" 
+          @click="closeMenu"
+          class="block p-4 no-underline text-gray-800 font-bold border-b border-gray-100 hover:text-green-600 md:border-b-0 md:py-2 md:px-4"
+          :class="{ 'text-green-600': $route.path === '/about' }"
+        >
+          About
+        </router-link>
       </nav>
     </header>
     
     <!-- Main Content Area (Scrollable) -->
     <pull-to-refresh 
       v-if="supportsPullToRefresh"
-      class="app-content" 
-      :class="{ 'has-bottom-nav': isMobileView }"
+      class="flex-1 overflow-y-auto p-4 -webkit-overflow-scrolling-touch" 
+      :class="{ 'pb-[calc(1rem+56px)]': isMobileView }"
       @refresh="handleRefresh"
     >
       <router-view/>
     </pull-to-refresh>
     
-    <main v-else class="app-content" :class="{ 'has-bottom-nav': isMobileView }">
+    <main 
+      v-else 
+      class="flex-1 overflow-y-auto p-4 -webkit-overflow-scrolling-touch"
+      :class="{ 'pb-[calc(1rem+56px)]': isMobileView }"
+    >
       <router-view/>
     </main>
     
     <!-- Fixed Footer (Hidden on Mobile) -->
-    <footer class="app-footer" :class="{ 'hidden-mobile': isMobileView }">
+    <footer 
+      class="flex-none bg-gray-100 border-t border-gray-200 p-4 text-center text-sm"
+      :class="{ 'hidden': isMobileView }"
+    >
       <div class="footer-content">
         <p>&copy; 2025 Music Ranker</p>
       </div>
@@ -48,9 +104,11 @@
 </template>
 
 <script>
-import BottomNavigation from './components/ui/BottomNavigation.vue';
-import OfflineStatus from './components/ui/OfflineStatus.vue';
-import PullToRefresh from './components/ui/PullToRefresh.vue';
+import { ref, onMounted, onUnmounted, computed } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
+import BottomNavigation from './components/ui/BottomNavigation.vue'
+import OfflineStatus from './components/ui/OfflineStatus.vue'
+import PullToRefresh from './components/ui/PullToRefresh.vue'
 
 export default {
   components: {
@@ -58,235 +116,96 @@ export default {
     OfflineStatus,
     PullToRefresh
   },
-  data() {
-    return {
-      menuOpen: false,
-      isMobileView: false,
-      windowWidth: 0,
-      supportsPullToRefresh: false
+  setup() {
+    const router = useRouter()
+    const route = useRoute()
+    
+    const menuOpen = ref(false)
+    const isMobileView = ref(false)
+    const windowWidth = ref(0)
+    const supportsPullToRefresh = ref(false)
+    
+    const checkScreenSize = () => {
+      windowWidth.value = window.innerWidth
+      isMobileView.value = windowWidth.value < 768
     }
-  },
-  created() {
-    window.addEventListener('resize', this.checkScreenSize);
-    this.checkScreenSize();
-  },
-  mounted() {
-    // Check if device supports touch events for pull-to-refresh
-    this.supportsPullToRefresh = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-  },
-  beforeDestroy() {
-    window.removeEventListener('resize', this.checkScreenSize);
-  },
-  methods: {
-    toggleMenu() {
-      this.menuOpen = !this.menuOpen;
+    
+    const toggleMenu = () => {
+      menuOpen.value = !menuOpen.value
       // Prevent body scrolling when menu is open
-      document.body.style.overflow = this.menuOpen ? 'hidden' : '';
-    },
-    closeMenu() {
-      this.menuOpen = false;
-      document.body.style.overflow = '';
-    },
-    checkScreenSize() {
-      this.windowWidth = window.innerWidth;
-      this.isMobileView = this.windowWidth < 768;
-    },
-    handleRefresh(completeCallback) {
+      document.body.style.overflow = menuOpen.value ? 'hidden' : ''
+    }
+    
+    const closeMenu = () => {
+      menuOpen.value = false
+      document.body.style.overflow = ''
+    }
+    
+    const handleRefresh = (completeCallback) => {
       // Reload current route data
-      const currentRoute = this.$router.currentRoute;
+      const currentRoute = router.currentRoute.value
       
-      // If the current component has a refresh method, call it
-      const currentComponent = this.$router.app.$children[0].$children[0];
+      // Just reload the route with a timestamp to force refresh
+      router.replace({
+        name: currentRoute.name,
+        params: { ...currentRoute.params },
+        query: { ...currentRoute.query, _t: Date.now() }
+      }).finally(() => {
+        setTimeout(completeCallback, 500)
+      })
+    }
+    
+    // Lifecycle hooks
+    onMounted(() => {
+      window.addEventListener('resize', checkScreenSize)
+      checkScreenSize()
       
-      if (currentComponent && typeof currentComponent.refresh === 'function') {
-        // Component has a refresh method
-        Promise.resolve(currentComponent.refresh())
-          .then(() => {
-            completeCallback();
-          })
-          .catch(() => {
-            completeCallback();
-          });
-      } else {
-        // No refresh method, just reload the route
-        this.$router.replace({
-          name: currentRoute.name,
-          params: { ...currentRoute.params },
-          query: { ...currentRoute.query, _t: Date.now() }
-        }).finally(() => {
-          setTimeout(completeCallback, 500);
-        });
-      }
+      // Check if device supports touch events for pull-to-refresh
+      supportsPullToRefresh.value = 'ontouchstart' in window || navigator.maxTouchPoints > 0
+    })
+    
+    onUnmounted(() => {
+      window.removeEventListener('resize', checkScreenSize)
+    })
+    
+    return {
+      menuOpen,
+      isMobileView,
+      windowWidth,
+      supportsPullToRefresh,
+      toggleMenu,
+      closeMenu,
+      checkScreenSize,
+      handleRefresh
     }
   }
 }
 </script>
 
-<style lang="scss">
-// Reset and base styles
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+<style>
+/* Custom styles that can't be easily replaced with Tailwind utilities */
+.menu-icon {
+  @apply block relative;
 }
 
-html, body {
-  height: 100%;
-  width: 100%;
-  overflow: hidden; // Prevent double scrollbars
+.menu-icon, .menu-icon:before, .menu-icon:after {
+  @apply w-full h-0.5 bg-gray-800 transition-all duration-300;
 }
 
-body {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  color: #2c3e50;
+.menu-icon:before, .menu-icon:after {
+  @apply content-[''] absolute left-0;
 }
 
-// Main app container
-#app {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  width: 100%;
+.menu-icon:before {
+  @apply -top-2;
 }
 
-// Fixed header
-.app-header {
-  flex: 0 0 auto;
-  background-color: #fff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  z-index: 100;
-  
-  .header-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem;
-  }
-  
-  .app-title {
-    font-size: 1.5rem;
-    margin: 0;
-  }
+.menu-icon:after {
+  @apply -bottom-2;
 }
 
-// Mobile menu toggle button
-.menu-toggle {
-  display: block;
-  background: none;
-  border: none;
-  width: 2rem;
-  height: 2rem;
-  position: relative;
-  cursor: pointer;
-  
-  .menu-icon {
-    display: block;
-    position: relative;
-    
-    &, &:before, &:after {
-      width: 100%;
-      height: 2px;
-      background-color: #2c3e50;
-      transition: all 0.3s ease;
-    }
-    
-    &:before, &:after {
-      content: '';
-      position: absolute;
-      left: 0;
-    }
-    
-    &:before {
-      top: -8px;
-    }
-    
-    &:after {
-      bottom: -8px;
-    }
-  }
-}
-
-// Mobile navigation
-.mobile-nav {
-  display: flex;
-  flex-direction: column;
-  background-color: #fff;
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.3s ease;
-  
-  &.is-open {
-    max-height: 100vh;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-  
-  a {
-    display: block;
-    padding: 1rem;
-    text-decoration: none;
-    color: #2c3e50;
-    font-weight: bold;
-    border-bottom: 1px solid #eee;
-    
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
-}
-
-// Main content area (scrollable)
-.app-content {
-  flex: 1 1 auto;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch; // Smooth scrolling on iOS
-  padding: 1rem;
-  
-  &.has-bottom-nav {
-    padding-bottom: calc(1rem + 56px); // Add space for bottom nav
-  }
-}
-
-// Fixed footer
-.app-footer {
-  flex: 0 0 auto;
-  background-color: #f8f9fa;
-  border-top: 1px solid #e9ecef;
-  padding: 1rem;
-  text-align: center;
-  font-size: 0.875rem;
-  
-  &.hidden-mobile {
-    display: none;
-  }
-}
-
-// Active state for touch elements
-.touch-active {
-  background-color: rgba(0, 0, 0, 0.05);
-}
-
-// Media queries for larger screens
-@media (min-width: 768px) {
-  .menu-toggle {
-    display: none;
-  }
-  
-  .mobile-nav {
-    max-height: none;
-    flex-direction: row;
-    justify-content: center;
-    padding: 0.5rem 0;
-    
-    a {
-      border-bottom: none;
-      padding: 0.5rem 1rem;
-    }
-  }
-  
-  .app-footer.hidden-mobile {
-    display: block;
-  }
+/* Add -webkit-overflow-scrolling-touch as a utility since Tailwind doesn't have it */
+.-webkit-overflow-scrolling-touch {
+  -webkit-overflow-scrolling: touch;
 }
 </style>
