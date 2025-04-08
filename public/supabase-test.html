@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Supabase Connection Test</title>
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      line-height: 1.6;
+    }
+    h1 {
+      color: #3ECF8E;
+      border-bottom: 2px solid #3ECF8E;
+      padding-bottom: 10px;
+    }
+    .container {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .card {
+      border: 1px solid #e1e1e1;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .card h2 {
+      margin-top: 0;
+      color: #333;
+    }
+    .success {
+      color: #3ECF8E;
+      font-weight: bold;
+    }
+    .error {
+      color: #e53935;
+      font-weight: bold;
+    }
+    .info {
+      color: #2196F3;
+      font-weight: bold;
+    }
+    pre {
+      background-color: #f5f5f5;
+      padding: 10px;
+      border-radius: 4px;
+      overflow-x: auto;
+    }
+    button {
+      background-color: #3ECF8E;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.3s;
+    }
+    button:hover {
+      background-color: #2eba7a;
+    }
+    .test-result {
+      margin-top: 10px;
+    }
+    .config-info {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .config-item {
+      display: flex;
+      align-items: center;
+    }
+    .config-item span:first-child {
+      font-weight: bold;
+      width: 120px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Supabase Connection Test</h1>
+  
+  <div class="container">
+    <div class="card">
+      <h2>Configuration</h2>
+      <div class="config-info">
+        <div class="config-item">
+          <span>URL:</span>
+          <span id="supabase-url">Loading...</span>
+        </div>
+        <div class="config-item">
+          <span>Anon Key:</span>
+          <span id="supabase-key">Loading...</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="card">
+      <h2>Test Connection</h2>
+      <button id="test-connection">Run Basic Connection Test</button>
+      <div id="connection-result" class="test-result"></div>
+    </div>
+    
+    <div class="card">
+      <h2>Test Tables</h2>
+      <button id="test-tables">Check Database Tables</button>
+      <div id="tables-result" class="test-result"></div>
+    </div>
+    
+    <div class="card">
+      <h2>Test Auth</h2>
+      <button id="test-auth">Test Authentication</button>
+      <div id="auth-result" class="test-result"></div>
+    </div>
+  </div>
+  
+  <script>
+    // Get environment variables from URL parameters (for testing only)
+    const urlParams = new URLSearchParams(window.location.search);
+    let supabaseUrl = urlParams.get('url');
+    let supabaseKey = urlParams.get('key');
+    
+    // If not provided in URL, use the ones from the app's environment
+    if (!supabaseUrl) {
+      supabaseUrl = process.env.VUE_APP_SUPABASE_URL;
+    }
+    
+    if (!supabaseKey) {
+      supabaseKey = process.env.VUE_APP_SUPABASE_ANON_KEY;
+    }
+    
+    // Display configuration
+    document.getElementById('supabase-url').textContent = supabaseUrl || 'Not configured';
+    document.getElementById('supabase-key').textContent = supabaseKey ? 
+      `${supabaseKey.substring(0, 10)}...${supabaseKey.substring(supabaseKey.length - 5)}` : 
+      'Not configured';
+    
+    // Initialize Supabase client
+    let supabase;
+    try {
+      supabase = supabaseKey && supabaseUrl ? 
+        window.supabase.createClient(supabaseUrl, supabaseKey) : 
+        null;
+    } catch (error) {
+      console.error('Error initializing Supabase client:', error);
+    }
+    
+    // Test connection
+    document.getElementById('test-connection').addEventListener('click', async () => {
+      const resultElement = document.getElementById('connection-result');
+      resultElement.innerHTML = '<span class="info">Testing connection...</span>';
+      
+      if (!supabase) {
+        resultElement.innerHTML = '<span class="error">Error: Supabase client not initialized. Check configuration.</span>';
+        return;
+      }
+      
+      try {
+        // Simple ping test - try to access a non-existent table
+        const { error } = await supabase
+          .from('_connection_test')
+          .select('*')
+          .limit(1);
+        
+        if (error && error.code === '42P01') {
+          // This is expected - table doesn't exist but connection works
+          resultElement.innerHTML = '<span class="success">Connection successful!</span>';
+        } else if (error) {
+          resultElement.innerHTML = `
+            <span class="error">Connection error: ${error.message}</span>
+            <pre>${JSON.stringify(error, null, 2)}</pre>
+          `;
+        } else {
+          resultElement.innerHTML = '<span class="success">Connection successful!</span>';
+        }
+      } catch (error) {
+        resultElement.innerHTML = `
+          <span class="error">Exception during connection test: ${error.message}</span>
+          <pre>${JSON.stringify(error, null, 2)}</pre>
+        `;
+      }
+    });
+    
+    // Test tables
+    document.getElementById('test-tables').addEventListener('click', async () => {
+      const resultElement = document.getElementById('tables-result');
+      resultElement.innerHTML = '<span class="info">Checking tables...</span>';
+      
+      if (!supabase) {
+        resultElement.innerHTML = '<span class="error">Error: Supabase client not initialized. Check configuration.</span>';
+        return;
+      }
+      
+      try {
+        const tablesToCheck = ['songs', 'artists', 'albums', 'user_song_ratings', 'playlists'];
+        let results = '<ul>';
+        
+        for (const table of tablesToCheck) {
+          try {
+            const { data, error } = await supabase
+              .from(table)
+              .select('*')
+              .limit(1);
+            
+            if (error) {
+              if (error.code === '42P01') {
+                results += `<li><span class="error">Table "${table}" does not exist</span></li>`;
+              } else {
+                results += `<li><span class="error">Error accessing "${table}": ${error.message}</span></li>`;
+              }
+            } else {
+              results += `<li><span class="success">Table "${table}" exists and is accessible (${data.length} rows retrieved)</span></li>`;
+            }
+          } catch (e) {
+            results += `<li><span class="error">Exception when checking "${table}": ${e.message}</span></li>`;
+          }
+        }
+        
+        results += '</ul>';
+        resultElement.innerHTML = results;
+      } catch (error) {
+        resultElement.innerHTML = `
+          <span class="error">Exception during table test: ${error.message}</span>
+          <pre>${JSON.stringify(error, null, 2)}</pre>
+        `;
+      }
+    });
+    
+    // Test auth
+    document.getElementById('test-auth').addEventListener('click', async () => {
+      const resultElement = document.getElementById('auth-result');
+      resultElement.innerHTML = '<span class="info">Testing authentication...</span>';
+      
+      if (!supabase) {
+        resultElement.innerHTML = '<span class="error">Error: Supabase client not initialized. Check configuration.</span>';
+        return;
+      }
+      
+      try {
+        const { data, error } = await supabase.auth.getSession();
+        
+        if (error) {
+          resultElement.innerHTML = `
+            <span class="error">Auth error: ${error.message}</span>
+            <pre>${JSON.stringify(error, null, 2)}</pre>
+          `;
+        } else {
+          resultElement.innerHTML = `
+            <span class="success">Auth configuration is working</span>
+            <p>Session: ${data.session ? 'Active' : 'None (expected for new connection)'}</p>
+          `;
+        }
+      } catch (error) {
+        resultElement.innerHTML = `
+          <span class="error">Exception during auth test: ${error.message}</span>
+          <pre>${JSON.stringify(error, null, 2)}</pre>
+        `;
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,225 @@
+songId,canonicalTitle,originalEraId,notes
+SONG_READY_FOR_IT,"...Ready for It?","ERA_REPUTATION",
+SONG_22,"22","ERA_RED",
+SONG_A_PERFECTLY_GOOD_HEART,"A Perfectly Good Heart","ERA_TS",
+SONG_A_PLACE_IN_THIS_WORLD,"A Place in This World","ERA_TS",
+SONG_AFTERGLOW,"Afterglow","ERA_LOVER",
+SONG_ALL_TOO_WELL,"All Too Well","ERA_RED",
+SONG_ALL_YOU_HAD_TO_DO_WAS_STAY,"All You Had to Do Was Stay","ERA_1989",
+SONG_ANTI_HERO,"Anti-Hero","ERA_MIDNIGHTS",
+SONG_AUGUST,"august","ERA_FOLKLORE",
+SONG_BABE,"Babe","ERA_RED","From The Vault"
+SONG_BACK_TO_DECEMBER,"Back to December","ERA_SPEAK_NOW",
+SONG_BAD_BLOOD,"Bad Blood","ERA_1989",
+SONG_BEAUTIFUL_EYES,"Beautiful Eyes","ERA_FEARLESS",
+SONG_BEGIN_AGAIN,"Begin Again","ERA_RED",
+SONG_BEJEWELED,"Bejeweled","ERA_MIDNIGHTS",
+SONG_BETTE_DAVIS_EYES,"Bette Davis Eyes","ERA_SPEAK_NOW","Cover"
+SONG_BETTER_MAN,"Better Man","ERA_RED","From The Vault"
+SONG_BETTER_THAN_REVENGE,"Better Than Revenge","ERA_SPEAK_NOW",
+SONG_BETTY,"betty","ERA_FOLKLORE",
+SONG_BLANK_SPACE,"Blank Space","ERA_1989",
+SONG_BREATHE,"Breathe","ERA_FEARLESS",
+SONG_BUT_DADDY_I_LOVE_HIM,"But Daddy I Love Him","ERA_TTPD",
+SONG_BYE_BYE_BABY,"Bye Bye Baby","ERA_FEARLESS","From The Vault"
+SONG_CALL_IT_WHAT_YOU_WANT,"Call It What You Want","ERA_REPUTATION",
+SONG_CARDIGAN,"cardigan","ERA_FOLKLORE",
+SONG_CASSANDRA,"Cassandra","ERA_TTPD",
+SONG_CASTLES_CRUMBLING,"Castles Crumbling","ERA_SPEAK_NOW","From The Vault"
+SONG_CHAMPAGNE_PROBLEMS,"champagne problems","ERA_EVERMORE",
+SONG_CHANGE,"Change","ERA_FEARLESS",
+SONG_CHLOE_SAM_SOPHIA_MARCUS,"Chloe or Sam or Sophia or Marcus","ERA_TTPD",
+SONG_CLARA_BOW,"Clara Bow","ERA_TTPD",
+SONG_CLEAN,"Clean","ERA_1989",
+SONG_CLOSURE,"closure","ERA_EVERMORE",
+SONG_COLD_AS_YOU,"Cold as You","ERA_TS",
+SONG_COME_BACK_BE_HERE,"Come Back… Be Here","ERA_RED","Original Deluxe Track"
+SONG_COME_IN_WITH_THE_RAIN,"Come In With the Rain","ERA_FEARLESS","Original Platinum Track"
+SONG_CONEY_ISLAND,"coney island","ERA_EVERMORE",
+SONG_CORNELIA_STREET,"Cornelia Street","ERA_LOVER",
+SONG_COWBOY_LIKE_ME,"cowboy like me","ERA_EVERMORE",
+SONG_CRUEL_SUMMER,"Cruel Summer","ERA_LOVER",
+SONG_DANCING_WITH_OUR_HANDS_TIED,"Dancing With Our Hands Tied","ERA_REPUTATION",
+SONG_DAYLIGHT,"Daylight","ERA_LOVER",
+SONG_DEAR_JOHN,"Dear John","ERA_SPEAK_NOW",
+SONG_DEATH_BY_A_THOUSAND_CUTS,"Death by a Thousand Cuts","ERA_LOVER",
+SONG_DELICATE,"Delicate","ERA_REPUTATION",
+SONG_DONT_BLAME_ME,"Don’t Blame Me","ERA_REPUTATION",
+SONG_DONT_YOU,"Don’t You","ERA_FEARLESS","From The Vault"
+SONG_DOROTHEA,"dorothea","ERA_EVERMORE",
+SONG_DOWN_BAD,"Down Bad","ERA_TTPD",
+SONG_DRESS,"Dress","ERA_REPUTATION",
+SONG_DROPS_OF_JUPITER,"Drops of Jupiter","ERA_SPEAK_NOW","Cover"
+SONG_ELECTRIC_TOUCH,"Electric Touch","ERA_SPEAK_NOW","From The Vault"
+SONG_ENCHANTED,"Enchanted","ERA_SPEAK_NOW",
+SONG_END_GAME,"End Game","ERA_REPUTATION",
+SONG_EPIPHANY,"epiphany","ERA_FOLKLORE",
+SONG_EVERMORE,"evermore","ERA_EVERMORE",
+SONG_EVERYTHING_HAS_CHANGED,"Everything Has Changed","ERA_RED",
+SONG_EXILE,"exile","ERA_FOLKLORE",
+SONG_FALSE_GOD,"False God","ERA_LOVER",
+SONG_FEARLESS,"Fearless","ERA_FEARLESS",
+SONG_FIFTEEN,"Fifteen","ERA_FEARLESS",
+SONG_FLORIDA,"Florida!!!","ERA_TTPD",
+SONG_FOOLISH_ONE,"Foolish One","ERA_SPEAK_NOW","From The Vault"
+SONG_FOREVER_AND_ALWAYS,"Forever & Always","ERA_FEARLESS",
+SONG_FOREVER_WINTER,"Forever Winter","ERA_RED","From The Vault"
+SONG_FORTNIGHT,"Fortnight","ERA_TTPD",
+SONG_FRESH_OUT_THE_SLAMMER,"Fresh Out the Slammer","ERA_TTPD",
+SONG_GETAWAY_CAR,"Getaway Car","ERA_REPUTATION",
+SONG_GIRL_AT_HOME,"Girl at Home","ERA_RED","Original Deluxe Track"
+SONG_GOLD_RUSH,"gold rush","ERA_EVERMORE",
+SONG_GORGEOUS,"Gorgeous","ERA_REPUTATION",
+SONG_GUILTY_AS_SIN,"Guilty as Sin?","ERA_TTPD",
+SONG_HAPPINESS,"happiness","ERA_EVERMORE",
+SONG_HAUNTED,"Haunted","ERA_SPEAK_NOW",
+SONG_HEY_STEPHEN,"Hey Stephen","ERA_FEARLESS",
+SONG_HOAX,"hoax","ERA_FOLKLORE",
+SONG_HOLY_GROUND,"Holy Ground","ERA_RED",
+SONG_HOW_DID_IT_END,"How Did It End?","ERA_TTPD",
+SONG_HOW_YOU_GET_THE_GIRL,"How You Get the Girl","ERA_1989",
+SONG_I_ALMOST_DO,"I Almost Do","ERA_RED",
+SONG_I_BET_YOU_THINK_ABOUT_ME,"I Bet You Think About Me","ERA_RED","From The Vault"
+SONG_I_CAN_DO_IT_WITH_BROKEN_HEART,"I Can Do It With a Broken Heart","ERA_TTPD",
+SONG_I_CAN_FIX_HIM,"I Can Fix Him (No Really I Can)","ERA_TTPD",
+SONG_I_CAN_SEE_YOU,"I Can See You","ERA_SPEAK_NOW","From The Vault"
+SONG_I_DID_SOMETHING_BAD,"I Did Something Bad","ERA_REPUTATION",
+SONG_I_FORGOT_THAT_YOU_EXISTED,"I Forgot That You Existed","ERA_LOVER",
+SONG_I_HATE_IT_HERE,"I Hate It Here","ERA_TTPD",
+SONG_I_KNEW_YOU_WERE_TROUBLE,"I Knew You Were Trouble.","ERA_RED",
+SONG_I_KNOW_PLACES,"I Know Places","ERA_1989",
+SONG_I_LOOK_IN_PEOPLES_WINDOWS,"I Look in People’s Windows","ERA_TTPD",
+SONG_I_THINK_HE_KNOWS,"I Think He Knows","ERA_LOVER",
+SONG_I_WANT_YOU_BACK,"I Want You Back","ERA_SPEAK_NOW","Cover"
+SONG_I_WISH_YOU_WOULD,"I Wish You Would","ERA_1989",
+SONG_IF_THIS_WAS_A_MOVIE,"If This Was a Movie","ERA_SPEAK_NOW","Original Deluxe Track"
+SONG_ILLICIT_AFFAIRS,"illicit affairs","ERA_FOLKLORE",
+SONG_IM_ONLY_ME_WHEN_IM_WITH_YOU,"I’m Only Me When I’m With You","ERA_TS",
+SONG_IMGONNAGETYOUBACK,"imgonnagetyouback","ERA_TTPD",
+SONG_INNOCENT,"Innocent","ERA_SPEAK_NOW",
+SONG_INVISIBLE,"Invisible","ERA_TS",
+SONG_INVISIBLE_STRING,"invisible string","ERA_FOLKLORE",
+SONG_IS_IT_OVER_NOW,"Is It Over Now?","ERA_1989","From The Vault"
+SONG_ITS_NICE_TO_HAVE_A_FRIEND,"It’s Nice to Have a Friend","ERA_LOVER",
+SONG_IVY,"ivy","ERA_EVERMORE",
+SONG_JUMP_THEN_FALL,"Jump Then Fall","ERA_FEARLESS","Original Platinum Track"
+SONG_KARMA,"Karma","ERA_MIDNIGHTS",
+SONG_KING_OF_MY_HEART,"King of My Heart","ERA_REPUTATION",
+SONG_LABYRINTH,"Labyrinth","ERA_MIDNIGHTS",
+SONG_LAST_KISS,"Last Kiss","ERA_SPEAK_NOW",
+SONG_LAVENDER_HAZE,"Lavender Haze","ERA_MIDNIGHTS",
+SONG_LOML,"loml","ERA_TTPD",
+SONG_LONDON_BOY,"London Boy","ERA_LOVER",
+SONG_LONG_LIVE,"Long Live","ERA_SPEAK_NOW",
+SONG_LONG_STORY_SHORT,"long story short","ERA_EVERMORE",
+SONG_LOOK_WHAT_YOU_MADE_ME_DO,"Look What You Made Me Do","ERA_REPUTATION",
+SONG_LOVE_STORY,"Love Story","ERA_FEARLESS",
+SONG_LOVER,"Lover","ERA_LOVER",
+SONG_MAD_WOMAN,"mad woman","ERA_FOLKLORE",
+SONG_MARJORIE,"marjorie","ERA_EVERMORE",
+SONG_MAROON,"Maroon","ERA_MIDNIGHTS",
+SONG_MARYS_SONG,"Mary’s Song (Oh My My My)","ERA_TS",
+SONG_MASTERMIND,"Mastermind","ERA_MIDNIGHTS",
+SONG_ME,"ME!","ERA_LOVER",
+SONG_MEAN,"Mean","ERA_SPEAK_NOW",
+SONG_MESSAGE_IN_A_BOTTLE,"Message in a Bottle","ERA_RED","From The Vault"
+SONG_MIDNIGHT_RAIN,"Midnight Rain","ERA_MIDNIGHTS",
+SONG_MINE,"Mine","ERA_SPEAK_NOW",
+SONG_MIRRORBALL,"mirrorball","ERA_FOLKLORE",
+SONG_MISS_AMERICANA,"Miss Americana & the Heartbreak Prince","ERA_LOVER",
+SONG_MR_PERFECTLY_FINE,"Mr. Perfectly Fine","ERA_FEARLESS","From The Vault"
+SONG_MY_BOY_ONLY_BREAKS_TOYS,"My Boy Only Breaks His Favorite Toys","ERA_TTPD",
+SONG_MY_TEARS_RICOCHET,"my tears ricochet","ERA_FOLKLORE",
+SONG_NEVER_GROW_UP,"Never Grow Up","ERA_SPEAK_NOW",
+SONG_NEW_ROMANTICS,"New Romantics","ERA_1989","Original Deluxe Track"
+SONG_NEW_YEARS_DAY,"New Year’s Day","ERA_REPUTATION",
+SONG_NO_BODY_NO_CRIME,"no body, no crime","ERA_EVERMORE",
+SONG_NOTHING_NEW,"Nothing New","ERA_RED","From The Vault"
+SONG_NOW_THAT_WE_DONT_TALK,"Now That We Don’t Talk","ERA_1989","From The Vault"
+SONG_OUR_SONG,"Our Song","ERA_TS",
+SONG_OURS,"Ours","ERA_SPEAK_NOW","Original Deluxe Track"
+SONG_OUT_OF_THE_WOODS,"Out of the Woods","ERA_1989",
+SONG_PAPER_RINGS,"Paper Rings","ERA_LOVER",
+SONG_PEACE,"peace","ERA_FOLKLORE",
+SONG_PETER,"Peter","ERA_TTPD",
+SONG_PICTURE_TO_BURN,"Picture to Burn","ERA_TS",
+SONG_QUESTION,"Question…?","ERA_MIDNIGHTS",
+SONG_RED,"Red","ERA_RED",
+SONG_ROBIN,"Robin","ERA_TTPD",
+SONG_RONAN,"Ronan","ERA_RED","Original Standalone Single"
+SONG_RUN,"Run","ERA_RED","From The Vault"
+SONG_SAD_BEAUTIFUL_TRAGIC,"Sad Beautiful Tragic","ERA_RED",
+SONG_SAY_DONT_GO,"Say Don’t Go","ERA_1989","From The Vault"
+SONG_SEVEN,"seven","ERA_FOLKLORE",
+SONG_SHAKE_IT_OFF,"Shake It Off","ERA_1989",
+SONG_SHOULDVE_SAID_NO,"Should’ve Said No","ERA_TS",
+SONG_SLUT,"“Slut!”","ERA_1989","From The Vault"
+SONG_SNOW_ON_THE_BEACH,"Snow on the Beach","ERA_MIDNIGHTS",
+SONG_SO_HIGH_SCHOOL,"So High School","ERA_TTPD",
+SONG_SO_IT_GOES,"So It Goes…","ERA_REPUTATION",
+SONG_SO_LONG_LONDON,"So Long, London","ERA_TTPD",
+SONG_SOON_YOULL_GET_BETTER,"Soon You’ll Get Better","ERA_LOVER",
+SONG_SPARKS_FLY,"Sparks Fly","ERA_SPEAK_NOW",
+SONG_SPEAK_NOW,"Speak Now","ERA_SPEAK_NOW",
+SONG_STARLIGHT,"Starlight","ERA_RED",
+SONG_STATE_OF_GRACE,"State of Grace","ERA_RED",
+SONG_STAY_BEAUTIFUL,"Stay Beautiful","ERA_TS",
+SONG_STAY_STAY_STAY,"Stay Stay Stay","ERA_RED",
+SONG_STYLE,"Style","ERA_1989",
+SONG_SUBURBAN_LEGENDS,"Suburban Legends","ERA_1989","From The Vault"
+SONG_SUPERMAN,"Superman","ERA_SPEAK_NOW","Original Deluxe Track"
+SONG_SUPERSTAR,"Superstar","ERA_FEARLESS","Original Platinum Track"
+SONG_SWEET_NOTHING,"Sweet Nothing","ERA_MIDNIGHTS",
+SONG_TEARDROPS_ON_MY_GUITAR,"Teardrops on My Guitar","ERA_TS",
+SONG_TELL_ME_WHY,"Tell Me Why","ERA_FEARLESS",
+SONG_THANK_YOU_AIMEE,"thanK you aIMee","ERA_TTPD",
+SONG_THATS_WHEN,"That’s When","ERA_FEARLESS","From The Vault"
+SONG_THE_1,"the 1","ERA_FOLKLORE",
+SONG_THE_ALBATROSS,"The Albatross","ERA_TTPD",
+SONG_THE_ALCHEMY,"The Alchemy","ERA_TTPD",
+SONG_THE_ARCHER,"The Archer","ERA_LOVER",
+SONG_THE_BEST_DAY,"The Best Day","ERA_FEARLESS",
+SONG_THE_BLACK_DOG,"The Black Dog","ERA_TTPD",
+SONG_THE_BOLTER,"The Bolter","ERA_TTPD",
+SONG_THE_LAST_GREAT_AMERICAN_DYNASTY,"the last great american dynasty","ERA_FOLKLORE",
+SONG_THE_LAST_TIME,"The Last Time","ERA_RED",
+SONG_THE_LAKES,"the lakes","ERA_FOLKLORE","Original Deluxe Track"
+SONG_THE_LUCKY_ONE,"The Lucky One","ERA_RED",
+SONG_THE_MAN,"The Man","ERA_LOVER",
+SONG_THE_MANUSCRIPT,"The Manuscript","ERA_TTPD",
+SONG_THE_MOMENT_I_KNEW,"The Moment I Knew","ERA_RED","Original Deluxe Track"
+SONG_THE_OTHER_SIDE_OF_THE_DOOR,"The Other Side of the Door","ERA_FEARLESS","Original Platinum Track"
+SONG_THE_OUTSIDE,"The Outside","ERA_TS",
+SONG_THE_PROPHECY,"The Prophecy","ERA_TTPD",
+SONG_THE_SMALLEST_MAN,"The Smallest Man Who Ever Lived","ERA_TTPD",
+SONG_THE_STORY_OF_US,"The Story of Us","ERA_SPEAK_NOW",
+SONG_THE_TORTURED_POETS_DEPARTMENT,"The Tortured Poets Department","ERA_TTPD",
+SONG_THE_VERY_FIRST_NIGHT,"The Very First Night","ERA_RED","From The Vault"
+SONG_THE_WAY_I_LOVED_YOU,"The Way I Loved You","ERA_FEARLESS",
+SONG_THIS_IS_ME_TRYING,"this is me trying","ERA_FOLKLORE",
+SONG_THIS_IS_WHY_WE_CANT_HAVE_NICE_THINGS,"This Is Why We Can’t Have Nice Things","ERA_REPUTATION",
+SONG_THIS_LOVE,"This Love","ERA_1989",
+SONG_TIED_TOGETHER_WITH_A_SMILE,"Tied Together With a Smile","ERA_TS",
+SONG_TIM_MCGRAW,"Tim McGraw","ERA_TS",
+SONG_TIMELESS,"Timeless","ERA_SPEAK_NOW","From The Vault"
+SONG_TIS_THE_DAMN_SEASON,"’tis the damn season","ERA_EVERMORE",
+SONG_TODAY_WAS_A_FAIRYTALE,"Today Was a Fairytale","ERA_FEARLESS","Original Soundtrack Single"
+SONG_TOLERATE_IT,"tolerate it","ERA_EVERMORE",
+SONG_TREACHEROUS,"Treacherous","ERA_RED",
+SONG_UNTOUCHABLE,"Untouchable","ERA_FEARLESS","Cover - Original Platinum Track"
+SONG_VIGILANTE_SHIT,"Vigilante Shit","ERA_MIDNIGHTS",
+SONG_WE_ARE_NEVER_EVER_GETTING_BACK_TOGETHER,"We Are Never Ever Getting Back Together","ERA_RED",
+SONG_WE_WERE_HAPPY,"We Were Happy","ERA_FEARLESS","From The Vault"
+SONG_WELCOME_TO_NEW_YORK,"Welcome to New York","ERA_1989",
+SONG_WHEN_EMMA_FALLS_IN_LOVE,"When Emma Falls in Love","ERA_SPEAK_NOW","From The Vault"
+SONG_WHITE_HORSE,"White Horse","ERA_FEARLESS",
+SONG_WHOS_AFRAID_OF_LITTLE_OLD_ME,"Who’s Afraid of Little Old Me?","ERA_TTPD",
+SONG_WILDEST_DREAMS,"Wildest Dreams","ERA_1989",
+SONG_WILLOW,"willow","ERA_EVERMORE",
+SONG_WONDERLAND,"Wonderland","ERA_1989","Original Deluxe Track"
+SONG_YOU_ALL_OVER_ME,"You All Over Me","ERA_FEARLESS","From The Vault"
+SONG_YOU_ARE_IN_LOVE,"You Are in Love","ERA_1989","Original Deluxe Track"
+SONG_YOU_BELONG_WITH_ME,"You Belong With Me","ERA_FEARLESS",
+SONG_YOU_NEED_TO_CALM_DOWN,"You Need to Calm Down","ERA_LOVER",
+SONG_YOURE_NOT_SORRY,"You’re Not Sorry","ERA_FEARLESS",
+SONG_YOURE_ON_YOUR_OWN_KID,"You’re on Your Own, Kid","ERA_MIDNIGHTS",

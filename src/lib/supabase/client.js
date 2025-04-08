@@ -7,10 +7,15 @@ import { createClient } from '@supabase/supabase-js'
  * The client is used throughout the application for database operations.
  */
 
-// Supabase connection details
-// Using direct values from .env.local
-const supabaseUrl = 'https://zfujellgwbznmosjuenq.supabase.co'
-const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpmdWplbGxnd2J6bm1vc2p1ZW5xIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM5ODM1MzYsImV4cCI6MjA1OTU1OTUzNn0.Yn3SJ7Vxnyv__XF6LPUIAuwOzOnRcRy47s5LA_9NlcQ'
+// Get environment variables from .env file
+// Vue CLI uses the VUE_APP_ prefix for environment variables
+const supabaseUrl = process.env.VUE_APP_SUPABASE_URL
+const supabaseAnonKey = process.env.VUE_APP_SUPABASE_ANON_KEY
+
+// Validate configuration
+if (!supabaseUrl || !supabaseAnonKey) {
+  console.warn('Supabase URL or Anon Key is missing. Please check your .env file.')
+}
 
 // Create the Supabase client
 const supabase = createClient(supabaseUrl, supabaseAnonKey, {
