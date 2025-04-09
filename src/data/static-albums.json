@@ -1,0 +1,13 @@
+[
+  { "id": "album-ts", "title": "Taylor Swift", "coverImageUrl": "/img/covers/ts.jpg", "year": 2006, "color": "#7fb1b3" },
+  { "id": "album-fearless", "title": "Fearless (Taylor's Version)", "coverImageUrl": "/img/covers/fearless.jpg", "year": 2008, "color": "#e0c16f" },
+  { "id": "album-speaknow", "title": "Speak Now (Taylor's Version)", "coverImageUrl": "/img/covers/speaknow.jpg", "year": 2010, "color": "#a277a6" },
+  { "id": "album-red", "title": "Red (Taylor's Version)", "coverImageUrl": "/img/covers/red.jpg", "year": 2012, "color": "#c25d5e" },
+  { "id": "album-1989", "title": "1989 (Taylor's Version)", "coverImageUrl": "/img/covers/1989.jpg", "year": 2014, "color": "#a7c7dc" },
+  { "id": "album-reputation", "title": "Reputation", "coverImageUrl": "/img/covers/reputation.jpg", "year": 2017, "color": "#252525" },
+  { "id": "album-lover", "title": "Lover", "coverImageUrl": "/img/covers/lover.jpg", "year": 2019, "color": "#f8c1d9" },
+  { "id": "album-folklore", "title": "Folklore", "coverImageUrl": "/img/covers/folklore.jpg", "year": 2020, "color": "#c0c0c0" },
+  { "id": "album-evermore", "title": "Evermore", "coverImageUrl": "/img/covers/evermore.jpg", "year": 2020, "color": "#8d6a58" },
+  { "id": "album-midnights", "title": "Midnights", "coverImageUrl": "/img/covers/midnights.jpg", "year": 2022, "color": "#264b5e" },
+  { "id": "album-tortured", "title": "The Tortured Poets Department", "coverImageUrl": "/img/covers/tortured.jpg", "year": 2024, "color": "#404040" }
+]

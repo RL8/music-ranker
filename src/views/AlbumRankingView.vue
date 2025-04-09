@@ -36,104 +36,162 @@
       </div>
     </div>
     
-    <!-- Tier Layout Placeholders -->
+    <!-- Tier Layout with Drag and Drop -->
     <div class="mb-8 space-y-6">
       <!-- Tier 1 -->
       <div class="border-2 border-green-500 rounded-lg p-4 bg-green-50">
         <h2 class="text-xl font-semibold mb-3 text-green-700">Tier 1</h2>
-        <div class="flex justify-center">
-          <div 
-            class="w-24 h-24 bg-gray-200 rounded-lg flex items-center justify-center shadow-sm border-2 border-dashed border-green-300 hover:bg-gray-100 transition-colors cursor-pointer relative"
-          >
-            <span class="text-gray-500 font-medium">Rank #1</span>
-            <div class="absolute -top-2 -right-2 bg-white text-xs px-2 py-1 rounded shadow-md">
-              Top Album
+        <draggable
+          v-model="rankingStore.rankedTiers.tier1"
+          :component-data="{ 'data-tier': 'tier1' }"
+          v-bind="dragOptions"
+          item-key="id"
+          class="flex justify-center min-h-[100px] items-center"
+          :move="checkMove"
+          @change="onDragChange"
+        >
+          <template #item="{element}">
+            <div class="album-item flex-shrink-0 w-24 h-24 rounded-lg flex items-center justify-center shadow-sm hover:shadow-md transition-all cursor-grab active:cursor-grabbing m-1 relative">
+              <img :src="element.coverImageUrl" :alt="element.title" class="w-full h-full object-cover rounded-lg">
+              <div class="absolute -top-2 -right-2 bg-white text-xs px-2 py-1 rounded shadow-md">
+                Top Album
+              </div>
+              <div class="absolute bottom-0 left-0 right-0 bg-black bg-opacity-70 text-white text-xs p-1 rounded-b-lg text-center">
+                {{ element.title }}
+              </div>
             </div>
-          </div>
-        </div>
+          </template>
+          <template #header v-if="rankingStore.rankedTiers.tier1.length === 0">
+            <div class="w-24 h-24 bg-gray-200 rounded-lg flex items-center justify-center shadow-sm border-2 border-dashed border-green-300 hover:bg-gray-100 transition-colors">
+              <span class="text-gray-500 font-medium">Rank #1</span>
+            </div>
+          </template>
+        </draggable>
       </div>
       
       <!-- Tier 2 -->
       <div class="border-2 border-blue-500 rounded-lg p-4 bg-blue-50">
         <h2 class="text-xl font-semibold mb-3 text-blue-700">Tier 2</h2>
-        <div class="flex justify-center space-x-4">
-          <div 
-            class="w-24 h-24 bg-gray-200 rounded-lg flex items-center justify-center shadow-sm border-2 border-dashed border-blue-300 hover:bg-gray-100 transition-colors cursor-pointer"
-          >
-            <span class="text-gray-500 font-medium">Rank #2</span>
-          </div>
-          <div 
-            class="w-24 h-24 bg-gray-200 rounded-lg flex items-center justify-center shadow-sm border-2 border-dashed border-blue-300 hover:bg-gray-100 transition-colors cursor-pointer"
-          >
-            <span class="text-gray-500 font-medium">Rank #3</span>
-          </div>
-        </div>
+        <draggable
+          v-model="rankingStore.rankedTiers.tier2"
+          :component-data="{ 'data-tier': 'tier2' }"
+          v-bind="dragOptions"
+          item-key="id"
+          class="flex justify-center min-h-[100px] items-center gap-4"
+          :move="checkMove"
+          @change="onDragChange"
+        >
+          <template #item="{element}">
+            <div class="album-item flex-shrink-0 w-24 h-24 rounded-lg flex items-center justify-center shadow-sm hover:shadow-md transition-all cursor-grab active:cursor-grabbing m-1 relative">
+              <img :src="element.coverImageUrl" :alt="element.title" class="w-full h-full object-cover rounded-lg">
+              <div class="absolute bottom-0 left-0 right-0 bg-black bg-opacity-70 text-white text-xs p-1 rounded-b-lg text-center">
+                {{ element.title }}
+              </div>
+            </div>
+          </template>
+          <template #header v-if="rankingStore.rankedTiers.tier2.length === 0">
+            <div class="flex justify-center space-x-4">
+              <div class="w-24 h-24 bg-gray-200 rounded-lg flex items-center justify-center shadow-sm border-2 border-dashed border-blue-300 hover:bg-gray-100 transition-colors">
+                <span class="text-gray-500 font-medium">Rank #2-3</span>
+              </div>
+            </div>
+          </template>
+        </draggable>
       </div>
       
       <!-- Tier 3 -->
       <div class="border-2 border-yellow-500 rounded-lg p-4 bg-yellow-50">
         <h2 class="text-xl font-semibold mb-3 text-yellow-700">Tier 3</h2>
-        <div class="flex justify-center space-x-4">
-          <div 
-            class="w-24 h-24 bg-gray-200 rounded-lg flex items-center justify-center shadow-sm border-2 border-dashed border-yellow-300 hover:bg-gray-100 transition-colors cursor-pointer"
-          >
-            <span class="text-gray-500 font-medium">Rank #4</span>
-          </div>
-          <div 
-            class="w-24 h-24 bg-gray-200 rounded-lg flex items-center justify-center shadow-sm border-2 border-dashed border-yellow-300 hover:bg-gray-100 transition-colors cursor-pointer"
-          >
-            <span class="text-gray-500 font-medium">Rank #5</span>
-          </div>
-          <div 
-            class="w-24 h-24 bg-gray-200 rounded-lg flex items-center justify-center shadow-sm border-2 border-dashed border-yellow-300 hover:bg-gray-100 transition-colors cursor-pointer"
-          >
-            <span class="text-gray-500 font-medium">Rank #6</span>
-          </div>
-        </div>
+        <draggable
+          v-model="rankingStore.rankedTiers.tier3"
+          :component-data="{ 'data-tier': 'tier3' }"
+          v-bind="dragOptions"
+          item-key="id"
+          class="flex justify-center min-h-[100px] items-center gap-4 flex-wrap"
+          :move="checkMove"
+          @change="onDragChange"
+        >
+          <template #item="{element}">
+            <div class="album-item flex-shrink-0 w-24 h-24 rounded-lg flex items-center justify-center shadow-sm hover:shadow-md transition-all cursor-grab active:cursor-grabbing m-1 relative">
+              <img :src="element.coverImageUrl" :alt="element.title" class="w-full h-full object-cover rounded-lg">
+              <div class="absolute bottom-0 left-0 right-0 bg-black bg-opacity-70 text-white text-xs p-1 rounded-b-lg text-center">
+                {{ element.title }}
+              </div>
+            </div>
+          </template>
+          <template #header v-if="rankingStore.rankedTiers.tier3.length === 0">
+            <div class="flex justify-center space-x-4">
+              <div class="w-24 h-24 bg-gray-200 rounded-lg flex items-center justify-center shadow-sm border-2 border-dashed border-yellow-300 hover:bg-gray-100 transition-colors">
+                <span class="text-gray-500 font-medium">Rank #4-6</span>
+              </div>
+            </div>
+          </template>
+        </draggable>
       </div>
       
       <!-- Tier 4 -->
       <div class="border-2 border-red-500 rounded-lg p-4 bg-red-50">
         <h2 class="text-xl font-semibold mb-3 text-red-700">Tier 4</h2>
-        <div class="flex flex-wrap justify-center gap-4">
-          <div 
-            class="w-24 h-24 bg-gray-200 rounded-lg flex items-center justify-center shadow-sm border-2 border-dashed border-red-300 hover:bg-gray-100 transition-colors cursor-pointer"
-          >
-            <span class="text-gray-500 font-medium">Rank #7</span>
-          </div>
-          <div 
-            class="w-24 h-24 bg-gray-200 rounded-lg flex items-center justify-center shadow-sm border-2 border-dashed border-red-300 hover:bg-gray-100 transition-colors cursor-pointer"
-          >
-            <span class="text-gray-500 font-medium">Rank #8</span>
-          </div>
-          <div 
-            class="w-24 h-24 bg-gray-200 rounded-lg flex items-center justify-center shadow-sm border-2 border-dashed border-red-300 hover:bg-gray-100 transition-colors cursor-pointer"
-          >
-            <span class="text-gray-500 font-medium">Rank #9</span>
-          </div>
-        </div>
+        <draggable
+          v-model="rankingStore.rankedTiers.tier4"
+          :component-data="{ 'data-tier': 'tier4' }"
+          v-bind="dragOptions"
+          item-key="id"
+          class="flex justify-center min-h-[100px] items-center gap-4 flex-wrap"
+          :move="checkMove"
+          @change="onDragChange"
+        >
+          <template #item="{element}">
+            <div class="album-item flex-shrink-0 w-24 h-24 rounded-lg flex items-center justify-center shadow-sm hover:shadow-md transition-all cursor-grab active:cursor-grabbing m-1 relative">
+              <img :src="element.coverImageUrl" :alt="element.title" class="w-full h-full object-cover rounded-lg">
+              <div class="absolute bottom-0 left-0 right-0 bg-black bg-opacity-70 text-white text-xs p-1 rounded-b-lg text-center">
+                {{ element.title }}
+              </div>
+            </div>
+          </template>
+          <template #header v-if="rankingStore.rankedTiers.tier4.length === 0">
+            <div class="flex justify-center space-x-4">
+              <div class="w-24 h-24 bg-gray-200 rounded-lg flex items-center justify-center shadow-sm border-2 border-dashed border-red-300 hover:bg-gray-100 transition-colors">
+                <span class="text-gray-500 font-medium">Rank #7-9</span>
+              </div>
+            </div>
+          </template>
+        </draggable>
       </div>
       
       <!-- Tier 5 -->
       <div class="border-2 border-purple-500 rounded-lg p-4 bg-purple-50">
         <h2 class="text-xl font-semibold mb-3 text-purple-700">Tier 5</h2>
-        <div class="flex justify-center space-x-4">
-          <div 
-            class="w-24 h-24 bg-gray-200 rounded-lg flex items-center justify-center shadow-sm border-2 border-dashed border-purple-300 hover:bg-gray-100 transition-colors cursor-pointer"
-          >
-            <span class="text-gray-500 font-medium">Rank #10</span>
-          </div>
-          <div 
-            class="w-24 h-24 bg-gray-200 rounded-lg flex items-center justify-center shadow-sm border-2 border-dashed border-purple-300 hover:bg-gray-100 transition-colors cursor-pointer"
-          >
-            <span class="text-gray-500 font-medium">Rank #11</span>
-          </div>
-        </div>
+        <draggable
+          v-model="rankingStore.rankedTiers.tier5"
+          :component-data="{ 'data-tier': 'tier5' }"
+          v-bind="dragOptions"
+          item-key="id"
+          class="flex justify-center min-h-[100px] items-center gap-4"
+          :move="checkMove"
+          @change="onDragChange"
+        >
+          <template #item="{element}">
+            <div class="album-item flex-shrink-0 w-24 h-24 rounded-lg flex items-center justify-center shadow-sm hover:shadow-md transition-all cursor-grab active:cursor-grabbing m-1 relative">
+              <img :src="element.coverImageUrl" :alt="element.title" class="w-full h-full object-cover rounded-lg">
+              <div class="absolute bottom-0 left-0 right-0 bg-black bg-opacity-70 text-white text-xs p-1 rounded-b-lg text-center">
+                {{ element.title }}
+              </div>
+            </div>
+          </template>
+          <template #header v-if="rankingStore.rankedTiers.tier5.length === 0">
+            <div class="flex justify-center space-x-4">
+              <div class="w-24 h-24 bg-gray-200 rounded-lg flex items-center justify-center shadow-sm border-2 border-dashed border-purple-300 hover:bg-gray-100 transition-colors">
+                <span class="text-gray-500 font-medium">Rank #10-11</span>
+              </div>
+            </div>
+          </template>
+        </draggable>
       </div>
     </div>
     
     <!-- Album Shelf Area -->
-    <div class="border-2 border-gray-300 rounded-lg p-4 bg-gray-50 mb-6 transition-all duration-300" :class="{ 'h-20 overflow-hidden': isShelfCollapsed }">
+    <div class="fixed bottom-0 left-0 right-0 bg-white border-t-2 border-gray-300 p-4 transition-all duration-300 z-10" :class="{ 'h-20 overflow-hidden': isShelfCollapsed }">
       <div class="flex justify-between items-center mb-3">
         <h2 class="text-xl font-semibold">Album Shelf</h2>
         <button 
@@ -143,162 +201,199 @@
         </button>
       </div>
       
-      <div class="flex flex-wrap gap-4 py-2">
-        <!-- Taylor Swift Album -->
-        <div 
-          class="album-item flex-shrink-0 w-20 h-20 bg-gradient-to-br from-blue-100 to-blue-200 rounded-lg flex items-center justify-center shadow-sm hover:shadow-md transition-all cursor-grab active:cursor-grabbing active:scale-105"
-        >
-          <span class="text-xs text-gray-700 font-medium text-center">Taylor Swift</span>
-        </div>
-        
-        <!-- Fearless Album -->
-        <div 
-          class="album-item flex-shrink-0 w-20 h-20 bg-gradient-to-br from-yellow-100 to-yellow-200 rounded-lg flex items-center justify-center shadow-sm hover:shadow-md transition-all cursor-grab active:cursor-grabbing active:scale-105"
-        >
-          <span class="text-xs text-gray-700 font-medium text-center">Fearless (TV)</span>
-        </div>
-        
-        <!-- Speak Now Album -->
-        <div 
-          class="album-item flex-shrink-0 w-20 h-20 bg-gradient-to-br from-purple-100 to-purple-200 rounded-lg flex items-center justify-center shadow-sm hover:shadow-md transition-all cursor-grab active:cursor-grabbing active:scale-105"
-        >
-          <span class="text-xs text-gray-700 font-medium text-center">Speak Now (TV)</span>
-        </div>
-        
-        <!-- Red Album -->
-        <div 
-          class="album-item flex-shrink-0 w-20 h-20 bg-gradient-to-br from-red-100 to-red-200 rounded-lg flex items-center justify-center shadow-sm hover:shadow-md transition-all cursor-grab active:cursor-grabbing active:scale-105"
-        >
-          <span class="text-xs text-gray-700 font-medium text-center">Red (TV)</span>
-        </div>
-        
-        <!-- 1989 Album -->
-        <div 
-          class="album-item flex-shrink-0 w-20 h-20 bg-gradient-to-br from-blue-100 to-teal-200 rounded-lg flex items-center justify-center shadow-sm hover:shadow-md transition-all cursor-grab active:cursor-grabbing active:scale-105"
-        >
-          <span class="text-xs text-gray-700 font-medium text-center">1989 (TV)</span>
-        </div>
-        
-        <!-- Reputation Album -->
-        <div 
-          class="album-item flex-shrink-0 w-20 h-20 bg-gradient-to-br from-gray-800 to-gray-900 rounded-lg flex items-center justify-center shadow-sm hover:shadow-md transition-all cursor-grab active:cursor-grabbing active:scale-105"
-        >
-          <span class="text-xs text-gray-100 font-medium text-center">Reputation</span>
-        </div>
-        
-        <!-- Lover Album -->
-        <div 
-          class="album-item flex-shrink-0 w-20 h-20 bg-gradient-to-br from-pink-100 to-pink-200 rounded-lg flex items-center justify-center shadow-sm hover:shadow-md transition-all cursor-grab active:cursor-grabbing active:scale-105"
-        >
-          <span class="text-xs text-gray-700 font-medium text-center">Lover</span>
-        </div>
-        
-        <!-- Folklore Album -->
-        <div 
-          class="album-item flex-shrink-0 w-20 h-20 bg-gradient-to-br from-gray-100 to-gray-300 rounded-lg flex items-center justify-center shadow-sm hover:shadow-md transition-all cursor-grab active:cursor-grabbing active:scale-105"
-        >
-          <span class="text-xs text-gray-700 font-medium text-center">Folklore</span>
-        </div>
-        
-        <!-- Evermore Album -->
-        <div 
-          class="album-item flex-shrink-0 w-20 h-20 bg-gradient-to-br from-orange-100 to-orange-200 rounded-lg flex items-center justify-center shadow-sm hover:shadow-md transition-all cursor-grab active:cursor-grabbing active:scale-105"
-        >
-          <span class="text-xs text-gray-700 font-medium text-center">Evermore</span>
-        </div>
-        
-        <!-- Midnights Album -->
-        <div 
-          class="album-item flex-shrink-0 w-20 h-20 bg-gradient-to-br from-indigo-200 to-indigo-300 rounded-lg flex items-center justify-center shadow-sm hover:shadow-md transition-all cursor-grab active:cursor-grabbing active:scale-105"
-        >
-          <span class="text-xs text-gray-700 font-medium text-center">Midnights</span>
-        </div>
-        
-        <!-- The Tortured Poets Department Album -->
-        <div 
-          class="album-item flex-shrink-0 w-20 h-20 bg-gradient-to-br from-gray-200 to-gray-400 rounded-lg flex items-center justify-center shadow-sm hover:shadow-md transition-all cursor-grab active:cursor-grabbing active:scale-105"
-        >
-          <span class="text-xs text-gray-700 font-medium text-center p-1">TTPD</span>
-        </div>
-      </div>
+      <draggable
+        v-model="rankingStore.availableAlbums"
+        v-bind="dragOptions"
+        item-key="id"
+        class="flex flex-wrap gap-4 py-2 min-h-[80px]"
+        :move="checkMove"
+        @change="onDragChange"
+      >
+        <template #item="{element}">
+          <div class="album-item flex-shrink-0 w-20 h-20 rounded-lg flex items-center justify-center shadow-sm hover:shadow-md transition-all cursor-grab active:cursor-grabbing active:scale-105 relative">
+            <img :src="element.coverImageUrl" :alt="element.title" class="w-full h-full object-cover rounded-lg">
+            <div class="absolute bottom-0 left-0 right-0 bg-black bg-opacity-70 text-white text-xs p-1 rounded-b-lg text-center truncate">
+              {{ element.title }}
+            </div>
+          </div>
+        </template>
+      </draggable>
     </div>
     
     <!-- Action Buttons -->
-    <div class="flex flex-col space-y-3 mt-8">
+    <div class="flex flex-col space-y-3 mt-8 mb-24">
       <button 
-        @click="startRanking"
-        class="w-full p-3 bg-green-600 text-white rounded-lg font-bold hover:bg-green-700 transition-colors active:scale-98 transform duration-150">
-        Start Ranking Session
+        @click="saveRankings"
+        class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg flex items-center justify-center transition-colors"
+        :class="{ 'opacity-75': !userStore.isLoggedInSimulation }"
+      >
+        <span v-if="userStore.isLoggedInSimulation">Save Rankings</span>
+        <span v-else>Save Rankings (Login Required)</span>
+        <svg v-if="!userStore.isLoggedInSimulation" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
+        </svg>
       </button>
       
-      <div class="relative">
-        <button 
-          class="w-full p-3 bg-gray-300 text-gray-500 rounded-lg font-bold opacity-50 cursor-not-allowed">
-          Save Rankings
-        </button>
-        <div v-if="!userStore.isLoggedInSimulation" class="absolute inset-0 flex items-center justify-center">
-          <div class="bg-white px-3 py-1 rounded-full shadow-md text-sm text-green-600">
-            Sign up to save your rankings
-          </div>
-        </div>
-      </div>
+      <button 
+        @click="resetRankings"
+        class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-6 rounded-lg transition-colors"
+      >
+        Reset Rankings
+      </button>
       
-      <router-link 
-        to="/rank/songs"
-        class="w-full p-3 bg-white border border-green-600 text-green-600 rounded-lg font-bold hover:bg-green-50 transition-colors text-center">
+      <button 
+        @click="goToSongRanking"
+        class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg mt-4 transition-colors"
+      >
         Continue to Song Ranking
-      </router-link>
+      </button>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted, computed, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { useUserStore } from '@/store/userStore';
+import { useRankingStore } from '@/store/rankingStore';
 import toastService from '@/services/toastService';
+import draggable from 'vuedraggable';
+import staticAlbumsData from '@/data/static-albums.json';
 
-const router = useRouter();
+// Store and router setup
 const userStore = useUserStore();
+const rankingStore = useRankingStore();
+const router = useRouter();
+const toast = toastService;
 
-// Shelf collapse state
+// Local state
 const isShelfCollapsed = ref(false);
+const isTouchDevice = ref(false);
+
+// Initialize on component mount
+onMounted(() => {
+  // Detect touch devices for better mobile handling
+  isTouchDevice.value = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+  
+  // Load static albums into the store
+  rankingStore.initializeStaticAlbums(staticAlbumsData);
+  
+  // Show help toast for first-time users
+  if (rankingStore.availableAlbums.length === staticAlbumsData.length) {
+    setTimeout(() => {
+      showToast('Start Ranking', 'Drag albums from the shelf to the tiers above. Tier 1 is your favorite!');
+    }, 1000);
+  }
+});
+
+// Auto-save rankings when they change
+watch(() => [rankingStore.rankedTiers, rankingStore.availableAlbums], () => {
+  rankingStore.saveRankingsToLocalStorage();
+}, { deep: true });
+
+// Drag and drop configuration
+const dragOptions = computed(() => ({
+  animation: 200,
+  group: 'albums', // Shared group name allows moving between lists
+  disabled: false,
+  ghostClass: 'ghost-album', // Class for placeholder element while dragging
+  // Add touch-specific options for mobile
+  touchStartThreshold: isTouchDevice.value ? 3 : 0, // Pixels to move before drag starts on touch devices
+  delay: isTouchDevice.value ? 100 : 0, // Small delay for touch devices
+  delayOnTouchOnly: true,
+  forceFallback: isTouchDevice.value // Force fallback for better mobile experience
+}));
+
+// Helper to limit tier capacity
+function checkMove(event) {
+  const tier = event.to.dataset.tier; // Get tier from data attribute
+  if (!tier) return true; // Allow moving back to shelf
+  
+  const targetTierList = rankingStore.rankedTiers[tier];
+  let maxItems;
+  
+  switch(tier) {
+    case 'tier1': maxItems = 1; break;
+    case 'tier2': maxItems = 2; break;
+    case 'tier3': maxItems = 3; break;
+    case 'tier4': maxItems = 3; break;
+    case 'tier5': maxItems = 2; break;
+    default: maxItems = Infinity;
+  }
+  
+  // Allow if target list isn't full OR if we are dragging within the same list (reordering)
+  return targetTierList.length < maxItems || event.from === event.to;
+}
+
+// Handle drag change events
+function onDragChange(event) {
+  // Provide haptic feedback on mobile devices if supported
+  if (isTouchDevice.value && window.navigator && window.navigator.vibrate) {
+    window.navigator.vibrate(50); // Short vibration for feedback
+  }
+  
+  // Show toast notification for tier capacity limits
+  if (event.added && event.to.dataset && event.to.dataset.tier) {
+    const tier = event.to.dataset.tier;
+    const capacity = rankingStore.getTierCapacity(tier);
+    const current = rankingStore.rankedTiers[tier].length;
+    
+    if (current === capacity) {
+      showToast('Tier Full', `This tier can hold a maximum of ${capacity} album${capacity > 1 ? 's' : ''}.`);
+    }
+  }
+}
 
 // Toggle shelf collapse
-const toggleShelf = () => {
+function toggleShelf() {
   isShelfCollapsed.value = !isShelfCollapsed.value;
-  showToast(
-    isShelfCollapsed.value ? 'Shelf Collapsed' : 'Shelf Expanded', 
-    isShelfCollapsed.value ? 'The album shelf is now collapsed to give more space to the tiers.' : 'The album shelf is now expanded to show all available albums.'
-  );
-};
+}
 
-// Start ranking session
-const startRanking = () => {
-  showToast('Ranking Started', 'You can now drag albums from the shelf to the tier slots to rank them.');
-  
-  // If not logged in, show a delayed toast encouraging sign up
-  if (!userStore.isLoggedInSimulation) {
-    setTimeout(() => {
-      showToast('Create an Account', 'Sign up for free to save your rankings and access them later!');
-    }, 5000);
+// Save rankings
+function saveRankings() {
+  if (userStore.isLoggedInSimulation) {
+    // Save to API if logged in
+    rankingStore.saveRankingsToApi(userStore.user.id)
+      .then(() => {
+        showToast('Success', 'Your album rankings have been saved!');
+      })
+      .catch(() => {
+        showToast('Error', 'There was a problem saving your rankings. Please try again.');
+      });
+  } else {
+    // Prompt to login
+    showToast('Login Required', 'Please log in or sign up to save your rankings.');
   }
-};
+}
+
+// Reset rankings
+function resetRankings() {
+  if (confirm('Are you sure you want to reset all your rankings? This cannot be undone.')) {
+    rankingStore.resetRankings(staticAlbumsData);
+    showToast('Rankings Reset', 'Your album rankings have been reset.');
+  }
+}
+
+// Navigate to song ranking
+function goToSongRanking() {
+  router.push('/rank/songs');
+}
 
 // Login function
-const login = () => {
+function login() {
   userStore.setIsLoggedInSimulation(true);
   showToast('Logged In', 'You are now logged in and can save your rankings.');
-};
+}
 
 // Show toast notification
-const showToast = (title, message) => {
-  toastService.show({
+function showToast(title, message) {
+  toast.show({
     title,
     message,
-    duration: 3000
+    type: 'info',
+    timeout: 3000
   });
-};
+}
 </script>
 
 <style scoped>
@@ -307,12 +402,25 @@ const showToast = (title, message) => {
   transform: translateY(-2px);
 }
 
-/* Button active state */
-.active\:scale-98:active {
-  transform: scale(0.98);
+/* Drag ghost styling */
+.ghost-album {
+  opacity: 0.5;
+  background: #c8ebfb;
+  border: 2px dashed #0ea5e9;
 }
 
+/* Info icon */
 .info-icon {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z' /%3E%3C/svg%3E");
+}
+
+/* Mobile optimizations */
+@media (max-width: 640px) {
+  .album-item {
+    width: 18vw;
+    height: 18vw;
+    max-width: 80px;
+    max-height: 80px;
+  }
 }
 </style>

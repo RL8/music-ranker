@@ -1,7 +1,7 @@
 <template>
   <div class="p-4 pb-20">
     <h1 class="text-2xl font-bold mb-4">
-      <span>Welcome to your Swiftie Universe, <span class="text-green-600">Username</span>!</span>
+      <span>Welcome to your Swiftie Universe, <span class="text-green-600">{{ userStore.user?.username || 'Swiftie' }}</span>!</span>
     </h1>
     
     <!-- View Toggle Buttons -->
@@ -44,55 +44,55 @@
         </button>
       </div>
       
-      <!-- Era Sunburst Chart -->
-      <div v-if="activeSunburst === 'era'" class="border p-4 my-6 min-h-[350px] flex items-center justify-center bg-gray-100 rounded-lg shadow-sm">
-        <div class="text-center">
-          <div class="w-48 h-48 mx-auto rounded-full bg-gradient-to-r from-red-500 to-orange-500 flex items-center justify-center mb-4 relative">
-            <div class="absolute inset-4 rounded-full bg-gradient-to-r from-pink-400 to-purple-500 flex items-center justify-center">
-              <div class="absolute inset-4 rounded-full bg-gradient-to-r from-yellow-400 to-red-500 flex items-center justify-center">
-                <div class="absolute inset-3 rounded-full bg-white flex items-center justify-center">
-                  <span class="text-gray-800 font-bold text-sm">Era View</span>
-                </div>
-              </div>
-            </div>
+      <!-- No Rankings Message -->
+      <div v-if="!hasRankings" class="border p-4 my-6 min-h-[350px] flex items-center justify-center bg-gray-100 rounded-lg shadow-sm">
+        <div class="text-center max-w-md">
+          <div class="w-20 h-20 mx-auto mb-4 bg-yellow-100 rounded-full flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-yellow-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
           </div>
-          <p class="text-gray-600 font-medium">Era-Based Visualization</p>
-          <p class="text-sm text-gray-500 mt-2">Your preferences organized by Taylor Swift eras</p>
+          <h3 class="text-lg font-medium text-gray-800 mb-2">No Rankings Yet</h3>
+          <p class="text-gray-600 mb-4">You haven't ranked any albums yet. Create your rankings to see your personalized visualizations.</p>
+          <router-link 
+            to="/rank/albums"
+            class="inline-block py-2 px-4 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition-colors">
+            Rank Albums Now
+          </router-link>
         </div>
+      </div>
+      
+      <!-- Era Sunburst Chart -->
+      <div v-else-if="activeSunburst === 'era'" class="border p-4 my-6 min-h-[350px] flex items-center justify-center bg-gray-100 rounded-lg shadow-sm">
+        <SunburstChart 
+          :data="eraSunburstData" 
+          :key="JSON.stringify(eraSunburstData)"
+          color-scheme="schemeSet3"
+          node-info-description="of your ranked albums"
+          :central-circle-size="0.15"
+        />
       </div>
       
       <!-- Time Period Sunburst Chart -->
-      <div v-if="activeSunburst === 'time'" class="border p-4 my-6 min-h-[350px] flex items-center justify-center bg-gray-100 rounded-lg shadow-sm">
-        <div class="text-center">
-          <div class="w-48 h-48 mx-auto rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center mb-4 relative">
-            <div class="absolute inset-4 rounded-full bg-gradient-to-r from-indigo-400 to-blue-500 flex items-center justify-center">
-              <div class="absolute inset-4 rounded-full bg-gradient-to-r from-blue-400 to-indigo-500 flex items-center justify-center">
-                <div class="absolute inset-3 rounded-full bg-white flex items-center justify-center">
-                  <span class="text-gray-800 font-bold text-sm">Time View</span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <p class="text-gray-600 font-medium">Time-Based Visualization</p>
-          <p class="text-sm text-gray-500 mt-2">Your preferences organized by release years</p>
-        </div>
+      <div v-else-if="activeSunburst === 'time'" class="border p-4 my-6 min-h-[350px] flex items-center justify-center bg-gray-100 rounded-lg shadow-sm">
+        <SunburstChart 
+          :data="timeSunburstData" 
+          :key="JSON.stringify(timeSunburstData)"
+          color-scheme="schemeBlues"
+          node-info-description="of your ranked albums"
+          :central-circle-size="0.15"
+        />
       </div>
       
       <!-- Overview Sunburst Chart -->
-      <div v-if="activeSunburst === 'overview'" class="border p-4 my-6 min-h-[350px] flex items-center justify-center bg-gray-100 rounded-lg shadow-sm">
-        <div class="text-center">
-          <div class="w-48 h-48 mx-auto rounded-full bg-gradient-to-r from-green-500 to-blue-500 flex items-center justify-center mb-4 relative">
-            <div class="absolute inset-4 rounded-full bg-gradient-to-r from-green-400 to-teal-500 flex items-center justify-center">
-              <div class="absolute inset-4 rounded-full bg-gradient-to-r from-teal-400 to-green-500 flex items-center justify-center">
-                <div class="absolute inset-3 rounded-full bg-white flex items-center justify-center">
-                  <span class="text-gray-800 font-bold text-sm">Overview</span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <p class="text-gray-600 font-medium">Complete Overview</p>
-          <p class="text-sm text-gray-500 mt-2">A comprehensive view of all your rankings</p>
-        </div>
+      <div v-else-if="activeSunburst === 'overview'" class="border p-4 my-6 min-h-[350px] flex items-center justify-center bg-gray-100 rounded-lg shadow-sm">
+        <SunburstChart 
+          :data="overviewSunburstData" 
+          :key="JSON.stringify(overviewSunburstData)"
+          color-scheme="schemeCategory10"
+          node-info-description="of your ranked albums"
+          :central-circle-size="0.15"
+        />
       </div>
     </div>
     
@@ -102,62 +102,36 @@
         <!-- Album Rankings Section -->
         <div class="border border-gray-200 rounded-lg p-4 bg-white">
           <h3 class="font-medium mb-3">Album Rankings</h3>
-          <div class="space-y-2">
-            <div class="flex items-center">
-              <div class="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center text-xs mr-2">S</div>
-              <div class="flex-1">
-                <p class="font-medium">Red (Taylor's Version)</p>
-                <p class="text-xs text-gray-500">Tier 1</p>
-              </div>
-            </div>
-            <div class="flex items-center">
-              <div class="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center text-xs mr-2">A</div>
-              <div class="flex-1">
-                <p class="font-medium">Folklore</p>
-                <p class="text-xs text-gray-500">Tier 2</p>
-              </div>
-            </div>
-            <div class="flex items-center">
-              <div class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center text-xs mr-2">A</div>
-              <div class="flex-1">
-                <p class="font-medium">1989</p>
-                <p class="text-xs text-gray-500">Tier 2</p>
+          <div v-if="hasRankings" class="space-y-2">
+            <div v-for="(tier, tierName) in rankingStore.rankedTiers" :key="tierName" v-if="tier.length > 0">
+              <div v-for="album in tier" :key="album.id" class="flex items-center mb-2">
+                <div class="w-8 h-8 rounded-full flex items-center justify-center text-xs mr-2" 
+                     :style="{ backgroundColor: getTierColor(tierName) + '30' }">
+                  {{ getTierLabel(tierName) }}
+                </div>
+                <div class="flex-1">
+                  <p class="font-medium">{{ album.title }}</p>
+                  <p class="text-xs text-gray-500">{{ getTierName(tierName) }}</p>
+                </div>
               </div>
             </div>
           </div>
+          <div v-else class="text-center py-4 text-gray-500">
+            No album rankings yet
+          </div>
           <router-link to="/rank/albums" class="mt-3 text-sm text-green-600 hover:underline inline-block">
-            View all album rankings →
+            {{ hasRankings ? 'Edit album rankings →' : 'Create album rankings →' }}
           </router-link>
         </div>
         
         <!-- Song Rankings Section -->
         <div class="border border-gray-200 rounded-lg p-4 bg-white">
           <h3 class="font-medium mb-3">Song Rankings</h3>
-          <div class="space-y-2">
-            <div class="flex items-center">
-              <div class="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center text-xs mr-2">S</div>
-              <div class="flex-1">
-                <p class="font-medium">All Too Well (10 min)</p>
-                <p class="text-xs text-gray-500">Red (Taylor's Version) - Tier 1</p>
-              </div>
-            </div>
-            <div class="flex items-center">
-              <div class="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center text-xs mr-2">S</div>
-              <div class="flex-1">
-                <p class="font-medium">cardigan</p>
-                <p class="text-xs text-gray-500">Folklore - Tier 1</p>
-              </div>
-            </div>
-            <div class="flex items-center">
-              <div class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center text-xs mr-2">A</div>
-              <div class="flex-1">
-                <p class="font-medium">Blank Space</p>
-                <p class="text-xs text-gray-500">1989 - Tier 2</p>
-              </div>
-            </div>
+          <div class="text-center py-4 text-gray-500">
+            No song rankings yet
           </div>
           <router-link to="/rank/songs" class="mt-3 text-sm text-green-600 hover:underline inline-block">
-            View all song rankings →
+            Create song rankings →
           </router-link>
         </div>
       </div>
@@ -201,110 +175,304 @@
       </div>
     </div>
     
-    <!-- Dashboard Content -->
+    <!-- Login/Logout Button -->
+    <div class="mt-10 text-center">
+      <button 
+        @click="toggleLogin(!userStore.isLoggedInSimulation)" 
+        class="px-3 py-1 bg-gray-200 text-gray-700 text-sm rounded hover:bg-gray-300 transition-colors">
+        {{ userStore.isLoggedInSimulation ? 'Simulate Logout' : 'Simulate Login' }}
+      </button>
+    </div>
+    
     <div class="border border-gray-300 rounded-lg p-4 bg-gray-50 mt-6 mb-6">
       <h2 class="text-xl font-semibold mb-2">Music Collection Overview</h2>
       <div class="space-y-2">
         <router-link 
           to="/rank/albums"
-          class="flex justify-between items-center p-2 bg-white rounded border border-gray-200 hover:bg-gray-50 block">
-          <span>Ranked Albums</span>
-          <span class="font-medium">11</span>
+          class="flex items-center p-3 bg-white rounded-lg shadow-sm hover:shadow-md transition-all">
+          <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mr-3">
+            <i class="album-icon w-6 h-6 bg-center bg-no-repeat bg-contain"></i>
+          </div>
+          <div class="flex-1">
+            <h3 class="font-medium">Album Rankings</h3>
+            <p class="text-sm text-gray-500">Rank your favorite Taylor Swift albums</p>
+          </div>
+          <div class="text-green-600">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+            </svg>
+          </div>
         </router-link>
+        
         <router-link 
           to="/rank/songs"
-          class="flex justify-between items-center p-2 bg-white rounded border border-gray-200 hover:bg-gray-50 block">
-          <span>Ranked Songs</span>
-          <span class="font-medium">42</span>
+          class="flex items-center p-3 bg-white rounded-lg shadow-sm hover:shadow-md transition-all">
+          <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mr-3">
+            <i class="song-icon w-6 h-6 bg-center bg-no-repeat bg-contain"></i>
+          </div>
+          <div class="flex-1">
+            <h3 class="font-medium">Song Rankings</h3>
+            <p class="text-sm text-gray-500">Rank songs from your favorite albums</p>
+          </div>
+          <div class="text-green-600">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+            </svg>
+          </div>
         </router-link>
-        <div class="flex justify-between items-center p-2 bg-white rounded border border-gray-200">
-          <span>Favorite Era</span>
-          <span class="font-medium">Red (Taylor's Version)</span>
-        </div>
       </div>
     </div>
-    
-    <!-- Logout Simulation Button -->
-    <button 
-      @click="logout"
-      class="mt-8 p-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400 transition-colors flex items-center mx-auto"
-    >
-      <i class="logout-icon w-4 h-4 mr-1 bg-center bg-no-repeat bg-contain"></i>
-      Simulate Logout
-    </button>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { useUserStore } from '@/store/userStore';
-import { useRouter } from 'vue-router';
+import { useRankingStore } from '@/store/rankingStore';
 import toastService from '@/services/toastService';
+import SunburstChart from '@/components/visualizations/SunburstChart.vue';
+import staticAlbumsData from '@/data/static-albums.json';
 
+// Store setup
 const userStore = useUserStore();
-const router = useRouter();
-const showShareMenu = ref(false);
+const rankingStore = useRankingStore();
+const toast = toastService;
+
+// UI state
 const activeView = ref('visualizations');
-const activeSunburst = ref('era');
+const activeSunburst = ref('overview');
+const showShareMenu = ref(false);
 
-const toggleShareMenu = () => {
+// Check if user has any rankings
+const hasRankings = computed(() => {
+  return Object.values(rankingStore.rankedTiers).some(tier => tier.length > 0);
+});
+
+// Toggle share menu
+function toggleShareMenu() {
   showShareMenu.value = !showShareMenu.value;
-};
+}
 
-const showToast = (title, message) => {
-  toastService.show({
+// Show toast notification
+function showToast(title, message) {
+  toast.show({
     title,
     message,
-    duration: 3000
+    type: 'info',
+    timeout: 3000
   });
-};
+}
 
-const downloadAsPNG = () => {
-  showToast('Download Started', 'Your visualization is being downloaded as a PNG image.');
-  showShareMenu.value = false;
-};
+// Download visualization as PNG
+function downloadAsPNG() {
+  showToast('Download Started', 'Your visualization is being prepared for download.');
+  // This would be implemented with actual export functionality
+}
 
-const shareAsAnimation = () => {
-  showToast('Animation Created', 'Your animated visualization is ready to share.');
-  showShareMenu.value = false;
-};
+// Share as animation
+function shareAsAnimation() {
+  showToast('Share Animation', 'Preparing animation for sharing...');
+  // This would be implemented with actual sharing functionality
+}
 
-const shareProfileLink = () => {
-  showToast('Link Copied', 'Your profile link has been copied to clipboard: swifties.io/profile/username');
-  showShareMenu.value = false;
-};
+// Share profile link
+function shareProfileLink() {
+  showToast('Link Copied', 'Your profile link has been copied to clipboard.');
+  // This would be implemented with actual clipboard functionality
+}
 
-const logout = () => {
-  userStore.setIsLoggedInSimulation(false);
-  showToast('Logged Out', 'You have been logged out and will be redirected to the home page.');
-  setTimeout(() => {
-    router.push('/');
-  }, 1500);
-};
+// Toggle login/logout
+function toggleLogin(status) {
+  userStore.setIsLoggedInSimulation(status);
+  showToast(
+    status ? 'Logged In' : 'Logged Out', 
+    status ? 'You are now logged in.' : 'You have been logged out.'
+  );
+}
+
+// Helper functions for tier display
+function getTierLabel(tierName) {
+  const labels = {
+    tier1: 'S',
+    tier2: 'A',
+    tier3: 'B',
+    tier4: 'C',
+    tier5: 'D'
+  };
+  return labels[tierName] || '';
+}
+
+function getTierName(tierName) {
+  const names = {
+    tier1: 'Tier 1 (Top)',
+    tier2: 'Tier 2',
+    tier3: 'Tier 3',
+    tier4: 'Tier 4',
+    tier5: 'Tier 5'
+  };
+  return names[tierName] || '';
+}
+
+function getTierColor(tierName) {
+  const colors = {
+    tier1: '#ef4444', // Red
+    tier2: '#3b82f6', // Blue
+    tier3: '#f59e0b', // Yellow
+    tier4: '#10b981', // Green
+    tier5: '#8b5cf6'  // Purple
+  };
+  return colors[tierName] || '#6b7280'; // Gray default
+}
+
+// Sunburst data transformations
+const overviewSunburstData = computed(() => {
+  if (!hasRankings.value) return { name: "No Rankings", children: [] };
+  
+  const children = [];
+  
+  // Add each tier as a node
+  Object.entries(rankingStore.rankedTiers).forEach(([tierName, albums]) => {
+    if (albums.length > 0) {
+      children.push({
+        name: getTierName(tierName),
+        color: getTierColor(tierName),
+        children: albums.map((album, index) => ({
+          name: album.title,
+          size: tierName === 'tier1' ? 10 : 
+                tierName === 'tier2' ? 8 : 
+                tierName === 'tier3' ? 6 : 
+                tierName === 'tier4' ? 4 : 2,
+          color: album.color
+        }))
+      });
+    }
+  });
+  
+  return {
+    name: "My Album Rankings",
+    children
+  };
+});
+
+const eraSunburstData = computed(() => {
+  if (!hasRankings.value) return { name: "No Rankings", children: [] };
+  
+  // Group albums by era (simplified for this example)
+  const eraGroups = {
+    "Country Era": ["album-ts"],
+    "Pop Transition": ["album-fearless", "album-speaknow", "album-red"],
+    "Pure Pop Era": ["album-1989", "album-reputation", "album-lover"],
+    "Folk Era": ["album-folklore", "album-evermore"],
+    "Recent Era": ["album-midnights", "album-tortured"]
+  };
+  
+  const children = [];
+  
+  // Create era nodes with their albums
+  Object.entries(eraGroups).forEach(([eraName, albumIds]) => {
+    const eraAlbums = [];
+    
+    // Find ranked albums in this era
+    Object.entries(rankingStore.rankedTiers).forEach(([tierName, albums]) => {
+      albums.forEach(album => {
+        if (albumIds.includes(album.id)) {
+          eraAlbums.push({
+            name: album.title,
+            size: tierName === 'tier1' ? 10 : 
+                  tierName === 'tier2' ? 8 : 
+                  tierName === 'tier3' ? 6 : 
+                  tierName === 'tier4' ? 4 : 2,
+            color: album.color,
+            tierName: getTierName(tierName)
+          });
+        }
+      });
+    });
+    
+    // Only add era if it has ranked albums
+    if (eraAlbums.length > 0) {
+      children.push({
+        name: eraName,
+        children: eraAlbums
+      });
+    }
+  });
+  
+  return {
+    name: "Albums by Era",
+    children
+  };
+});
+
+const timeSunburstData = computed(() => {
+  if (!hasRankings.value) return { name: "No Rankings", children: [] };
+  
+  // Group albums by time period
+  const timeGroups = {
+    "2006-2010": [2006, 2007, 2008, 2009, 2010],
+    "2011-2015": [2011, 2012, 2013, 2014, 2015],
+    "2016-2020": [2016, 2017, 2018, 2019, 2020],
+    "2021-2025": [2021, 2022, 2023, 2024, 2025]
+  };
+  
+  const children = [];
+  
+  // Create time period nodes with their albums
+  Object.entries(timeGroups).forEach(([periodName, years]) => {
+    const periodAlbums = [];
+    
+    // Find all albums in this time period
+    const albumsInPeriod = staticAlbumsData.filter(album => years.includes(album.year));
+    const albumIdsInPeriod = albumsInPeriod.map(album => album.id);
+    
+    // Find ranked albums in this period
+    Object.entries(rankingStore.rankedTiers).forEach(([tierName, albums]) => {
+      albums.forEach(album => {
+        if (albumIdsInPeriod.includes(album.id)) {
+          periodAlbums.push({
+            name: album.title,
+            size: tierName === 'tier1' ? 10 : 
+                  tierName === 'tier2' ? 8 : 
+                  tierName === 'tier3' ? 6 : 
+                  tierName === 'tier4' ? 4 : 2,
+            color: album.color,
+            tierName: getTierName(tierName)
+          });
+        }
+      });
+    });
+    
+    // Only add period if it has ranked albums
+    if (periodAlbums.length > 0) {
+      children.push({
+        name: periodName,
+        children: periodAlbums
+      });
+    }
+  });
+  
+  return {
+    name: "Albums by Time Period",
+    children
+  };
+});
 </script>
 
 <style scoped>
 /* Icon styles */
 .edit-icon {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'%3E%3Cpath d='M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z' /%3E%3C/svg%3E");
 }
 
 .share-icon {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'%3E%3Cpath d='M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z' /%3E%3C/svg%3E");
 }
 
-.logout-icon {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'%3E%3Cpath d='M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z'/%3E%3C/svg%3E");
+.album-icon {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3' /%3E%3C/svg%3E");
 }
 
-/* Add subtle animation to the sunburst */
-@keyframes pulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.02); }
-  100% { transform: scale(1); }
-}
-
-.rounded-full {
-  animation: pulse 4s infinite ease-in-out;
+.song-icon {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3' /%3E%3C/svg%3E");
 }
 </style>

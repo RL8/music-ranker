@@ -9,7 +9,18 @@ export const useRankingStore = defineStore('ranking', {
     songRankings: [],
     rankingHistory: [],
     loading: false,
-    error: null
+    error: null,
+    // New state for drag-and-drop functionality
+    availableAlbums: [], // Albums available to be ranked (on the shelf)
+    rankedTiers: {     // Albums placed in tiers
+      tier1: [], // Max 1 album { id, title, coverImageUrl }
+      tier2: [], // Max 2 albums
+      tier3: [], // Max 3 albums
+      tier4: [], // Max 3 albums
+      tier5: []  // Max 2 albums
+    },
+    // Local storage key for persisting rankings
+    localStorageKey: 'swifties_album_rankings'
   }),
 
   // Getters: computed properties for the state
@@ -30,6 +41,40 @@ export const useRankingStore = defineStore('ranking', {
       return state.songRankings.find(
         ranking => ranking.song_id === songId && ranking.album_context_id === albumContextId
       )
+    },
+    
+    // New getters for drag-and-drop functionality
+    getTierCapacity: () => (tier) => {
+      const capacities = {
+        tier1: 1,
+        tier2: 2,
+        tier3: 3,
+        tier4: 3,
+        tier5: 2
+      };
+      return capacities[tier] || 0;
+    },
+    
+    isTierFull: (state) => (tier) => {
+      const capacities = {
+        tier1: 1,
+        tier2: 2,
+        tier3: 3,
+        tier4: 3,
+        tier5: 2
+      };
+      return state.rankedTiers[tier].length >= capacities[tier];
+    },
+    
+    // Get all ranked albums across all tiers
+    allRankedAlbums: (state) => {
+      return [
+        ...state.rankedTiers.tier1,
+        ...state.rankedTiers.tier2,
+        ...state.rankedTiers.tier3,
+        ...state.rankedTiers.tier4,
+        ...state.rankedTiers.tier5
+      ];
     }
   },
 
@@ -231,6 +276,110 @@ export const useRankingStore = defineStore('ranking', {
         console.error('Error saving ranking snapshot:', error)
       } finally {
         this.loading = false
+      }
+    },
+    
+    // New actions for drag-and-drop functionality
+    initializeStaticAlbums(albumsData) {
+      // Only initialize if availableAlbums is empty to prevent overwriting during navigation
+      if (this.availableAlbums.length === 0) {
+        // First try to load from localStorage
+        this.loadRankingsFromLocalStorage();
+        
+        // If we still don't have any ranked albums, initialize with static data
+        if (this.availableAlbums.length === 0 && 
+            this.rankedTiers.tier1.length === 0 && 
+            this.rankedTiers.tier2.length === 0 && 
+            this.rankedTiers.tier3.length === 0 && 
+            this.rankedTiers.tier4.length === 0 && 
+            this.rankedTiers.tier5.length === 0) {
+          
+          this.availableAlbums = [...albumsData];
+          // Clear tiers just in case
+          this.rankedTiers = { tier1: [], tier2: [], tier3: [], tier4: [], tier5: [] };
+        }
+      }
+    },
+    
+    // Save rankings to localStorage for persistence
+    saveRankingsToLocalStorage() {
+      try {
+        const rankings = {
+          availableAlbums: this.availableAlbums,
+          rankedTiers: this.rankedTiers,
+          timestamp: new Date().toISOString()
+        };
+        localStorage.setItem(this.localStorageKey, JSON.stringify(rankings));
+      } catch (error) {
+        console.error('Error saving rankings to localStorage:', error);
+      }
+    },
+    
+    // Load rankings from localStorage
+    loadRankingsFromLocalStorage() {
+      try {
+        const savedRankings = localStorage.getItem(this.localStorageKey);
+        if (savedRankings) {
+          const { availableAlbums, rankedTiers } = JSON.parse(savedRankings);
+          this.availableAlbums = availableAlbums;
+          this.rankedTiers = rankedTiers;
+          return true;
+        }
+      } catch (error) {
+        console.error('Error loading rankings from localStorage:', error);
+      }
+      return false;
+    },
+    
+    // Clear all rankings and reset to initial state
+    resetRankings(albumsData) {
+      this.availableAlbums = [...albumsData];
+      this.rankedTiers = { tier1: [], tier2: [], tier3: [], tier4: [], tier5: [] };
+      this.saveRankingsToLocalStorage();
+    },
+    
+    // Convert tiered rankings to flat structure for API/database
+    convertRankingsToApiFormat(userId) {
+      const flatRankings = [];
+      
+      // Process each tier
+      Object.entries(this.rankedTiers).forEach(([tier, albums], tierIndex) => {
+        albums.forEach((album, albumIndex) => {
+          flatRankings.push({
+            user_id: userId,
+            album_id: album.id,
+            tier: tierIndex + 1, // Convert tier name to number
+            rank_in_tier: albumIndex + 1,
+            updated_at: new Date()
+          });
+        });
+      });
+      
+      return flatRankings;
+    },
+    
+    // Save rankings to API/database when user is logged in
+    async saveRankingsToApi(userId) {
+      if (!userId) return;
+      
+      this.loading = true;
+      try {
+        const flatRankings = this.convertRankingsToApiFormat(userId);
+        
+        // For each ranking, call the existing rankAlbum method
+        for (const ranking of flatRankings) {
+          await this.rankAlbum(ranking);
+        }
+        
+        console.log('Rankings saved to API');
+        this.error = null;
+        return true;
+      } catch (error) {
+        this.error = error.message || 'Failed to save rankings';
+        console.error('Error saving rankings to API:', error);
+        return false;
+      } finally {
+        this.loading = false;
       }
     }
   }
