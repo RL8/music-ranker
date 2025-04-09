@@ -4,7 +4,12 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <link rel="icon" href="/favicon.ico">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <link rel="icon" href="<%= BASE_URL %>favicon.ico">
+    <link rel="icon" type="image/svg+xml" href="<%= BASE_URL %>img/icons/favicon.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="<%= BASE_URL %>img/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="<%= BASE_URL %>img/icons/favicon-16x16.png">
     <title>Music Ranker</title>
   </head>
   <body>
@@ -12,6 +17,6 @@
       <strong>We're sorry but Music Ranker doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
     </noscript>
     <div id="app"></div>
-    <script type="module" src="/src/main.js"></script>
+    <!-- Built files will be auto injected -->
   </body>
 </html>

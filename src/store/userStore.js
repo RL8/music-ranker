@@ -9,7 +9,8 @@ export const useUserStore = defineStore('user', {
     profile: null,
     isAuthenticated: false,
     loading: false,
-    error: null
+    error: null,
+    isLoggedInSimulation: false // Default to logged out
   }),
 
   // Getters: computed properties for the state
@@ -21,6 +22,10 @@ export const useUserStore = defineStore('user', {
 
   // Actions: methods that can change the state and perform async operations
   actions: {
+    setIsLoggedInSimulation(status) {
+      this.isLoggedInSimulation = status;
+    },
+    
     async fetchUser() {
       this.loading = true
       try {

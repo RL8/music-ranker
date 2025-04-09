@@ -33,7 +33,8 @@ app.config.errorHandler = function(err, instance, info) {
   // You can also report errors to a monitoring service here
 }
 
-app.config.productionTip = false
+// Remove deprecated productionTip setting
+// app.config.productionTip = false  // This is no longer needed in Vue 3.5+
 
 // Use plugins
 app.use(pinia)
