@@ -5,6 +5,7 @@ import router from './router'
 import { createPinia } from 'pinia'
 import apiClient from './plugins/axios'
 import { NODE_ENV, isDevelopment } from './utils/env'
+import toastService from './services/toastService'
 
 // Import global CSS
 import './assets/main.css'
@@ -17,6 +18,9 @@ const app = createApp(App)
 
 // Configure Axios
 app.config.globalProperties.$axios = apiClient
+
+// Add toast service to global properties
+app.config.globalProperties.$toast = toastService
 
 // Configure Vue DevTools
 if (isDevelopment) {

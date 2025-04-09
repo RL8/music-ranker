@@ -5,9 +5,14 @@
       <div class="flex justify-between items-center">
         <div class="flex items-center">
           <div class="w-8 h-8 mr-2 bg-green-600 rounded-full flex items-center justify-center text-white">
-            <span class="text-lg font-bold">M</span>
+            <span class="text-lg font-bold">S</span>
           </div>
-          <h1 class="text-xl font-bold m-0">Swifties.io (Skeleton)</h1>
+          <h1 class="text-xl font-bold m-0">Swifties.io</h1>
+        </div>
+        <div class="flex items-center">
+          <button class="w-8 h-8 flex items-center justify-center text-gray-600 hover:text-green-600 transition-colors">
+            <i class="info-icon w-5 h-5 bg-center bg-no-repeat bg-contain"></i>
+          </button>
         </div>
       </div>
     </header>
@@ -55,5 +60,10 @@ body {
 html, body {
   height: 100%;
   overflow: hidden;
+}
+
+/* Info icon */
+.info-icon {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z'/%3E%3C/svg%3E");
 }
 </style>
