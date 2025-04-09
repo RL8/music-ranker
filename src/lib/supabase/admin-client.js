@@ -8,19 +8,9 @@ import { createClient } from '@supabase/supabase-js'
  * The service role key grants full access to your database without respecting RLS policies.
  */
 
-// Get environment variables based on the build system
-const getEnvVar = (name) => {
-  if (typeof process !== 'undefined' && process.env) {
-    return process.env[name] || ''
-  } else if (typeof import.meta !== 'undefined' && import.meta.env) {
-    return import.meta.env[name] || ''
-  }
-  return ''
-}
-
 // Supabase connection details
-const supabaseUrl = getEnvVar('VUE_APP_SUPABASE_URL') || getEnvVar('VITE_SUPABASE_URL') || ''
-const supabaseServiceKey = getEnvVar('VUE_APP_SUPABASE_SERVICE_KEY') || getEnvVar('VITE_SUPABASE_SERVICE_KEY') || ''
+const supabaseUrl = process.env.VUE_APP_SUPABASE_URL || ''
+const supabaseServiceKey = process.env.VUE_APP_SUPABASE_SERVICE_KEY || ''
 
 // Validate configuration
 if (!supabaseUrl || !supabaseServiceKey) {

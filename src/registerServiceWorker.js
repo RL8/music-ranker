@@ -1,5 +1,8 @@
 /* eslint-disable no-console */
 
+import { register } from 'register-service-worker'
+import { isDevelopment } from './utils/env'
+
 // Create a custom event bus for service worker events
 const swEventBus = {
   events: {},
@@ -47,35 +50,50 @@ window.addEventListener('offline', () => {
 // Initial connectivity check
 swEventBus.emit('connectivity', { isOffline });
 
-// With Vite PWA plugin, we don't need to manually register the service worker
-// The plugin handles registration and updates automatically
-// We just need to listen for the events from the plugin
-
-if ('serviceWorker' in navigator) {
-  // Wait for the 'load' event to not block other work
-  window.addEventListener('load', async () => {
-    // The vite-plugin-pwa uses workbox-window for managing service workers
-    try {
-      // Listen for service worker updates
-      navigator.serviceWorker.addEventListener('controllerchange', () => {
-        console.log('New service worker controller, page will reload');
-        swEventBus.emit('updated');
-        // Reload the page to ensure new content is shown
-        window.location.reload();
-      });
-
-      // Listen for service worker messages
-      navigator.serviceWorker.addEventListener('message', (event) => {
-        const data = event.data;
-        if (data && data.type) {
-          swEventBus.emit(data.type, data);
-        }
-      });
-
-      console.log('Service worker event listeners registered');
-    } catch (error) {
-      console.error('Error setting up service worker event listeners:', error);
+// Register the service worker using Vue CLI's register-service-worker
+if (process.env.NODE_ENV === 'production') {
+  register(`${process.env.BASE_URL}service-worker.js`, {
+    ready() {
+      console.log(
+        'App is being served from cache by a service worker.\n' +
+        'For more details, visit https://goo.gl/AFskqB'
+      );
+      swEventBus.emit('ready');
+    },
+    registered() {
+      console.log('Service worker has been registered.');
+      swEventBus.emit('registered');
+    },
+    cached() {
+      console.log('Content has been cached for offline use.');
+      swEventBus.emit('cached');
+    },
+    updatefound() {
+      console.log('New content is downloading.');
+      swEventBus.emit('updatefound');
+    },
+    updated() {
+      console.log('New content is available; please refresh.');
+      swEventBus.emit('updated');
+      // You can add a notification here to prompt the user to refresh
+    },
+    offline() {
+      console.log('No internet connection found. App is running in offline mode.');
+      swEventBus.emit('offline');
+    },
+    error(error) {
+      console.error('Error during service worker registration:', error);
       swEventBus.emit('error', error);
+    }
+  });
+}
+
+// Listen for service worker messages
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.addEventListener('message', (event) => {
+    const data = event.data;
+    if (data && data.type) {
+      swEventBus.emit(data.type, data);
     }
   });
 }

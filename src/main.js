@@ -4,6 +4,7 @@ import './registerServiceWorker'
 import router from './router'
 import { createPinia } from 'pinia'
 import apiClient from './plugins/axios'
+import { NODE_ENV, isDevelopment } from './utils/env'
 
 // Import global CSS
 import './assets/main.css'
@@ -18,7 +19,7 @@ const app = createApp(App)
 app.config.globalProperties.$axios = apiClient
 
 // Configure Vue DevTools
-if (process.env.NODE_ENV !== 'production') {
+if (isDevelopment) {
   // Log Vue version to help with debugging
   console.log('Vue version:', app.version)
 }

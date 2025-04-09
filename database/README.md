@@ -25,12 +25,12 @@ After your project is created, you'll need to set up the database schema:
 
 1. In the Supabase dashboard, go to "Settings" > "API"
 2. Copy your "Project URL" and "anon" public API key
-3. Create a `.env.local` file in the root of your project (based on `.env.example`)
+3. Create a `.env` file in the root of your project (based on `.env.example`)
 4. Add your Supabase credentials:
 
 ```
-VITE_SUPABASE_URL=your_project_url
-VITE_SUPABASE_ANON_KEY=your_anon_key
+VUE_APP_SUPABASE_URL=your_project_url
+VUE_APP_SUPABASE_ANON_KEY=your_anon_key
 ```
 
 ## Testing the Connection
