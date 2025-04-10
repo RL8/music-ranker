@@ -41,16 +41,8 @@
       <!-- Tier 1 -->
       <div class="border-2 border-green-500 rounded-lg p-4 bg-green-50">
         <h2 class="text-xl font-semibold mb-3 text-green-700">Tier 1</h2>
-        <draggable
-          v-model="rankingStore.rankedTiers.tier1"
-          :component-data="{ 'data-tier': 'tier1' }"
-          v-bind="dragOptions"
-          item-key="id"
-          class="flex justify-center min-h-[100px] items-center"
-          :move="checkMove"
-          @change="onDragChange"
-        >
-          <template #item="{element}">
+        <div class="flex justify-center min-h-[100px] items-center">
+          <template v-for="(element, index) in rankingStore.rankedTiers.tier1" :key="index">
             <div class="album-item flex-shrink-0 w-24 h-24 rounded-lg flex items-center justify-center shadow-sm hover:shadow-md transition-all cursor-grab active:cursor-grabbing m-1 relative">
               <img :src="element.coverImageUrl" :alt="element.title" class="w-full h-full object-cover rounded-lg">
               <div class="absolute -top-2 -right-2 bg-white text-xs px-2 py-1 rounded shadow-md">
@@ -61,27 +53,19 @@
               </div>
             </div>
           </template>
-          <template #header v-if="rankingStore.rankedTiers.tier1.length === 0">
+          <template v-if="rankingStore.rankedTiers.tier1.length === 0">
             <div class="w-24 h-24 bg-gray-200 rounded-lg flex items-center justify-center shadow-sm border-2 border-dashed border-green-300 hover:bg-gray-100 transition-colors">
               <span class="text-gray-500 font-medium">Rank #1</span>
             </div>
           </template>
-        </draggable>
+        </div>
       </div>
       
       <!-- Tier 2 -->
       <div class="border-2 border-blue-500 rounded-lg p-4 bg-blue-50">
         <h2 class="text-xl font-semibold mb-3 text-blue-700">Tier 2</h2>
-        <draggable
-          v-model="rankingStore.rankedTiers.tier2"
-          :component-data="{ 'data-tier': 'tier2' }"
-          v-bind="dragOptions"
-          item-key="id"
-          class="flex justify-center min-h-[100px] items-center gap-4"
-          :move="checkMove"
-          @change="onDragChange"
-        >
-          <template #item="{element}">
+        <div class="flex justify-center min-h-[100px] items-center gap-4">
+          <template v-for="(element, index) in rankingStore.rankedTiers.tier2" :key="index">
             <div class="album-item flex-shrink-0 w-24 h-24 rounded-lg flex items-center justify-center shadow-sm hover:shadow-md transition-all cursor-grab active:cursor-grabbing m-1 relative">
               <img :src="element.coverImageUrl" :alt="element.title" class="w-full h-full object-cover rounded-lg">
               <div class="absolute bottom-0 left-0 right-0 bg-black bg-opacity-70 text-white text-xs p-1 rounded-b-lg text-center">
@@ -89,29 +73,21 @@
               </div>
             </div>
           </template>
-          <template #header v-if="rankingStore.rankedTiers.tier2.length === 0">
+          <template v-if="rankingStore.rankedTiers.tier2.length === 0">
             <div class="flex justify-center space-x-4">
               <div class="w-24 h-24 bg-gray-200 rounded-lg flex items-center justify-center shadow-sm border-2 border-dashed border-blue-300 hover:bg-gray-100 transition-colors">
                 <span class="text-gray-500 font-medium">Rank #2-3</span>
               </div>
             </div>
           </template>
-        </draggable>
+        </div>
       </div>
       
       <!-- Tier 3 -->
       <div class="border-2 border-yellow-500 rounded-lg p-4 bg-yellow-50">
         <h2 class="text-xl font-semibold mb-3 text-yellow-700">Tier 3</h2>
-        <draggable
-          v-model="rankingStore.rankedTiers.tier3"
-          :component-data="{ 'data-tier': 'tier3' }"
-          v-bind="dragOptions"
-          item-key="id"
-          class="flex justify-center min-h-[100px] items-center gap-4 flex-wrap"
-          :move="checkMove"
-          @change="onDragChange"
-        >
-          <template #item="{element}">
+        <div class="flex justify-center min-h-[100px] items-center gap-4 flex-wrap">
+          <template v-for="(element, index) in rankingStore.rankedTiers.tier3" :key="index">
             <div class="album-item flex-shrink-0 w-24 h-24 rounded-lg flex items-center justify-center shadow-sm hover:shadow-md transition-all cursor-grab active:cursor-grabbing m-1 relative">
               <img :src="element.coverImageUrl" :alt="element.title" class="w-full h-full object-cover rounded-lg">
               <div class="absolute bottom-0 left-0 right-0 bg-black bg-opacity-70 text-white text-xs p-1 rounded-b-lg text-center">
@@ -119,29 +95,21 @@
               </div>
             </div>
           </template>
-          <template #header v-if="rankingStore.rankedTiers.tier3.length === 0">
+          <template v-if="rankingStore.rankedTiers.tier3.length === 0">
             <div class="flex justify-center space-x-4">
               <div class="w-24 h-24 bg-gray-200 rounded-lg flex items-center justify-center shadow-sm border-2 border-dashed border-yellow-300 hover:bg-gray-100 transition-colors">
                 <span class="text-gray-500 font-medium">Rank #4-6</span>
               </div>
             </div>
           </template>
-        </draggable>
+        </div>
       </div>
       
       <!-- Tier 4 -->
       <div class="border-2 border-red-500 rounded-lg p-4 bg-red-50">
         <h2 class="text-xl font-semibold mb-3 text-red-700">Tier 4</h2>
-        <draggable
-          v-model="rankingStore.rankedTiers.tier4"
-          :component-data="{ 'data-tier': 'tier4' }"
-          v-bind="dragOptions"
-          item-key="id"
-          class="flex justify-center min-h-[100px] items-center gap-4 flex-wrap"
-          :move="checkMove"
-          @change="onDragChange"
-        >
-          <template #item="{element}">
+        <div class="flex justify-center min-h-[100px] items-center gap-4 flex-wrap">
+          <template v-for="(element, index) in rankingStore.rankedTiers.tier4" :key="index">
             <div class="album-item flex-shrink-0 w-24 h-24 rounded-lg flex items-center justify-center shadow-sm hover:shadow-md transition-all cursor-grab active:cursor-grabbing m-1 relative">
               <img :src="element.coverImageUrl" :alt="element.title" class="w-full h-full object-cover rounded-lg">
               <div class="absolute bottom-0 left-0 right-0 bg-black bg-opacity-70 text-white text-xs p-1 rounded-b-lg text-center">
@@ -149,29 +117,21 @@
               </div>
             </div>
           </template>
-          <template #header v-if="rankingStore.rankedTiers.tier4.length === 0">
+          <template v-if="rankingStore.rankedTiers.tier4.length === 0">
             <div class="flex justify-center space-x-4">
               <div class="w-24 h-24 bg-gray-200 rounded-lg flex items-center justify-center shadow-sm border-2 border-dashed border-red-300 hover:bg-gray-100 transition-colors">
                 <span class="text-gray-500 font-medium">Rank #7-9</span>
               </div>
             </div>
           </template>
-        </draggable>
+        </div>
       </div>
       
       <!-- Tier 5 -->
       <div class="border-2 border-purple-500 rounded-lg p-4 bg-purple-50">
         <h2 class="text-xl font-semibold mb-3 text-purple-700">Tier 5</h2>
-        <draggable
-          v-model="rankingStore.rankedTiers.tier5"
-          :component-data="{ 'data-tier': 'tier5' }"
-          v-bind="dragOptions"
-          item-key="id"
-          class="flex justify-center min-h-[100px] items-center gap-4"
-          :move="checkMove"
-          @change="onDragChange"
-        >
-          <template #item="{element}">
+        <div class="flex justify-center min-h-[100px] items-center gap-4">
+          <template v-for="(element, index) in rankingStore.rankedTiers.tier5" :key="index">
             <div class="album-item flex-shrink-0 w-24 h-24 rounded-lg flex items-center justify-center shadow-sm hover:shadow-md transition-all cursor-grab active:cursor-grabbing m-1 relative">
               <img :src="element.coverImageUrl" :alt="element.title" class="w-full h-full object-cover rounded-lg">
               <div class="absolute bottom-0 left-0 right-0 bg-black bg-opacity-70 text-white text-xs p-1 rounded-b-lg text-center">
@@ -179,14 +139,14 @@
               </div>
             </div>
           </template>
-          <template #header v-if="rankingStore.rankedTiers.tier5.length === 0">
+          <template v-if="rankingStore.rankedTiers.tier5.length === 0">
             <div class="flex justify-center space-x-4">
               <div class="w-24 h-24 bg-gray-200 rounded-lg flex items-center justify-center shadow-sm border-2 border-dashed border-purple-300 hover:bg-gray-100 transition-colors">
                 <span class="text-gray-500 font-medium">Rank #10-11</span>
               </div>
             </div>
           </template>
-        </draggable>
+        </div>
       </div>
     </div>
     
@@ -201,15 +161,8 @@
         </button>
       </div>
       
-      <draggable
-        v-model="rankingStore.availableAlbums"
-        v-bind="dragOptions"
-        item-key="id"
-        class="flex flex-wrap gap-4 py-2 min-h-[80px]"
-        :move="checkMove"
-        @change="onDragChange"
-      >
-        <template #item="{element}">
+      <div class="flex flex-wrap gap-4 py-2 min-h-[80px]">
+        <template v-for="(element, index) in rankingStore.availableAlbums" :key="index">
           <div class="album-item flex-shrink-0 w-20 h-20 rounded-lg flex items-center justify-center shadow-sm hover:shadow-md transition-all cursor-grab active:cursor-grabbing active:scale-105 relative">
             <img :src="element.coverImageUrl" :alt="element.title" class="w-full h-full object-cover rounded-lg">
             <div class="absolute bottom-0 left-0 right-0 bg-black bg-opacity-70 text-white text-xs p-1 rounded-b-lg text-center truncate">
@@ -217,7 +170,7 @@
             </div>
           </div>
         </template>
-      </draggable>
+      </div>
     </div>
     
     <!-- Action Buttons -->
@@ -257,7 +210,6 @@ import { useRouter } from 'vue-router';
 import { useUserStore } from '@/store/userStore';
 import { useRankingStore } from '@/store/rankingStore';
 import toastService from '@/services/toastService';
-import draggable from 'vuedraggable';
 import staticAlbumsData from '@/data/static-albums.json';
 
 // Store and router setup
@@ -281,7 +233,7 @@ onMounted(() => {
   // Show help toast for first-time users
   if (rankingStore.availableAlbums.length === staticAlbumsData.length) {
     setTimeout(() => {
-      showToast('Start Ranking', 'Drag albums from the shelf to the tiers above. Tier 1 is your favorite!');
+      showToast('View Albums', 'This is a simplified view of albums. Drag-and-drop functionality has been removed.');
     }, 1000);
   }
 });
@@ -290,59 +242,6 @@ onMounted(() => {
 watch(() => [rankingStore.rankedTiers, rankingStore.availableAlbums], () => {
   rankingStore.saveRankingsToLocalStorage();
 }, { deep: true });
-
-// Drag and drop configuration
-const dragOptions = computed(() => ({
-  animation: 200,
-  group: 'albums', // Shared group name allows moving between lists
-  disabled: false,
-  ghostClass: 'ghost-album', // Class for placeholder element while dragging
-  // Add touch-specific options for mobile
-  touchStartThreshold: isTouchDevice.value ? 3 : 0, // Pixels to move before drag starts on touch devices
-  delay: isTouchDevice.value ? 100 : 0, // Small delay for touch devices
-  delayOnTouchOnly: true,
-  forceFallback: isTouchDevice.value // Force fallback for better mobile experience
-}));
-
-// Helper to limit tier capacity
-function checkMove(event) {
-  const tier = event.to.dataset.tier; // Get tier from data attribute
-  if (!tier) return true; // Allow moving back to shelf
-  
-  const targetTierList = rankingStore.rankedTiers[tier];
-  let maxItems;
-  
-  switch(tier) {
-    case 'tier1': maxItems = 1; break;
-    case 'tier2': maxItems = 2; break;
-    case 'tier3': maxItems = 3; break;
-    case 'tier4': maxItems = 3; break;
-    case 'tier5': maxItems = 2; break;
-    default: maxItems = Infinity;
-  }
-  
-  // Allow if target list isn't full OR if we are dragging within the same list (reordering)
-  return targetTierList.length < maxItems || event.from === event.to;
-}
-
-// Handle drag change events
-function onDragChange(event) {
-  // Provide haptic feedback on mobile devices if supported
-  if (isTouchDevice.value && window.navigator && window.navigator.vibrate) {
-    window.navigator.vibrate(50); // Short vibration for feedback
-  }
-  
-  // Show toast notification for tier capacity limits
-  if (event.added && event.to.dataset && event.to.dataset.tier) {
-    const tier = event.to.dataset.tier;
-    const capacity = rankingStore.getTierCapacity(tier);
-    const current = rankingStore.rankedTiers[tier].length;
-    
-    if (current === capacity) {
-      showToast('Tier Full', `This tier can hold a maximum of ${capacity} album${capacity > 1 ? 's' : ''}.`);
-    }
-  }
-}
 
 // Toggle shelf collapse
 function toggleShelf() {

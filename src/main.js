@@ -6,8 +6,6 @@ import { createPinia } from 'pinia'
 import apiClient from './plugins/axios'
 import { NODE_ENV, isDevelopment } from './utils/env'
 import toastService from './services/toastService'
-import { MotionPlugin } from '@vueuse/motion'
-import { GesturePlugin } from '@vueuse/gesture'
 
 // Import global CSS
 import './assets/main.css'
@@ -45,8 +43,6 @@ app.config.errorHandler = function(err, instance, info) {
 // Use plugins
 app.use(pinia)
 app.use(router)
-app.use(MotionPlugin)
-app.use(GesturePlugin)
 
 // Mount the app
 app.mount('#app')
