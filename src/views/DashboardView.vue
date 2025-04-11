@@ -122,6 +122,10 @@
           <router-link to="/rank/albums" class="mt-3 text-sm text-green-600 hover:underline inline-block">
             {{ hasRankings ? 'Edit album rankings →' : 'Create album rankings →' }}
           </router-link>
+          <router-link to="/rank/albums/coverflow" class="mt-3 ml-4 text-sm text-purple-600 hover:underline inline-flex items-center">
+            Try Coverflow Ranking
+            <span class="ml-1 px-1.5 py-0.5 bg-purple-100 text-purple-700 text-xs rounded-full">New</span>
+          </router-link>
         </div>
         
         <!-- Song Rankings Section -->
@@ -198,6 +202,24 @@
             <p class="text-sm text-gray-500">Rank your favorite Taylor Swift albums</p>
           </div>
           <div class="text-green-600">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+            </svg>
+          </div>
+        </router-link>
+        
+        <router-link 
+          to="/rank/albums/coverflow"
+          class="flex items-center p-3 bg-white rounded-lg shadow-sm hover:shadow-md transition-all">
+          <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mr-3">
+            <i class="coverflow-icon w-6 h-6 bg-center bg-no-repeat bg-contain"></i>
+          </div>
+          <div class="flex-1">
+            <h3 class="font-medium">Coverflow Rankings</h3>
+            <p class="text-sm text-gray-500">Try our new coverflow ranking experience</p>
+            <span class="inline-block mt-1 px-1.5 py-0.5 bg-purple-100 text-purple-700 text-xs rounded-full">New</span>
+          </div>
+          <div class="text-purple-600">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
               <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
             </svg>
@@ -473,6 +495,10 @@ const timeSunburstData = computed(() => {
 }
 
 .song-icon {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3' /%3E%3C/svg%3E");
+}
+
+.coverflow-icon {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3' /%3E%3C/svg%3E");
 }
 </style>

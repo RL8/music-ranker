@@ -194,6 +194,14 @@
         Reset Rankings
       </button>
       
+      <router-link 
+        to="/rank/albums/coverflow"
+        class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-6 rounded-lg transition-colors flex items-center justify-center"
+      >
+        <span>Try Coverflow Ranking</span>
+        <span class="ml-2 px-2 py-0.5 bg-white text-purple-700 text-xs rounded-full">New</span>
+      </router-link>
+      
       <button 
         @click="goToSongRanking"
         class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg mt-4 transition-colors"

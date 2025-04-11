@@ -52,6 +52,11 @@ const routes = [
     component: () => import('../views/AlbumRankingView.vue')
   },
   {
+    path: '/rank/albums/coverflow',
+    name: 'album-ranking-coverflow',
+    component: () => import('../views/AlbumRankingCoverflowView.vue')
+  },
+  {
     path: '/rank/songs',
     name: 'song-ranking',
     component: () => import('../views/SongRankingView.vue')
