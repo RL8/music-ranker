@@ -1,0 +1,336 @@
+Okay, here are the detailed implementation plans for Phase 3 and Phase 4, building on the completed UI Skeleton.
+
+---
+
+**Phase 3: Basic Album Drag-and-Drop UI (within Skeleton)**
+
+*   **Goal:** Implement the core drag-and-drop ranking mechanism in `AlbumRankingView.vue` using static data for albums and storing the ranking order in the local Pinia `rankingStore`. No database interaction.
+*   **Focus:** De-risk the drag-and-drop interaction, ensure smooth UI on mobile, and establish local state management for rankings.
+
+**1. Prepare Static Album Data (`src/data/static-albums.json`)**
+
+*   **Objective:** Create a simple JSON file with basic album info for the draggable shelf.
+*   **Action:**
+    *   Create the file `src/data/static-albums.json`.
+    *   Populate it with an array of album objects. Each object needs at minimum:
+        ```json
+        [
+          { "id": "album-ts", "title": "Taylor Swift", "coverImageUrl": "/img/covers/ts.jpg" },
+          { "id": "album-fearless", "title": "Fearless", "coverImageUrl": "/img/covers/fearless.jpg" },
+          { "id": "album-speaknow", "title": "Speak Now", "coverImageUrl": "/img/covers/speaknow.jpg" },
+          // ... add entries for all albums needed for ranking
+        ]
+        ```
+        *(Note: Create placeholder images in `public/img/covers/` or use existing URLs if available. The `id` should be unique and consistent.)*
+
+**2. Setup Pinia State (`src/store/rankingStore.js`)**
+
+*   **Objective:** Define the state structure to hold available albums and the tiered rankings locally.
+*   **Action:** Modify `src/store/rankingStore.js`.
+    *   Update the `state` function:
+        ```javascript
+        state: () => ({
+          availableAlbums: [], // Albums available to be ranked (on the shelf)
+          rankedTiers: {     // Albums placed in tiers
+            tier1: [], // Max 1 album { id, title, coverImageUrl }
+            tier2: [], // Max 2 albums
+            tier3: [], // Max 3 albums
+            tier4: [], // Max 3 albums
+            tier5: []  // Max 2 albums
+          },
+          loading: false,
+          error: null
+          // rankingHistory: [], // Keep for later
+        }),
+        ```
+    *   Add an `action` to load static data:
+        ```javascript
+        actions: {
+          initializeStaticAlbums(albumsData) {
+            // Only initialize if availableAlbums is empty to prevent overwriting during navigation
+            if (this.availableAlbums.length === 0 && this.rankedTiers.tier1.length === 0 /* etc */) {
+               this.availableAlbums = [...albumsData];
+               // Clear tiers just in case
+               this.rankedTiers = { tier1: [], tier2: [], tier3: [], tier4: [], tier5: [] };
+            }
+          },
+          // ... keep other placeholder actions or remove them for now
+        }
+        ```
+
+**3. Implement `AlbumRankingView.vue`**
+
+*   **Objective:** Build the visual ranking interface using the D&D library and bind it to the Pinia store.
+*   **Action:** Modify `src/views/AlbumRankingView.vue`.
+    *   **`<script setup>`:**
+        ```javascript
+        import { onMounted, ref } from 'vue';
+        import { useRankingStore } from '@/store/rankingStore';
+        import draggable from 'vuedraggable'; // Or your chosen D&D library component
+        import staticAlbumsData from '@/data/static-albums.json';
+
+        const rankingStore = useRankingStore();
+        const isShelfCollapsed = ref(false); // For the collapsible shelf
+
+        onMounted(() => {
+          // Load static albums into the store if they aren't already there
+          rankingStore.initializeStaticAlbums(staticAlbumsData);
+        });
+
+        function logRankings() {
+          console.log('Current Rankings State:', JSON.parse(JSON.stringify(rankingStore.rankedTiers)));
+        }
+
+        // --- D&D Configuration ---
+        const dragOptions = {
+          animation: 200,
+          group: 'albums', // Shared group name allows moving between lists
+          disabled: false,
+          ghostClass: 'ghost' // Class for placeholder element while dragging
+        };
+
+        // Helper to limit tier capacity (needed because vue.draggable doesn't enforce max items directly)
+        function checkMove(event) {
+          const tier = event.to.dataset.tier; // Assign data-tier attribute to draggable components
+          if (!tier) return true; // Allow moving back to shelf
+
+          const targetTierList = rankingStore.rankedTiers[tier];
+          let maxItems;
+          switch(tier) {
+            case 'tier1': maxItems = 1; break;
+            case 'tier2': maxItems = 2; break;
+            case 'tier3': maxItems = 3; break;
+            case 'tier4': maxItems = 3; break;
+            case 'tier5': maxItems = 2; break;
+            default: maxItems = Infinity;
+          }
+          // Allow if target list isn't full OR if we are dragging within the same list (reordering)
+          return targetTierList.length < maxItems || event.from === event.to;
+        }
+        ```
+    *   **`<template>`:**
+        ```vue
+         <div class="p-4">
+            <h1 class="text-2xl font-bold mb-4">Album Ranking</h1>
+            <p class="mb-4 text-sm text-gray-600">Drag albums from the shelf below into the tiers.</p>
+
+            <!-- Tiered Ranking Area -->
+            <div class="space-y-4 mb-6">
+              <!-- Tier 1 -->
+              <div class="tier bg-gray-100 p-3 rounded border border-gray-300">
+                <h3 class="font-semibold mb-2 text-lg text-center">Tier 1 (#1)</h3>
+                <draggable
+                  v-model="rankingStore.rankedTiers.tier1"
+                  :component-data="{ 'data-tier': 'tier1' }"
+                  v-bind="dragOptions"
+                  item-key="id"
+                  class="tier-dropzone min-h-[100px] flex justify-center items-center bg-white rounded border-dashed border-gray-400 p-2"
+                  :move="checkMove"
+                >
+                  <template #item="{element}">
+                    <div class="ranked-album-item p-1 cursor-move">
+                      <img :src="element.coverImageUrl" :alt="element.title" class="w-16 h-16 object-cover rounded shadow">
+                      <!-- Optional: Show title -->
+                      <!-- <p class="text-xs mt-1 text-center truncate">{{ element.title }}</p> -->
+                    </div>
+                  </template>
+                  <template #header v-if="rankingStore.rankedTiers.tier1.length === 0">
+                      <div class="text-gray-400 text-sm">Drop #1 Album Here</div>
+                  </template>
+                </draggable>
+              </div>
+
+              <!-- Tier 2 -->
+              <div class="tier bg-gray-100 p-3 rounded border border-gray-300">
+                 <h3 class="font-semibold mb-2 text-base text-center">Tier 2 (#2, #3)</h3>
+                 <draggable
+                    v-model="rankingStore.rankedTiers.tier2"
+                    :component-data="{ 'data-tier': 'tier2' }"
+                    v-bind="dragOptions"
+                    item-key="id"
+                    class="tier-dropzone min-h-[90px] flex justify-around items-center bg-white rounded border-dashed border-gray-400 p-2 gap-2"
+                    :move="checkMove"
+                  >
+                    <template #item="{element}">
+                       <div class="ranked-album-item p-1 cursor-move">
+                         <img :src="element.coverImageUrl" :alt="element.title" class="w-14 h-14 object-cover rounded shadow">
+                       </div>
+                    </template>
+                    <template #header v-if="rankingStore.rankedTiers.tier2.length < 2">
+                       <div class="text-gray-400 text-sm">Drop #2 / #3 Albums Here</div>
+                    </template>
+                 </draggable>
+              </div>
+
+              <!-- Tier 3, 4, 5 (Similar structure, adjust flex/grid layout as needed) -->
+              <!-- ... -->
+
+            </div>
+
+            <!-- Collapsible Unordered Album Shelf -->
+            <div class="fixed bottom-0 left-0 right-0 bg-gray-200 border-t border-gray-300 z-20 transition-transform duration-300" :class="{ 'translate-y-full': isShelfCollapsed }">
+               <button @click="isShelfCollapsed = !isShelfCollapsed" class="absolute -top-8 right-2 bg-gray-300 p-1 rounded-t text-xs">
+                  {{ isShelfCollapsed ? 'Show Shelf' : 'Hide Shelf' }}
+               </button>
+               <div class="p-3 max-h-48 overflow-y-auto">
+                  <h3 class="font-semibold mb-2 text-center">Available Albums</h3>
+                  <draggable
+                    v-model="rankingStore.availableAlbums"
+                    v-bind="dragOptions"
+                    item-key="id"
+                    class="flex flex-wrap gap-2 justify-center bg-white p-2 rounded min-h-[80px]"
+                    :move="checkMove"
+                   >
+                      <template #item="{element}">
+                         <div class="album-shelf-item p-1 cursor-move text-center">
+                           <img :src="element.coverImageUrl" :alt="element.title" class="w-12 h-12 object-cover rounded shadow mb-1 mx-auto">
+                           <p class="text-xs truncate w-16">{{ element.title }}</p>
+                         </div>
+                      </template>
+                   </draggable>
+               </div>
+            </div>
+
+             <!-- Placeholder Save Button -->
+            <button @click="logRankings" class="mt-6 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
+              Log Rankings (Test Save)
+            </button>
+         </div>
+        ```
+    *   **CSS/Tailwind:** Style the `.tier-dropzone`, `.ranked-album-item`, `.album-shelf-item`, and `.ghost` classes for visual feedback.
+
+**4. Testing**
+
+*   Run the app (`yarn serve`).
+*   Navigate to `/rank/albums`.
+*   Verify the static albums appear on the shelf.
+*   Drag albums from the shelf to different tier drop zones.
+*   Verify that tiers enforce their capacity limits (e.g., only one album in Tier 1).
+*   Reorder albums within a tier.
+*   Drag an album from a tier back to the shelf.
+*   Test the shelf collapse/expand button.
+*   Click the "Log Rankings" button and check the browser console for the correct state output from Pinia.
+*   Test responsiveness and drag behavior in a mobile view (browser dev tools or actual device).
+
+**Deliverable:** An interactive `AlbumRankingView` screen allowing drag-and-drop ranking using static data, with the ranking state managed locally in Pinia.
+
+---
+
+**Phase 4: Basic Sunburst Display (Ranked Data within Skeleton)**
+
+*   **Goal:** Update `DashboardView.vue` to display a sunburst visualization based on the local album ranking data currently held in the `rankingStore`.
+*   **Focus:** Establish the connection between ranking state and visualization, ensuring reactive updates.
+
+**1. Update `DashboardView.vue`**
+
+*   **Objective:** Bind the sunburst component to a computed property derived from the ranking store.
+*   **Action:** Modify `src/views/DashboardView.vue`.
+    *   **`<script setup>`:**
+        ```javascript
+        import { computed } from 'vue'; // Import computed
+        import { useRankingStore } from '@/store/rankingStore';
+        import SunburstChart from '@/components/SunburstChart.vue'; // Adjust path if needed
+
+        const rankingStore = useRankingStore();
+
+        // Computed property to transform ranked tiers into sunburst data format
+        const sunburstRankedData = computed(() => {
+          const tiersData = rankingStore.rankedTiers;
+          const children = [];
+
+          // Map each tier to a sunburst node
+          if (tiersData.tier1.length > 0) {
+            children.push({
+              name: "Tier 1 (#1)",
+              // color: '#FFD700', // Optional: assign tier colors
+              children: tiersData.tier1.map(album => ({
+                name: album.title,
+                size: 10, // Arbitrary size for now
+                note: `Ranked #1` // Add note data if sunburst supports it
+              }))
+            });
+          }
+           if (tiersData.tier2.length > 0) {
+            children.push({
+              name: "Tier 2 (#2-3)",
+              // color: '#C0C0C0',
+              children: tiersData.tier2.map((album, index) => ({
+                name: album.title,
+                size: 8,
+                note: `Ranked #${index + 2}`
+              }))
+            });
+          }
+           if (tiersData.tier3.length > 0) {
+            children.push({
+              name: "Tier 3 (#4-6)",
+              // color: '#CD7F32',
+              children: tiersData.tier3.map((album, index) => ({
+                name: album.title,
+                size: 6,
+                 note: `Ranked #${index + 4}`
+              }))
+            });
+          }
+          // Add Tier 4 & 5 similarly...
+
+          // Add unranked albums if desired
+          // if (rankingStore.availableAlbums.length > 0) {
+          //   children.push({
+          //     name: "Unranked",
+          //     children: rankingStore.availableAlbums.map(album => ({ name: album.title, size: 1 }))
+          //   });
+          // }
+
+          // Return the final structure for the sunburst
+          return {
+            name: "My Album Rankings", // Root node name
+            children: children
+          };
+        });
+
+        // --- Keep simulation toggle logic if needed for testing ---
+        import { useUserStore } from '@/store/userStore';
+        const userStore = useUserStore();
+        function toggleLogin(status) { userStore.setIsLoggedInSimulation(status); }
+        ```
+    *   **`<template>`:**
+        ```vue
+        <div class="p-4">
+            <h1 class="text-2xl font-bold mb-4">My Dashboard (Skeleton - Ranked)</h1>
+            <p class="mb-2 text-sm text-gray-600">Displaying locally ranked albums.</p>
+
+            <div class="border p-4 my-4 min-h-[300px] flex items-center justify-center bg-gray-100">
+              <!-- Bind to the new computed property -->
+              <SunburstChart
+                :data="sunburstRankedData"
+                :key="JSON.stringify(sunburstRankedData)" <!-- Force re-render on data change -->
+               />
+               <!-- Remove static placeholder text if component renders -->
+            </div>
+
+             <!-- Keep other placeholder buttons/toggles for now -->
+            <div class="flex space-x-2 my-4">
+                <!-- ... -->
+            </div>
+            <div class="flex space-x-2">
+               <!-- ... -->
+            </div>
+
+            <!-- Simulation Toggle -->
+            <button @click="toggleLogin(false)" class="mt-10 p-1 bg-gray-300 text-xs rounded">Simulate Logout</button>
+        </div>
+        ```
+        *(Note: The `:key` binding on `<SunburstChart>` can help force a re-render if the component doesn't automatically react deeply to data changes. Adjust based on your specific sunburst component's behavior.)*
+
+**2. Testing Reactivity**
+
+*   Run the app (`yarn serve`).
+*   Navigate to `/rank/albums`. Drag albums into various tiers.
+*   Navigate to `/music` (Dashboard).
+*   **Verify:** The sunburst chart should now display nodes representing the tiers and the albums you ranked within them.
+*   Go back to `/rank/albums`. Change the order or move albums between tiers.
+*   Navigate back to `/music`.
+*   **Verify:** The sunburst chart should update automatically to reflect the latest ranking state from the Pinia store.
+
+**Deliverable:** The Dashboard screen now dynamically visualizes the album rankings held in the local Pinia store, confirming the reactive link between the ranking state and the visualization component.

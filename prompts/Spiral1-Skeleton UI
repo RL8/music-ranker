@@ -1,0 +1,192 @@
+Okay, acknowledging that the foundation (Vue 3, Vue CLI, Pinia, Router, Tailwind, Supabase client/schema) is successfully established, and you have a working sunburst component ready for integration, here's the revised, detailed plan for **Phase 2: UI Skeleton Implementation**.
+
+**Goal:** Create the visual structure and navigation flow of the entire Swifties.io app *without* authentication restrictions for this phase. All screens will exist as basic placeholders styled with Tailwind, navigation will match the spec, and the existing sunburst component will be integrated into `HomeView` and `DashboardView` using static data.
+
+**1. Update Router (`src/router/index.js`)**
+
+*   **Objective:** Ensure all routes are defined and remove authentication guards temporarily.
+*   **Action:**
+    *   Verify the `routes` array contains entries for `home` (`/`), `dashboard` (`/music`), `album-ranking` (`/rank/albums`), `song-ranking` (`/rank/songs`), `profile` (`/profile`), and `settings` (`/settings`). These should exist from the previous foundational setup.
+    *   **Crucially:** Remove the `meta: { requiresAuth: true }` property from the `profile` route (and any other routes where it might have been added).
+    *   **Crucially:** Find and remove (or comment out) the `router.beforeEach(...)` navigation guard function entirely. This allows unrestricted navigation between all screens during skeleton development.
+    *   Review and remove any old routes from the original `music-ranker` project that are no longer needed (e.g., `/song/:id`, `/admin/taylor-swift`, `/visualizations/sunburst` unless you want to keep it for reference).
+
+**2. Implement Login Simulation (`src/store/userStore.js`)**
+
+*   **Objective:** Add a simple mechanism to visually toggle between logged-in and logged-out layouts.
+*   **Action:**
+    *   Open `src/store/userStore.js`.
+    *   Add a new state property:
+        ```javascript
+        // Inside the defineStore setup function or state object:
+        const isLoggedInSimulation = ref(false) // Default to logged out
+        ```
+    *   Add a new action:
+        ```javascript
+        // Also inside the defineStore setup function or actions object:
+        function setIsLoggedInSimulation(status) {
+          isLoggedInSimulation.value = status;
+          // Optionally, navigate immediately for effect, need to import router
+          // import router from '@/router'; // Import router at top
+          // if (status) {
+          //   router.push({ name: 'dashboard' });
+          // } else {
+          //   router.push({ name: 'home' });
+          // }
+        }
+        ```
+    *   Expose the new state and action in the `return` statement of the store:
+        ```javascript
+        return {
+          // ... other existing returned properties
+          isLoggedInSimulation,
+          setIsLoggedInSimulation
+        }
+        ```
+
+**3. Update App Shell (`src/App.vue`)**
+
+*   **Objective:** Set up the main layout with header, content area, and conditional bottom navigation based on the simulation state.
+*   **Action:**
+    *   Ensure the root `div` has Tailwind classes for full height flex layout: `class="flex flex-col h-screen w-full"`.
+    *   Add a placeholder fixed `<header>` using Tailwind:
+        ```vue
+        <header class="flex-none bg-white shadow-md z-10 p-4">
+          <h1 class="text-xl font-bold">Swifties.io (Skeleton)</h1>
+          <!-- Add Logo/Info Icons later -->
+        </header>
+        ```
+    *   Ensure the main content area uses `<router-view />` inside a flexible, scrollable container:
+        ```vue
+        <main class="flex-1 overflow-y-auto p-4" :class="{ 'pb-16': userStore.isLoggedInSimulation }"> <!-- Add padding-bottom for nav -->
+          <router-view/>
+        </main>
+        ```
+    *   Import the `useUserStore` and conditionally render `BottomNavigation`:
+        ```vue
+        <script setup>
+        import BottomNavigation from '@/components/ui/BottomNavigation.vue'; // Verify path
+        import { useUserStore } from '@/store/userStore'; // Import the user store
+
+        const userStore = useUserStore();
+        </script>
+
+        <template>
+          <!-- ... header and main ... -->
+          <BottomNavigation v-if="userStore.isLoggedInSimulation" />
+        </template>
+        ```
+
+**4. Update Bottom Navigation (`src/components/ui/BottomNavigation.vue`)**
+
+*   **Objective:** Ensure links match the spec and use Tailwind for styling.
+*   **Action:**
+    *   Verify/update the `<router-link>` components:
+        *   Link 1: `to="/music"` (or `:to="{ name: 'dashboard' }"`). Label: "Music". Icon: Music Note.
+        *   Link 2: `to="/profile"` (or `:to="{ name: 'profile' }"`). Label: "Profile". Icon: Person.
+        *   Link 3: `to="/settings"` (or `:to="{ name: 'settings' }"`). Label: "Settings". Icon: Gear.
+        *   Link 4: `to="/settings"` (or `:to="{ name: 'settings' }"`). Label: "About". Icon: Information Symbol. (This links to the Settings page, the specific tab handling comes later).
+    *   Replace placeholder icons with actual SVG icons or an icon library (e.g., Heroicons via `<Icon>` components or Tailwind classes if using a font icon).
+    *   Ensure styling uses Tailwind classes (e.g., `flex`, `flex-col`, `items-center`, `text-gray-500`, `hover:text-green-600`, active class styling like `text-green-600`).
+
+**5. Flesh Out Placeholder Views (`src/views/*.vue`)**
+
+*   **Objective:** Add basic structure and text placeholders to all view files using Tailwind CSS.
+*   **Action:** Edit *each* of the following files:
+    *   `src/views/HomeView.vue` (Screen 1)
+    *   `src/views/DashboardView.vue` (Screen 4)
+    *   `src/views/AlbumRankingView.vue` (Screen 2)
+    *   `src/views/SongRankingView.vue` (Screen 3)
+    *   `src/views/ProfileView.vue` (Screen 5)
+    *   `src/views/SettingsView.vue` (Screen 6)
+    *   **Inside each file's `<template>`:**
+        *   Add a root `div` with padding (e.g., `class="p-4"`).
+        *   Add an `<h1>` with the screen title (e.g., `Album Ranking`).
+        *   Add a `<p>` briefly describing the spec for that screen (e.g., `Spec: Tiered layout...`).
+        *   Use simple `div` elements with borders and background colors (`border`, `bg-gray-100`, `min-h-[...])` to represent major layout areas (chart area, tier area, list shelf area, tab containers).
+        *   Use text inside these divs to label them (e.g., `[Sunburst Chart Area]`, `[Tier 1 Placeholder]`).
+        *   For `ProfileView` and `SettingsView`, use simple `button` or `div` elements with text to represent the tabs specified.
+    *   **Add Simulation Toggles:**
+        *   In `src/views/HomeView.vue`, add:
+            ```vue
+            <script setup>
+            import { useUserStore } from '@/store/userStore';
+            const userStore = useUserStore();
+            </script>
+            <template>
+              <!-- ... other content ... -->
+              <button @click="userStore.setIsLoggedInSimulation(true)" class="mt-10 p-1 bg-gray-300 text-xs rounded">Simulate Login</button>
+            </template>
+            ```
+        *   In `src/views/DashboardView.vue`, add:
+            ```vue
+            <script setup>
+            import { useUserStore } from '@/store/userStore';
+            const userStore = useUserStore();
+            </script>
+            <template>
+              <!-- ... other content ... -->
+              <button @click="userStore.setIsLoggedInSimulation(false)" class="mt-10 p-1 bg-gray-300 text-xs rounded">Simulate Logout</button>
+            </template>
+            ```
+
+**6. Integrate Existing Sunburst Component**
+
+*   **Objective:** Display your working sunburst in `HomeView` and `DashboardView`.
+*   **Assumption:** Your sunburst component is ready, let's assume it's at `src/components/SunburstChart.vue`.
+*   **Action:**
+    *   Create a static data file if one doesn't exist from the previous plan, e.g., `src/data/static-sunburst-data.json`. Use the `taylor-swift-sunburst.json` content or a simplified version.
+    *   In `src/views/HomeView.vue`:
+        ```vue
+        <script setup>
+        // ... other imports
+        import { ref } from 'vue';
+        import SunburstChart from '@/components/SunburstChart.vue'; // Adjust path
+        import staticData from '@/data/static-sunburst-data.json';
+        const staticSunburstData = ref(staticData);
+        </script>
+        <template>
+          <!-- ... other content ... -->
+          <div class="border p-4 my-4 min-h-[300px] flex items-center justify-center bg-gray-100">
+            <SunburstChart :data="staticSunburstData" />
+          </div>
+          <!-- ... -->
+        </template>
+        ```
+    *   In `src/views/DashboardView.vue`:
+        ```vue
+        <script setup>
+        // ... other imports
+        import { ref } from 'vue';
+        import SunburstChart from '@/components/SunburstChart.vue'; // Adjust path
+        import staticData from '@/data/static-sunburst-data.json';
+        const staticSunburstData = ref(staticData);
+        </script>
+        <template>
+          <!-- ... other content ... -->
+          <div class="border p-4 my-4 min-h-[300px] flex items-center justify-center bg-gray-100">
+            <SunburstChart :data="staticSunburstData" />
+          </div>
+          <!-- ... -->
+        </template>
+        ```
+    *   Verify the component renders and displays the static data correctly on both pages.
+
+**7. Test Navigation**
+
+*   **Objective:** Ensure the skeleton is fully navigable.
+*   **Action:**
+    *   Run the development server (`yarn serve` or `npm run serve`).
+    *   Click the "Simulate Login" button on the homepage. Verify you navigate to `/music` and the bottom nav appears.
+    *   Click each item in the bottom navigation (`Music`, `Profile`, `Settings`, `About`). Verify you navigate to the correct placeholder screen (`/music`, `/profile`, `/settings`).
+    *   Click the "Simulate Logout" button on the dashboard. Verify you navigate to `/` and the bottom nav disappears.
+    *   Manually navigate to `/rank/albums` and `/rank/songs` to ensure those views load.
+
+---
+
+**Deliverable after this Phase:**
+
+*   A fully navigable application skeleton reflecting the specified screens and layout structure.
+*   Ability to switch between simulated logged-in and logged-out views.
+*   The existing sunburst component integrated and displaying static data on the appropriate screens.
+*   The project structure is ready for implementing the core ranking features (Phase 3) within the correct navigational context.

@@ -1,0 +1,329 @@
+
+# Swifties.io Screen-by-Screen UI/UX Overview
+
+This document provides a detailed screen-by-screen overview of the Swifties.io mobile browser app, focusing on UI/UX elements, animations, transitions, and differences between logged-in and logged-out user views.
+
+## General UI/UX Considerations:
+- **Consistent Branding**: Maintain a consistent visual style throughout the app, including color palettes, typography, and iconography, reflecting the Taylor Swift brand.
+- **Mobile-First Design**: All screens should be optimized for mobile devices, ensuring a responsive and intuitive experience on various screen sizes and orientations.
+- **Touch-Friendly Interactions**: Design interactions with touch gestures in mind, prioritizing ease of use and clear feedback.
+- **Performance**: Optimize all UI elements and animations for smooth performance on mobile browsers.
+- **Accessibility**: Ensure the app is accessible to users with disabilities, following WCAG guidelines.
+
+## Screen 1: Homepage (General Discography)
+**Purpose**: Introduce the app and showcase Taylor Swift's discography, encouraging sign-up/login.
+
+**Overall Look**: Dynamic and engaging, with a focus on interactive data visualization.
+
+### For Logged-Out Users:
+**Header**:
+- App Logo (Swifties.io): Prominently displayed.
+- Tagline (Optional): A short, catchy phrase related to Taylor Swift and the app's purpose.
+- Information Icon ("i"): A subtle icon that, when tapped, displays a tooltip or overlay explaining the sunburst diagrams and their interactivity.
+
+**Body**:
+- Three distinct, interactive sunburst visualizations of Taylor Swift's discography, presented one at a time.
+
+**Sunburst Visuals**:
+- Visually appealing, using color-coding to represent different aspects of the discography (e.g., eras, album release years).
+- Center of the sunburst represents the entire discography, with layers expanding outwards to show albums, songs, etc.
+- Smooth transitions between layers and views.
+
+**Sunburst Interaction**:
+- Horizontal Swipe: User can swipe left or right to transition between the three sunburst visualizations.
+- Single Tap: Tapping a node (album or song) displays a tooltip/overlay with relevant information (e.g., album title, release date, tracklist).
+- Double Tap: Tapping a node (album or era) expands that section, revealing the next layer of the sunburst.
+- Pinch to Zoom: Users can zoom in and out on the sunburst to explore details.
+- Zoom Out Animation: Swiping left zooms out, collapsing layers until the full discography view is shown.
+
+**Footer**: Fixed footer navigation bar (Music, Profile, Settings, About/Contact).
+
+**Call to Actions (Above Footer)**:
+- "Create Your Own Visuals" button: A prominent, visually engaging button (e.g., gradient, subtle animation) that leads to Screen 2 (Album Ranking).
+- "Already have an account? Log in" link: A smaller, less prominent link that leads to the login flow (modal or dedicated page).
+
+**Animations & Transitions**:
+- Smooth transitions between sunburst visualizations on horizontal swipe.
+- Animated expansion of sunburst layers on double-tap.
+- Fluid zooming and panning of the sunburst in response to pinch gestures.
+- Subtle animation on the information icon to draw attention.
+
+### Differences for Logged-In Users:
+Logged-in users do not see this screen. They are directed to Screen 4 (Dashboard) upon login.
+
+## Screen 2: Album Ranking
+**Purpose**: Allow users to rank their favorite Taylor Swift albums in a tiered system.
+
+**Overall Look**: Interactive and organized, with a clear drag-and-drop interface.
+
+### For All Users (Logged-in and Logged-out):
+**Header**:
+- App Logo (Swifties.io): Consistent placement.
+- Title: "Rank Your Favorite Albums" (or similar).
+- Information Icon ("i"): Displays a tooltip/overlay with instructions on how to use the tiered ranking system (e.g., "Drag albums from the list below to rank them in order").
+
+**Body**:
+**Tiered Ranking Area**:
+- Five horizontal tiers, visually distinct (e.g., different background colors or subtle dividers).
+- Each tier has placeholders indicating the ranking order (e.g., "1" for Tier 1, "2" and "3" for Tier 2, etc.).
+- Placeholders are clearly defined drop zones.
+
+**Tier Structure**:
+- Tier 1: 1 slot (occupies full width)
+- Tier 2: 2 slots (side-by-side)
+- Tier 3: 3 slots (equally spaced)
+- Tier 4: 3 slots (equally spaced)
+- Tier 5: 2 slots (equally spaced)
+
+**Unordered Album List**:
+- Located above the footer, designed as a collapsible "shelf".
+- Initially visible, displaying thumbnail images of all Taylor Swift albums (two rows, six columns).
+- Ordered by album release date.
+- Scrollable horizontally.
+
+**Collapsible Behavior**:
+- When the user starts dragging an album, the unordered list smoothly collapses downwards, giving more space to the tiered ranking area.
+- When collapsed, a subtle animation (e.g., a small arrow, a pulsing effect) indicates that the list can be reopened.
+
+**Footer**: Fixed footer navigation bar.
+
+**Action Buttons (Above Footer)**:
+- "Start Ranking Session": A button to initiate the ranking process. Changes to "Restart Ranking Session" if the user has already started.
+- "Save Rankings": A button to save the user's rankings. Initially disabled. Enabled only when at least three albums are placed in the tiered ranking area.
+
+**Animations & Transitions**:
+- Smooth collapsing and expanding animation for the unordered album list.
+- Visual feedback when dragging an album:
+  - Slight enlargement of the album thumbnail.
+  - A subtle shadow or glow effect.
+  - Haptic feedback (vibration) on drag start.
+- Visual feedback when hovering over a tier placeholder:
+  - Slight expansion of the placeholder.
+  - Change in background color.
+- Micro-animation when an album is dropped into a tier (e.g., a brief scaling or bouncing effect, more pronounced for Tier 1).
+- Smooth transitions when reordering albums within a tier.
+
+### Differences for Logged-In Users:
+No differences in UI or design.
+
+## Screen 3: Song Ranking
+**Purpose**: Allow users to rank their favorite songs from the albums they ranked on Screen 2.
+
+**Overall Look**: Similar to Screen 2, with a focus on drag-and-drop interaction, but adapted for song titles instead of album covers.
+
+### For All Users (Logged-in and Logged-out):
+**Header**:
+- App Logo (Swifties.io): Consistent placement.
+- Title: "Rank Your Favorite Songs" (or similar).
+- Information Icon ("i"): Displays a tooltip/overlay with instructions on how to use the tiered ranking system for songs.
+
+**Body**:
+**Selected Album Row**:
+- A horizontally scrollable row of thumbnail images representing the albums the user ranked on Screen 2.
+- Up to five visible at a time, with a clear visual indication of horizontal scrolling (e.g., arrows, partial visibility of the next/previous album).
+- Tapping an album thumbnail updates the Unordered Song List below to show the songs from the selected album.
+
+**Tiered Ranking Area**:
+- A multi-tiered list, similar in style to Screen 2, but adapted for songs (text-based placeholders instead of images).
+- Each tier has placeholders indicating the ranking order (e.g., "1" for Tier 1).
+- Tier structure adapts to the number of songs:
+  - Tier 1: 1 slot
+  - Tier 2: 2 slots
+  - Tier 3: 3 slots
+  - Tier 4: 4 slots
+  - Tier 5+: Up to 5 slots per tier, adding more tiers as needed.
+
+**Unordered Song List**:
+- Located above the footer, designed as a collapsible "shelf".
+- Displays the names of the songs from the currently selected album, ordered by track number.
+- Scrollable horizontally (two rows, six columns).
+- Collapsible behavior identical to the Unordered Album List on Screen 2.
+
+**Footer**: Fixed footer navigation bar.
+
+**Action Buttons (Above Footer)**:
+- "Start Song Ranking Session": A button to initiate the song ranking process for the selected album.
+- "Save Song Rankings": A button to save the user's song rankings. Disabled until the user has ranked at least three songs from at least three albums.
+
+**Animations & Transitions**:
+- Smooth transitions when switching between album song lists.
+- Collapsing and expanding animation for the unordered song list (identical to Screen 2).
+- Visual feedback for dragging and dropping songs (similar to Screen 2, but adapted for text).
+- Smooth transitions when reordering songs within a tier.
+
+### Differences for Logged-In Users:
+No differences in UI or design.
+
+## Screen 4: Dashboard (Personalized Visualizations)
+**Purpose**: Display personalized sunburst visualizations and ranked lists based on user preferences, and provide sharing and editing options.
+
+**Overall Look**: A personalized and visually driven dashboard.
+
+### For Logged-in Users Only:
+**Header**:
+- App Logo (Swifties.io): Consistent placement.
+- Personalized Greeting: (e.g., "Welcome to your Swiftie Universe, [Username]!").
+
+**Body**:
+**Toggles/Tabs**:
+- Buttons or tabs to switch between "Visualizations" and "Rankings".
+
+**"Visualizations" View**:
+- Displays one of three personalized sunburst visualizations, reflecting the user's ranked albums and songs.
+- Mirrors the sunburst styles from Screen 1 (Era, Time Period, Overview) but filtered to the user's preferences.
+- Users can toggle between these three views.
+
+**"Rankings" View**:
+- Displays the user's ranked lists of albums and songs, similar in style to Screens 2 and 3, but without the drag-and-drop functionality.
+
+**Share Options**:
+- A prominent "Share" button or menu, consistently available in both "Visualizations" and "Rankings" views.
+- Options:
+  - "Download as PNG Image": Downloads a static image of the current view (sunburst or ranked list).
+  - "Share as Animation (GIF/Short Video)": Creates a short, animated representation of the sunburst visualization.
+  - "Share Profile Link": Displays and copies the user's unique profile link (swifties.io/[username]).
+  - "Share as Game (Coming Soon)": A sub-option under "Share Profile Link," displaying a "Coming Soon" message.
+
+**"Edit Rankings" Button**: A prominent button that takes the user back to Screen 2 or Screen 3, depending on whether they are on the album or song ranking view, with their previous rankings pre-populated.
+
+**Footer**: Fixed footer navigation bar.
+
+**Animations & Transitions**:
+- Smooth transitions between the three personalized sunburst views.
+- Visual feedback when using sharing options.
+- Transition between "Visualizations" and "Rankings" views.
+
+### Differences for Logged-In Users:
+This screen is only accessible to logged-in users.
+
+## Screen 5: Profile Page
+**Purpose**: Allow logged-in users to manage their profile and access profile-related features. Logged-out users see sign-up/login prompts.
+
+**Overall Look**: Organized and informative, with a tabbed interface.
+
+### For Logged-in Users:
+**Header**:
+- App Logo (Swifties.io): Consistent placement.
+- Title: "Profile"
+
+**Body**: Tabbed interface:
+**Tab 1: Profile Information**:
+- Displays the user's profile information:
+  - Username: Editable, with a uniqueness check.
+  - Email Address: Editable.
+  - Password: Option to change password.
+  - Profile Photo: Option to upload/change.
+  - Bio: Text area for a short user bio (editable, skippable).
+- "Save Changes" button to update profile information.
+
+**Tab 2: Link Preview**:
+- Displays a preview of what other users see when visiting the user's public profile link.
+- Includes:
+  - A message (e.g., "[Username]'s Swiftie Preferences").
+  - User's profile picture.
+  - User's username.
+  - User's bio.
+  - Toggles to preview the user's ranked lists and sunburst visualizations.
+- Displays the user's unique profile link (swifties.io/[username]).
+
+**Tab 3: Game (Coming Soon)**:
+- "Coming Soon" message.
+- Brief description of the game: "Share a cryptic graphic of your favorite Taylor Swift songs and albums and let your friends guess! Earn points and compete!"
+
+**Tab 4: History**:
+- Lists the user's past ranking sessions (date/timestamp).
+- Initial sessions are visible to all users.
+- Subsequent sessions are hidden with a "Premium Feature: Upgrade to View" overlay.
+
+**Tab 5: Premium**:
+- Information about premium subscription benefits:
+  - Unlimited data storage.
+  - Access to all ranking possibilities.
+  - Access to version history.
+- Call to action to subscribe:
+  - Button to initiate the Stripe payment sequence for the yearly subscription ($19.89).
+  - Special offer for the first 1,989 users ("Join Club 1989"): Lifetime subscription for $13.13.
+
+**Footer**: Fixed footer navigation bar.
+
+**Animations & Transitions**:
+- Smooth transitions between tabs.
+- Visual feedback when saving profile changes.
+
+### Differences for Logged-In Users:
+Logged-in users can view and edit their profile information.
+
+### For Logged-out Users:
+**Header**:
+- App Logo (Swifties.io)
+- Title: "Profile"
+
+**Body**:
+- Prominent "Sign Up" and "Log In" buttons/forms.
+- Message explaining that the user needs to be logged in to view profile details.
+
+**Footer**: Fixed footer navigation bar.
+
+**Animations & Transitions**:
+- Smooth transitions.
+
+### Differences for Logged-out Users:
+Logged-out users see a simplified version with sign-up/login prompts instead of profile management options. Tabs 2-5 are hidden or display a login prompt.
+
+## Screen 6: Settings Page
+**Purpose**: To provide users with app preferences, information, and support.
+
+**Overall Look**: Clean and organized, with a tabbed interface.
+
+### For Logged-in Users
+**Header**:
+- App Logo (Swifties.io)
+- Title: "Settings"
+
+**Body**: Tabbed interface:
+**Tab 1: Standard Settings**:
+- Options to toggle light/dark mode.
+- Other standard app settings as needed (e.g., notification preferences, accessibility options).
+
+**Tab 2: About Us**:
+- Information about the app, its creators, and its mission.
+
+**Tab 3: Roadmap**:
+- Information about upcoming features and planned development.
+
+**Tab 4: Feedback**:
+- A form for users to submit feedback.
+- Dropdown menu to select feedback type: Bug Report, Feature Request, General Feedback, etc.
+
+**Tab 5: Help / FAQs**:
+- A list of frequently asked questions and their answers.
+
+**Footer**: Fixed footer navigation bar.
+
+**Animations & Transitions**:
+- Smooth transitions between tabs.
+- Visual feedback for settings changes.
+
+### Differences for Logged-out Users
+**Header**:
+- App Logo (Swifties.io)
+- Title: "Settings"
+
+**Body**: Tabbed interface:
+**Tab 1: About Us**:
+- Information about the app, its creators, and its mission.
+
+**Tab 2: Roadmap**:
+- Information about upcoming features and planned development.
+
+Tabs 3-5 (Standard Settings, Feedback, Help/FAQs) are hidden or display a message like "Log in to access these settings."
+
+**Footer**: Fixed footer navigation bar.
+
+**Animations & Transitions**:
+- Smooth transitions between tabs.
+
+---
+
+This detailed screen-by-screen overview should provide the design and development teams with a clear understanding of the user experience, UI elements, and design considerations for each screen, including how the experience differs for logged-in and logged-out users.
+```

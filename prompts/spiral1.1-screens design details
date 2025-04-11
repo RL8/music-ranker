@@ -1,0 +1,41 @@
+Okay, that's a great next step. The "Swifties.io Screen-by-Screen UI/UX Overview" document gives us much more concrete detail about the look, feel, and expected micro-interactions for each screen.
+
+Before jumping into implementing these enhancements on top of the current skeleton, here are my thoughts and suggestions, keeping the "wireframe/skeleton spirit" in mind:
+
+**Overall Goal:** Enhance the existing skeleton views to visually match the *structure and key UI elements* described in the new document, using placeholders for dynamic content and interactions. We want a more detailed *visual* blueprint, still without complex logic.
+
+**Key Principles for This Phase:**
+
+1.  **Structure Over Logic:** Focus on arranging elements correctly (tiers, shelves, tabs, headers, footers) using Tailwind.
+2.  **Visual Placeholders:** Replace generic text like `[Placeholder]` with more specific descriptions or representative UI elements (e.g., placeholder form inputs, icon placeholders).
+3.  **Simulate States:** Improve the logged-in/out simulation, especially for Profile and Settings, to show the correct *set* of placeholders (e.g., tabs, buttons) for each state.
+4.  **Keep it Static:** Interactions like drag-and-drop, swiping between sunbursts, tab switching, saving, collapsing shelves, and animations should *not* be functional yet. We're just showing *where* they will be and *what* they look like statically.
+5.  **Sunburst Integration:** Continue using the existing sunburst component with static data where specified.
+
+**Suggestions/Plan Before Implementation:**
+
+1.  **Headers:** Add the specified titles (e.g., "Rank Your Favorite Albums") and a placeholder for the "i" icon (maybe just `(i)`) to the headers of the relevant views (`HomeView`, `AlbumRankingView`, `SongRankingView`). Add the "[Personalized Greeting]" placeholder text to `DashboardView`'s header.
+2.  **Homepage (Screen 1 / `HomeView.vue`):**
+    *   Keep the single static sunburst placeholder for now. Representing the 3 swipeable ones visually is complex for a skeleton.
+    *   Update the CTA placeholders to use the exact text: "[Create Your Own Visuals Button]" and "[Already have an account? Log in]". Style the button placeholder more prominently.
+3.  **Ranking Screens (Screens 2 & 3 / `AlbumRankingView.vue`, `SongRankingView.vue`):**
+    *   **Tiers:** Use simple `div`s styled with Tailwind to represent the tiers. Inside each tier, add text placeholders for the *exact* number of slots specified (e.g., Tier 1: `[Rank #1]`; Tier 2: `[Rank #2] [Rank #3]`).
+    *   **Shelf:** Style the shelf `div` to clearly look like a horizontal container (e.g., using flexbox, maybe add a subtle border). Add placeholder elements inside representing album thumbnails (Screen 2) or song names (Screen 3). Add a small visual cue like `[Collapsible Shelf v]` to indicate its future behavior.
+    *   **Buttons:** Update button placeholders with the exact text ("Start Ranking Session", "Save Rankings", "Start Song Ranking Session", "Save Song Rankings"). Visually disable the "Save" buttons by default (e.g., `opacity-50`).
+    *   **Screen 3 Specific:** Add a placeholder `div` at the top for the "[Horizontally Scrollable Album Thumbnails]".
+4.  **Dashboard (Screen 4 / `DashboardView.vue`):**
+    *   Add placeholder `button` elements for the view toggles ("Visualizations", "Rankings") and the sunburst type toggles ("Era", "Time Period", "Overview").
+    *   Add placeholder buttons for "[Edit Rankings]" and "[Share Menu]".
+    *   Keep the single static sunburst placeholder.
+5.  **Profile (Screen 5 / `ProfileView.vue`):**
+    *   Use simple `button` or styled `div` elements to represent the tabs ("Profile Information", "Link Preview", etc.). 
+    *   **Crucially:** Use `v-if="userStore.isLoggedInSimulation"` and `v-else` (or similar logic tied to the simulation store state) to show *either* the placeholder Login/Signup buttons *or* the placeholder Tab buttons and profile content structure.
+    *   Inside the logged-in view, add basic placeholder form fields (`<input type="text" placeholder="Username">`, etc.) for the "Profile Information" tab area. Add placeholder text/elements for the content of the other tabs ("Link Preview", "Game", "History", "Premium").
+6.  **Settings (Screen 6 / `SettingsView.vue`):**
+    *   Similar to Profile, use `v-if="userStore.isLoggedInSimulation"` to show the *correct set* of placeholder tabs ("Standard Settings", "About Us", etc. for logged-in; fewer for logged-out).
+    *   Add basic placeholders for the content within each visible tab area (e.g., "[Dark Mode Toggle]", "[Feedback Form Area]").
+7.  **Animations/Transitions:** Defer all complex animations (collapsing shelves, D&D feedback, sunburst transitions). The focus is static structure.
+
+This approach builds upon the current skeleton by adding the next layer of visual detail derived from your UI/UX document. It creates a much clearer picture of each screen's layout and components without getting bogged down in implementation logic, perfectly fitting the "wireframe/skeleton spirit". Once this is done, we'll be excellently positioned to start implementing the core interactive logic (like drag-and-drop) in the next phase.
+
+Do you agree with this refined plan for the enhanced skeleton?
