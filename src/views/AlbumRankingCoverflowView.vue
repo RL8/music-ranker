@@ -36,55 +36,75 @@
       </div>
     </div>
     
-    <!-- Coverflow Album Display Placeholder -->
+    <!-- Coverflow Album Display -->
     <div class="border-2 border-gray-300 rounded-lg p-6 bg-gray-50 mb-8">
-      <div class="text-center">
-        <h2 class="text-xl font-semibold mb-4">Coverflow Ranking Coming Soon</h2>
-        <p class="text-gray-600 mb-6">This feature is currently under development</p>
-        
-        <!-- Placeholder Coverflow UI -->
-        <div class="relative h-64 max-w-md mx-auto mb-8">
-          <!-- Album Cards -->
-          <div class="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-white rounded-lg shadow-lg z-30 flex items-center justify-center">
-            <img src="https://via.placeholder.com/200x200?text=Current+Album" alt="Current Album" class="w-full h-full object-cover rounded-lg">
-          </div>
-          <div class="absolute left-1/4 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-40 h-40 bg-white rounded-lg shadow-md z-20 rotate-[-15deg] flex items-center justify-center opacity-70">
-            <img src="https://via.placeholder.com/200x200?text=Previous+Album" alt="Previous Album" class="w-full h-full object-cover rounded-lg">
-          </div>
-          <div class="absolute left-3/4 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-40 h-40 bg-white rounded-lg shadow-md z-20 rotate-[15deg] flex items-center justify-center opacity-70">
-            <img src="https://via.placeholder.com/200x200?text=Next+Album" alt="Next Album" class="w-full h-full object-cover rounded-lg">
+      <div v-if="rankingStore.availableAlbums.length > 0">
+        <AlbumCoverflowCarousel 
+          :albums="rankingStore.availableAlbums"
+          @rate-album="handleAlbumRating"
+        />
+      </div>
+      <div v-else class="text-center py-8">
+        <div class="w-20 h-20 mx-auto mb-4 bg-yellow-100 rounded-full flex items-center justify-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-yellow-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+        <h3 class="text-lg font-medium text-gray-800 mb-2">No Albums Available</h3>
+        <p class="text-gray-600 mb-4">There are no albums available to rank. Please check back later.</p>
+      </div>
+    </div>
+    
+    <!-- Ranking Results -->
+    <div v-if="Object.values(ratedAlbums).length > 0" class="mb-8">
+      <h2 class="text-xl font-semibold mb-4">Your Rankings</h2>
+      
+      <!-- Liked Albums -->
+      <div v-if="likedAlbums.length > 0" class="mb-6">
+        <h3 class="font-medium text-green-700 mb-2 flex items-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+          </svg>
+          Liked Albums
+        </h3>
+        <div class="flex flex-wrap gap-2">
+          <div v-for="album in likedAlbums" :key="album.id" class="w-16 h-16 relative">
+            <img :src="album.coverImageUrl" :alt="album.title" class="w-full h-full object-cover rounded">
+            <div class="absolute inset-0 bg-black bg-opacity-20 rounded"></div>
           </div>
         </div>
-        
-        <!-- Rating Controls -->
-        <div class="flex justify-center space-x-4 mb-6">
-          <button class="w-12 h-12 rounded-full bg-red-100 text-red-600 flex items-center justify-center shadow hover:bg-red-200 transition-colors">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
-          <button class="w-12 h-12 rounded-full bg-yellow-100 text-yellow-600 flex items-center justify-center shadow hover:bg-yellow-200 transition-colors">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-          </button>
-          <button class="w-12 h-12 rounded-full bg-green-100 text-green-600 flex items-center justify-center shadow hover:bg-green-200 transition-colors">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-            </svg>
-          </button>
+      </div>
+      
+      <!-- Neutral Albums -->
+      <div v-if="neutralAlbums.length > 0" class="mb-6">
+        <h3 class="font-medium text-yellow-700 mb-2 flex items-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          Neutral Albums
+        </h3>
+        <div class="flex flex-wrap gap-2">
+          <div v-for="album in neutralAlbums" :key="album.id" class="w-16 h-16 relative">
+            <img :src="album.coverImageUrl" :alt="album.title" class="w-full h-full object-cover rounded">
+            <div class="absolute inset-0 bg-black bg-opacity-20 rounded"></div>
+          </div>
         </div>
-        
-        <!-- Navigation Dots -->
-        <div class="flex justify-center space-x-1 mb-4">
-          <div class="w-2 h-2 rounded-full bg-green-600"></div>
-          <div class="w-2 h-2 rounded-full bg-gray-300"></div>
-          <div class="w-2 h-2 rounded-full bg-gray-300"></div>
-          <div class="w-2 h-2 rounded-full bg-gray-300"></div>
-          <div class="w-2 h-2 rounded-full bg-gray-300"></div>
+      </div>
+      
+      <!-- Disliked Albums -->
+      <div v-if="dislikedAlbums.length > 0" class="mb-6">
+        <h3 class="font-medium text-red-700 mb-2 flex items-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+          Disliked Albums
+        </h3>
+        <div class="flex flex-wrap gap-2">
+          <div v-for="album in dislikedAlbums" :key="album.id" class="w-16 h-16 relative">
+            <img :src="album.coverImageUrl" :alt="album.title" class="w-full h-full object-cover rounded">
+            <div class="absolute inset-0 bg-black bg-opacity-20 rounded"></div>
+          </div>
         </div>
-        
-        <p class="text-sm text-gray-500">Album 1 of 11</p>
       </div>
     </div>
     
@@ -92,14 +112,19 @@
     <div class="flex flex-col space-y-3 mt-8 mb-24">
       <button 
         @click="saveRankings"
-        class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg flex items-center justify-center transition-colors opacity-50 cursor-not-allowed"
+        class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg flex items-center justify-center transition-colors"
+        :class="{ 'opacity-50 cursor-not-allowed': !hasRatings || !userStore.isLoggedInSimulation }"
+        :disabled="!hasRatings || !userStore.isLoggedInSimulation"
       >
-        <span>Save Rankings (Coming Soon)</span>
+        <span v-if="userStore.isLoggedInSimulation">Save Rankings</span>
+        <span v-else>Save Rankings (Login Required)</span>
       </button>
       
       <button 
         @click="resetRankings"
-        class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-6 rounded-lg transition-colors opacity-50 cursor-not-allowed"
+        class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-6 rounded-lg transition-colors"
+        :class="{ 'opacity-50 cursor-not-allowed': !hasRatings }"
+        :disabled="!hasRatings"
       >
         Reset Rankings
       </button>
@@ -115,23 +140,115 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useUserStore } from '@/store/userStore';
 import { useRankingStore } from '@/store/rankingStore';
 import toastService from '@/services/toastService';
+import AlbumCoverflowCarousel from '@/components/AlbumCoverflowCarousel.vue';
 
 const router = useRouter();
 const userStore = useUserStore();
 const rankingStore = useRankingStore();
 
-// Placeholder functions for future implementation
+// Track rated albums
+const ratedAlbums = ref({});
+
+// Computed properties for different rating categories
+const likedAlbums = computed(() => {
+  return Object.values(ratedAlbums.value).filter(album => album.rating === 'like');
+});
+
+const neutralAlbums = computed(() => {
+  return Object.values(ratedAlbums.value).filter(album => album.rating === 'neutral');
+});
+
+const dislikedAlbums = computed(() => {
+  return Object.values(ratedAlbums.value).filter(album => album.rating === 'dislike');
+});
+
+const hasRatings = computed(() => {
+  return Object.keys(ratedAlbums.value).length > 0;
+});
+
+// Handle album rating from the coverflow component
+const handleAlbumRating = ({ album, rating }) => {
+  ratedAlbums.value[album.id] = {
+    ...album,
+    rating
+  };
+  
+  showToast('Album Rated', `You ${rating}d "${album.title}"`);
+};
+
+// Convert coverflow ratings to tier-based rankings
+const convertRatingsToTiers = () => {
+  // Clear existing tiers
+  Object.keys(rankingStore.rankedTiers).forEach(tier => {
+    rankingStore.rankedTiers[tier] = [];
+  });
+  
+  // Add liked albums to top tiers (1-2)
+  likedAlbums.value.forEach((album, index) => {
+    if (index === 0) {
+      rankingStore.rankedTiers.tier1.push(album);
+    } else if (index < 3) {
+      rankingStore.rankedTiers.tier2.push(album);
+    } else {
+      rankingStore.rankedTiers.tier3.push(album);
+    }
+  });
+  
+  // Add neutral albums to middle tiers (3-4)
+  neutralAlbums.value.forEach((album, index) => {
+    if (index < 3) {
+      rankingStore.rankedTiers.tier3.push(album);
+    } else {
+      rankingStore.rankedTiers.tier4.push(album);
+    }
+  });
+  
+  // Add disliked albums to bottom tier (5)
+  dislikedAlbums.value.forEach(album => {
+    rankingStore.rankedTiers.tier5.push(album);
+  });
+  
+  // Update available albums
+  rankingStore.availableAlbums = rankingStore.availableAlbums.filter(album => 
+    !Object.keys(ratedAlbums.value).includes(album.id.toString())
+  );
+};
+
 const saveRankings = () => {
-  showToast('Coming Soon', 'This feature is currently under development.');
+  if (!hasRatings.value) {
+    showToast('No Rankings', 'Please rate some albums before saving.');
+    return;
+  }
+  
+  if (!userStore.isLoggedInSimulation) {
+    showToast('Login Required', 'Please log in to save your rankings.');
+    return;
+  }
+  
+  // Convert coverflow ratings to tier-based rankings
+  convertRatingsToTiers();
+  
+  // Save rankings using the existing store method
+  rankingStore.saveRankingsToLocalStorage();
+  
+  showToast('Rankings Saved', 'Your album rankings have been saved successfully.');
 };
 
 const resetRankings = () => {
-  showToast('Coming Soon', 'This feature is currently under development.');
+  if (!hasRatings.value) {
+    showToast('No Rankings', 'You haven\'t rated any albums yet.');
+    return;
+  }
+  
+  // Reset the rated albums
+  ratedAlbums.value = {};
+  
+  showToast('Rankings Reset', 'Your coverflow rankings have been reset.');
 };
 
 const login = () => {
@@ -146,6 +263,26 @@ const showToast = (title, message) => {
     duration: 3000
   });
 };
+
+// Initialize albums if needed
+onMounted(() => {
+  if (rankingStore.availableAlbums.length === 0) {
+    // If no albums are available, initialize with static data
+    rankingStore.initializeStaticAlbums([
+      { id: 1, title: 'Taylor Swift', coverImageUrl: 'https://via.placeholder.com/300x300?text=Taylor+Swift', year: '2006' },
+      { id: 2, title: 'Fearless', coverImageUrl: 'https://via.placeholder.com/300x300?text=Fearless', year: '2008' },
+      { id: 3, title: 'Speak Now', coverImageUrl: 'https://via.placeholder.com/300x300?text=Speak+Now', year: '2010' },
+      { id: 4, title: 'Red', coverImageUrl: 'https://via.placeholder.com/300x300?text=Red', year: '2012' },
+      { id: 5, title: '1989', coverImageUrl: 'https://via.placeholder.com/300x300?text=1989', year: '2014' },
+      { id: 6, title: 'Reputation', coverImageUrl: 'https://via.placeholder.com/300x300?text=Reputation', year: '2017' },
+      { id: 7, title: 'Lover', coverImageUrl: 'https://via.placeholder.com/300x300?text=Lover', year: '2019' },
+      { id: 8, title: 'Folklore', coverImageUrl: 'https://via.placeholder.com/300x300?text=Folklore', year: '2020' },
+      { id: 9, title: 'Evermore', coverImageUrl: 'https://via.placeholder.com/300x300?text=Evermore', year: '2020' },
+      { id: 10, title: 'Midnights', coverImageUrl: 'https://via.placeholder.com/300x300?text=Midnights', year: '2022' },
+      { id: 11, title: 'The Tortured Poets Department', coverImageUrl: 'https://via.placeholder.com/300x300?text=TTPD', year: '2023' }
+    ]);
+  }
+});
 </script>
 
 <style scoped>
