@@ -1,41 +1,27 @@
 <template>
-  <div class="flex flex-col h-screen w-full overflow-hidden">
-    <!-- Fixed Header -->
-    <header class="flex-none bg-white shadow-md z-10 p-4">
-      <div class="flex justify-between items-center">
-        <div class="flex items-center">
-          <div class="w-8 h-8 mr-2 bg-green-600 rounded-full flex items-center justify-center text-white">
-            <span class="text-lg font-bold">S</span>
-          </div>
-          <h1 class="text-xl font-bold m-0">Swifties.io</h1>
-        </div>
-        <div class="flex items-center">
-          <button class="w-8 h-8 flex items-center justify-center text-gray-600 hover:text-green-600 transition-colors">
-            <i class="info-icon w-5 h-5 bg-center bg-no-repeat bg-contain"></i>
-          </button>
-        </div>
-      </div>
-    </header>
+  <div class="flex h-screen w-full overflow-hidden">
+    <!-- Sidebar Navigation -->
+    <Sidebar />
     
-    <!-- Main Content Area (Scrollable) -->
-    <main class="flex-1 overflow-y-auto -webkit-overflow-scrolling-touch">
-      <router-view/>
-    </main>
-    
-    <!-- Bottom Navigation (Only when logged in simulation is active) -->
-    <footer class="flex-none z-10">
-      <bottom-navigation v-if="userStore.isLoggedInSimulation" />
-    </footer>
+    <!-- Main Content Area -->
+    <div class="flex flex-col flex-1 h-full overflow-hidden transition-all duration-300" :class="{ 'md:ml-[250px]': true }">
+      <!-- Page-specific header can be added by individual views -->
+      
+      <!-- Main Content (Scrollable) -->
+      <main class="flex-1 overflow-y-auto -webkit-overflow-scrolling-touch">
+        <router-view/>
+      </main>
+    </div>
   </div>
 </template>
 
 <script>
 import { useUserStore } from '@/store/userStore'
-import BottomNavigation from './components/ui/BottomNavigation.vue'
+import Sidebar from './components/ui/Sidebar.vue'
 
 export default {
   components: {
-    BottomNavigation
+    Sidebar
   },
   setup() {
     const userStore = useUserStore()
