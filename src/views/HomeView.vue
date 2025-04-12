@@ -60,18 +60,10 @@
     <!-- CTA Buttons -->
     <div class="mt-10 flex flex-col items-center">
       <router-link 
-        to="/rank/albums"
+        to="/rank/albums/carousel"
         class="w-full max-w-xs p-3 bg-green-600 text-white rounded-full font-bold hover:bg-green-700 transition-colors shadow-md active:scale-95 transform duration-150 text-center mb-3"
       >
-        Create Your Own Visuals
-      </router-link>
-      
-      <router-link 
-        to="/rank/albums/coverflow"
-        class="w-full max-w-xs p-3 bg-purple-600 text-white rounded-full font-bold hover:bg-purple-700 transition-colors shadow-md active:scale-95 transform duration-150 text-center flex items-center justify-center"
-      >
-        <span>Try Coverflow Ranking</span>
-        <span class="ml-2 px-2 py-0.5 bg-white text-purple-700 text-xs rounded-full">New</span>
+        Create Your Own Album Rankings
       </router-link>
       
       <button 

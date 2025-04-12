@@ -49,12 +49,17 @@ const routes = [
   {
     path: '/rank/albums',
     name: 'album-ranking',
-    component: () => import('../views/AlbumRankingView.vue')
+    redirect: '/rank/albums/carousel'
   },
   {
     path: '/rank/albums/coverflow',
     name: 'album-ranking-coverflow',
-    component: () => import('../views/AlbumRankingCoverflowView.vue')
+    redirect: '/rank/albums/carousel'
+  },
+  {
+    path: '/rank/albums/carousel',
+    name: 'album-ranking-carousel',
+    component: () => import('../views/AlbumRankingCarouselView.vue')
   },
   {
     path: '/rank/songs',
