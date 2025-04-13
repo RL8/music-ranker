@@ -58,6 +58,26 @@ export interface Song {
 }
 
 /**
+ * Editions table type definition
+ */
+export interface Edition {
+  editionId: string;
+  editionName: string;
+  description?: string;
+  created_at?: Date;
+}
+
+/**
+ * RecordingEditions junction table type definition
+ */
+export interface RecordingEdition {
+  recordingId: string;
+  editionId: string;
+  notes?: string;
+  created_at?: Date;
+}
+
+/**
  * Type definition for joined data between Albums and Songs
  */
 export interface AlbumWithSongs extends Album {
@@ -87,4 +107,6 @@ export interface Database {
   Eras: Era[];
   Recordings: Recording[];
   Songs: Song[];
+  Editions: Edition[];
+  RecordingEditions: RecordingEdition[];
 }

@@ -4,13 +4,15 @@ This document provides detailed information about the database schema used in th
 
 ## Tables Overview
 
-The database consists of 5 main tables:
+The database consists of 7 main tables:
 
 1. **Albums** - Stores information about music albums
 2. **Artists** - Contains artist information
 3. **Eras** - Represents musical eras or periods
 4. **Recordings** - Individual recordings of songs on albums
 5. **Songs** - Contains song information
+6. **Editions** - Contains predefined album editions and release types
+7. **RecordingEditions** - Junction table linking recordings to their respective editions
 
 ## Table Structures
 
@@ -73,6 +75,28 @@ Contains information about songs.
 | originalEraId   | text      | YES      | Foreign key reference to the era when the song was originally released |
 | notes           | text      | YES      | Additional notes about the song            |
 
+### Editions Table
+
+Contains predefined album editions and release types.
+
+| Column Name    | Data Type | Nullable | Description                                |
+|----------------|-----------|----------|--------------------------------------------|
+| editionId      | text      | NO       | Primary key, unique identifier for editions |
+| editionName    | text      | NO       | Display name of the edition                |
+| description    | text      | YES      | Description of the edition                 |
+| created_at     | timestamp | YES      | Timestamp when the record was created      |
+
+### RecordingEditions Table
+
+Junction table linking recordings to their respective editions.
+
+| Column Name    | Data Type | Nullable | Description                                |
+|----------------|-----------|----------|--------------------------------------------|
+| recordingId    | text      | NO       | Primary key (part 1), foreign key to Recordings table |
+| editionId      | text      | NO       | Primary key (part 2), foreign key to Editions table |
+| notes          | text      | YES      | Additional notes about this recording-edition relationship |
+| created_at     | timestamp | YES      | Timestamp when the record was created      |
+
 ## Relationships
 
 The database tables are related as follows:
@@ -82,6 +106,8 @@ The database tables are related as follows:
 3. **Recordings to Songs**: Recordings have a `songId` that references the `songId` in the Songs table
 4. **Recordings to Albums**: Recordings have an `albumId` that references the `albumId` in the Albums table
 5. **Songs to Eras**: Songs have an `originalEraId` that references the `eraId` in the Eras table
+6. **Recordings to Editions**: Recordings have a `recordingId` that references the `recordingId` in the RecordingEditions table
+7. **Editions to Recordings**: Editions have an `editionId` that references the `editionId` in the RecordingEditions table
 
 ## Data Model Diagram
 
@@ -95,6 +121,13 @@ The database tables are related as follows:
      │                 │
 ┌────▼────┐       ┌────▼────┐
 │Recordings│       │  Songs  │
+└──────────┘       └─────────┘
+     │                 │
+     │                 │
+     │                 │
+     │                 │
+┌────▼────┐       ┌────▼────┐
+│RecordingEditions│       │  Editions  │
 └──────────┘       └─────────┘
 ```
 

@@ -41,5 +41,23 @@ Table "Songs" {
   "notes" text
 }
 
+Table "Editions" {
+  "editionId" text [pk]
+  "editionName" text
+  "description" text
+  "created_at" timestamp
+}
+
+Table "RecordingEditions" {
+  "recordingId" text [ref: > "Recordings"."recordingId"]
+  "editionId" text [ref: > "Editions"."editionId"]
+  "notes" text
+  "created_at" timestamp
+  
+  indexes {
+    ("recordingId", "editionId") [pk]
+  }
+}
+
 // Note: This diagram shows a circular reference between Albums and Eras
 // which is a valid data model but requires careful handling in application code.
