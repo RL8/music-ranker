@@ -1,13 +1,1241 @@
 [
-  { "id": "album-ts", "title": "Taylor Swift", "coverImageUrl": "/img/covers/ts.jpg", "year": 2006, "color": "#7fb1b3" },
-  { "id": "album-fearless", "title": "Fearless (Taylor's Version)", "coverImageUrl": "/img/covers/fearless.jpg", "year": 2008, "color": "#e0c16f" },
-  { "id": "album-speaknow", "title": "Speak Now (Taylor's Version)", "coverImageUrl": "/img/covers/speaknow.jpg", "year": 2010, "color": "#a277a6" },
-  { "id": "album-red", "title": "Red (Taylor's Version)", "coverImageUrl": "/img/covers/red.jpg", "year": 2012, "color": "#c25d5e" },
-  { "id": "album-1989", "title": "1989 (Taylor's Version)", "coverImageUrl": "/img/covers/1989.jpg", "year": 2014, "color": "#a7c7dc" },
-  { "id": "album-reputation", "title": "Reputation", "coverImageUrl": "/img/covers/reputation.jpg", "year": 2017, "color": "#252525" },
-  { "id": "album-lover", "title": "Lover", "coverImageUrl": "/img/covers/lover.jpg", "year": 2019, "color": "#f8c1d9" },
-  { "id": "album-folklore", "title": "Folklore", "coverImageUrl": "/img/covers/folklore.jpg", "year": 2020, "color": "#c0c0c0" },
-  { "id": "album-evermore", "title": "Evermore", "coverImageUrl": "/img/covers/evermore.jpg", "year": 2020, "color": "#8d6a58" },
-  { "id": "album-midnights", "title": "Midnights", "coverImageUrl": "/img/covers/midnights.jpg", "year": 2022, "color": "#264b5e" },
-  { "id": "album-tortured", "title": "The Tortured Poets Department", "coverImageUrl": "/img/covers/tortured.jpg", "year": 2024, "color": "#404040" }
+  {
+    "id": "album-ts",
+    "title": "Taylor Swift",
+    "coverImageUrl": "/img/covers/ts.jpg",
+    "year": 2006,
+    "color": "#7fb1b3",
+    "songs": [
+      {
+        "id": "ts-1",
+        "title": "Tim McGraw",
+        "duration": "3:30"
+      },
+      {
+        "id": "ts-2",
+        "title": "Picture to Burn",
+        "duration": "3:30"
+      },
+      {
+        "id": "ts-3",
+        "title": "Teardrops on My Guitar",
+        "duration": "3:30"
+      },
+      {
+        "id": "ts-4",
+        "title": "A Place in This World",
+        "duration": "3:30"
+      },
+      {
+        "id": "ts-5",
+        "title": "Cold as You",
+        "duration": "3:30"
+      },
+      {
+        "id": "ts-6",
+        "title": "The Outside",
+        "duration": "3:30"
+      },
+      {
+        "id": "ts-7",
+        "title": "Tied Together with a Smile",
+        "duration": "3:30"
+      },
+      {
+        "id": "ts-8",
+        "title": "Stay Beautiful",
+        "duration": "3:30"
+      },
+      {
+        "id": "ts-9",
+        "title": "Should've Said No",
+        "duration": "3:30"
+      },
+      {
+        "id": "ts-10",
+        "title": "Mary's Song (Oh My My My)",
+        "duration": "3:30"
+      },
+      {
+        "id": "ts-11",
+        "title": "Our Song",
+        "duration": "3:30"
+      },
+      {
+        "id": "ts-12",
+        "title": "I'm Only Me When I'm with You",
+        "duration": "3:30"
+      },
+      {
+        "id": "ts-13",
+        "title": "Invisible",
+        "duration": "3:30"
+      },
+      {
+        "id": "ts-14",
+        "title": "A Perfectly Good Heart",
+        "duration": "3:30"
+      }
+    ]
+  },
+  {
+    "id": "album-fearless",
+    "title": "Fearless (Taylor's Version)",
+    "coverImageUrl": "/img/covers/fearless.jpg",
+    "year": 2008,
+    "color": "#e0c16f",
+    "songs": [
+      {
+        "id": "fearless-1",
+        "title": "Fearless (Taylor's Version)",
+        "duration": "3:30"
+      },
+      {
+        "id": "fearless-2",
+        "title": "Fifteen (Taylor's Version)",
+        "duration": "3:30"
+      },
+      {
+        "id": "fearless-3",
+        "title": "Love Story (Taylor's Version)",
+        "duration": "3:30"
+      },
+      {
+        "id": "fearless-4",
+        "title": "Hey Stephen (Taylor's Version)",
+        "duration": "3:30"
+      },
+      {
+        "id": "fearless-5",
+        "title": "White Horse (Taylor's Version)",
+        "duration": "3:30"
+      },
+      {
+        "id": "fearless-6",
+        "title": "You Belong with Me (Taylor's Version)",
+        "duration": "3:30"
+      },
+      {
+        "id": "fearless-7",
+        "title": "Breathe (Taylor's Version)",
+        "duration": "3:30"
+      },
+      {
+        "id": "fearless-8",
+        "title": "Tell Me Why (Taylor's Version)",
+        "duration": "3:30"
+      },
+      {
+        "id": "fearless-9",
+        "title": "You're Not Sorry (Taylor's Version)",
+        "duration": "3:30"
+      },
+      {
+        "id": "fearless-10",
+        "title": "The Way I Loved You (Taylor's Version)",
+        "duration": "3:30"
+      },
+      {
+        "id": "fearless-11",
+        "title": "Forever & Always (Taylor's Version)",
+        "duration": "3:30"
+      },
+      {
+        "id": "fearless-12",
+        "title": "The Best Day (Taylor's Version)",
+        "duration": "3:30"
+      },
+      {
+        "id": "fearless-13",
+        "title": "Change (Taylor's Version)",
+        "duration": "3:30"
+      },
+      {
+        "id": "fearless-14",
+        "title": "Jump Then Fall (Taylor's Version)",
+        "duration": "3:30"
+      },
+      {
+        "id": "fearless-15",
+        "title": "Untouchable (Taylor's Version)",
+        "duration": "3:30"
+      },
+      {
+        "id": "fearless-16",
+        "title": "Come In with the Rain (Taylor's Version)",
+        "duration": "3:30"
+      },
+      {
+        "id": "fearless-17",
+        "title": "Superstar (Taylor's Version)",
+        "duration": "3:30"
+      },
+      {
+        "id": "fearless-18",
+        "title": "The Other Side of the Door (Taylor's Version)",
+        "duration": "3:30"
+      },
+      {
+        "id": "fearless-19",
+        "title": "Today Was a Fairytale (Taylor's Version)",
+        "duration": "3:30"
+      },
+      {
+        "id": "fearless-20",
+        "title": "You All Over Me (Taylor's Version) (From The Vault)",
+        "duration": "3:30"
+      },
+      {
+        "id": "fearless-21",
+        "title": "Mr. Perfectly Fine (Taylor's Version) (From The Vault)",
+        "duration": "3:30"
+      },
+      {
+        "id": "fearless-22",
+        "title": "We Were Happy (Taylor's Version) (From The Vault)",
+        "duration": "3:30"
+      },
+      {
+        "id": "fearless-23",
+        "title": "That's When (Taylor's Version) (From The Vault)",
+        "duration": "3:30"
+      },
+      {
+        "id": "fearless-24",
+        "title": "Don't You (Taylor's Version) (From The Vault)",
+        "duration": "3:30"
+      },
+      {
+        "id": "fearless-25",
+        "title": "Bye Bye Baby (Taylor's Version) (From The Vault)",
+        "duration": "3:30"
+      }
+    ]
+  },
+  {
+    "id": "album-speaknow",
+    "title": "Speak Now (Taylor's Version)",
+    "coverImageUrl": "/img/covers/speaknow.jpg",
+    "year": 2010,
+    "color": "#a277a6",
+    "songs": [
+      {
+        "id": "speaknow-1",
+        "title": "Mine (Taylor's version)",
+        "duration": "3:30"
+      },
+      {
+        "id": "speaknow-2",
+        "title": "Sparks Fly (Taylor's version)",
+        "duration": "3:30"
+      },
+      {
+        "id": "speaknow-3",
+        "title": "Back to December (Taylor's version)",
+        "duration": "3:30"
+      },
+      {
+        "id": "speaknow-4",
+        "title": "Speak Now (Taylor's version)",
+        "duration": "3:30"
+      },
+      {
+        "id": "speaknow-5",
+        "title": "Dear John (Taylor's version)",
+        "duration": "3:30"
+      },
+      {
+        "id": "speaknow-6",
+        "title": "Mean (Taylor's version)",
+        "duration": "3:30"
+      },
+      {
+        "id": "speaknow-7",
+        "title": "The Story of Us (Taylor's version)",
+        "duration": "3:30"
+      },
+      {
+        "id": "speaknow-8",
+        "title": "Never Grow Up (Taylor's version)",
+        "duration": "3:30"
+      },
+      {
+        "id": "speaknow-9",
+        "title": "Enchanted (Taylor's version)",
+        "duration": "3:30"
+      },
+      {
+        "id": "speaknow-10",
+        "title": "Better Than Revenge (Taylor's version)",
+        "duration": "3:30"
+      },
+      {
+        "id": "speaknow-11",
+        "title": "Innocent (Taylor's version)",
+        "duration": "3:30"
+      },
+      {
+        "id": "speaknow-12",
+        "title": "Haunted (Taylor's version)",
+        "duration": "3:30"
+      },
+      {
+        "id": "speaknow-13",
+        "title": "Last Kiss (Taylor's version)",
+        "duration": "3:30"
+      },
+      {
+        "id": "speaknow-14",
+        "title": "Long Live (Taylor's version)",
+        "duration": "3:30"
+      },
+      {
+        "id": "speaknow-15",
+        "title": "Ours (Taylor's version)",
+        "duration": "3:30"
+      },
+      {
+        "id": "speaknow-16",
+        "title": "Superman (Taylor's version)",
+        "duration": "3:30"
+      },
+      {
+        "id": "speaknow-17",
+        "title": "Electric Touch (Taylor's version) (from The Vault)",
+        "duration": "3:30"
+      },
+      {
+        "id": "speaknow-18",
+        "title": "When Emma Falls in Love (Taylor's version) (from The Vault)",
+        "duration": "3:30"
+      },
+      {
+        "id": "speaknow-19",
+        "title": "I Can See You (Taylor's version) (from The Vault)",
+        "duration": "3:30"
+      },
+      {
+        "id": "speaknow-20",
+        "title": "Castles Crumbling (Taylor's version) (from The Vault)",
+        "duration": "3:30"
+      }
+    ]
+  },
+  {
+    "id": "album-red",
+    "title": "Red (Taylor's Version)",
+    "coverImageUrl": "/img/covers/red.jpg",
+    "year": 2012,
+    "color": "#c25d5e",
+    "songs": [
+      {
+        "id": "red-1",
+        "title": "State of Grace (Taylor's Version)",
+        "duration": "3:30"
+      },
+      {
+        "id": "red-2",
+        "title": "Red (Taylor's Version)",
+        "duration": "3:30"
+      },
+      {
+        "id": "red-3",
+        "title": "Treacherous (Taylor's Version)",
+        "duration": "3:30"
+      },
+      {
+        "id": "red-4",
+        "title": "I Knew You Were Trouble (Taylor's Version)",
+        "duration": "3:30"
+      },
+      {
+        "id": "red-5",
+        "title": "All Too Well (Taylor's Version)",
+        "duration": "3:30"
+      },
+      {
+        "id": "red-6",
+        "title": "22 (Taylor's Version)",
+        "duration": "3:30"
+      },
+      {
+        "id": "red-7",
+        "title": "I Almost Do (Taylor's Version)",
+        "duration": "3:30"
+      },
+      {
+        "id": "red-8",
+        "title": "We Are Never Ever Getting Back Together (Taylor's Version)",
+        "duration": "3:30"
+      },
+      {
+        "id": "red-9",
+        "title": "Stay Stay Stay (Taylor's Version)",
+        "duration": "3:30"
+      },
+      {
+        "id": "red-10",
+        "title": "The Last Time (Taylor's Version)",
+        "duration": "3:30"
+      },
+      {
+        "id": "red-11",
+        "title": "Holy Ground (Taylor's Version)",
+        "duration": "3:30"
+      },
+      {
+        "id": "red-12",
+        "title": "Sad Beautiful Tragic (Taylor's Version)",
+        "duration": "3:30"
+      },
+      {
+        "id": "red-13",
+        "title": "The Lucky One (Taylor's Version)",
+        "duration": "3:30"
+      },
+      {
+        "id": "red-14",
+        "title": "Everything Has Changed (Taylor's Version)",
+        "duration": "3:30"
+      },
+      {
+        "id": "red-15",
+        "title": "Starlight (Taylor's Version)",
+        "duration": "3:30"
+      },
+      {
+        "id": "red-16",
+        "title": "Begin Again (Taylor's Version)",
+        "duration": "3:30"
+      },
+      {
+        "id": "red-17",
+        "title": "The Moment I Knew (Taylor's Version)",
+        "duration": "3:30"
+      },
+      {
+        "id": "red-18",
+        "title": "Come Back... Be Here (Taylor's Version)",
+        "duration": "3:30"
+      },
+      {
+        "id": "red-19",
+        "title": "Girl at Home (Taylor's Version)",
+        "duration": "3:30"
+      },
+      {
+        "id": "red-20",
+        "title": "Ronan (Taylor's Version)",
+        "duration": "3:30"
+      },
+      {
+        "id": "red-21",
+        "title": "Better Man (Taylor's Version) (From The Vault)",
+        "duration": "3:30"
+      },
+      {
+        "id": "red-22",
+        "title": "Nothing New (Taylor's Version) (From The Vault)",
+        "duration": "3:30"
+      },
+      {
+        "id": "red-23",
+        "title": "Babe (Taylor's Version) (From The Vault)",
+        "duration": "3:30"
+      },
+      {
+        "id": "red-24",
+        "title": "Message In A Bottle (Taylor's Version) (From The Vault)",
+        "duration": "3:30"
+      },
+      {
+        "id": "red-25",
+        "title": "I Bet You Think About Me (Taylor's Version) (From The Vault)",
+        "duration": "3:30"
+      },
+      {
+        "id": "red-26",
+        "title": "Forever Winter (Taylor's Version) (From The Vault)",
+        "duration": "3:30"
+      },
+      {
+        "id": "red-27",
+        "title": "Run (Taylor's Version) (From The Vault)",
+        "duration": "3:30"
+      },
+      {
+        "id": "red-28",
+        "title": "The Very First Night (Taylor's Version) (From The Vault)",
+        "duration": "3:30"
+      },
+      {
+        "id": "red-29",
+        "title": "All Too Well (10 Minute Version) (Taylor's Version) (From The Vault)",
+        "duration": "3:30"
+      }
+    ]
+  },
+  {
+    "id": "album-1989",
+    "title": "1989 (Taylor's Version)",
+    "coverImageUrl": "/img/covers/1989.jpg",
+    "year": 2014,
+    "color": "#a7c7dc",
+    "songs": [
+      {
+        "id": "1989-1",
+        "title": "Welcome To New York (Taylor's Version)",
+        "duration": "3:30"
+      },
+      {
+        "id": "1989-2",
+        "title": "Blank Space (Taylor's Version)",
+        "duration": "3:30"
+      },
+      {
+        "id": "1989-3",
+        "title": "Style (Taylor's Version)",
+        "duration": "3:30"
+      },
+      {
+        "id": "1989-4",
+        "title": "Out Of The Woods (Taylor's Version)",
+        "duration": "3:30"
+      },
+      {
+        "id": "1989-5",
+        "title": "All You Had To Do Was Stay (Taylor's Version)",
+        "duration": "3:30"
+      },
+      {
+        "id": "1989-6",
+        "title": "Shake It Off (Taylor's Version)",
+        "duration": "3:30"
+      },
+      {
+        "id": "1989-7",
+        "title": "I Wish You Would (Taylor's Version)",
+        "duration": "3:30"
+      },
+      {
+        "id": "1989-8",
+        "title": "Bad Blood (Taylor's Version)",
+        "duration": "3:30"
+      },
+      {
+        "id": "1989-9",
+        "title": "Wildest Dreams (Taylor's Version)",
+        "duration": "3:30"
+      },
+      {
+        "id": "1989-10",
+        "title": "How You Get The Girl (Taylor's Version)",
+        "duration": "3:30"
+      },
+      {
+        "id": "1989-11",
+        "title": "This Love (Taylor's Version)",
+        "duration": "3:30"
+      },
+      {
+        "id": "1989-12",
+        "title": "I Know Places (Taylor's Version)",
+        "duration": "3:30"
+      },
+      {
+        "id": "1989-13",
+        "title": "Clean (Taylor's Version)",
+        "duration": "3:30"
+      },
+      {
+        "id": "1989-14",
+        "title": "Wonderland (Taylor's Version)",
+        "duration": "3:30"
+      },
+      {
+        "id": "1989-15",
+        "title": "You Are In Love (Taylor's Version)",
+        "duration": "3:30"
+      },
+      {
+        "id": "1989-16",
+        "title": "New Romantics (Taylor's Version)",
+        "duration": "3:30"
+      },
+      {
+        "id": "1989-17",
+        "title": "Is It Over Now? (Taylor's Version) (From The Vault)",
+        "duration": "3:30"
+      },
+      {
+        "id": "1989-18",
+        "title": "Say Don't Go (Taylor's Version) (From The Vault)",
+        "duration": "3:30"
+      },
+      {
+        "id": "1989-19",
+        "title": "Now That We Don't Talk (Taylor's Version) (From The Vault)",
+        "duration": "3:30"
+      },
+      {
+        "id": "1989-20",
+        "title": "Suburban Legends (Taylor's Version) (From The Vault)",
+        "duration": "3:30"
+      },
+      {
+        "id": "1989-21",
+        "title": "Slut! (Taylor's Version) (From The Vault)",
+        "duration": "3:30"
+      }
+    ]
+  },
+  {
+    "id": "album-reputation",
+    "title": "Reputation",
+    "coverImageUrl": "/img/covers/reputation.jpg",
+    "year": 2017,
+    "color": "#252525",
+    "songs": [
+      {
+        "id": "reputation-1",
+        "title": "...Ready For It?",
+        "duration": "3:30"
+      },
+      {
+        "id": "reputation-2",
+        "title": "End Game",
+        "duration": "3:30"
+      },
+      {
+        "id": "reputation-3",
+        "title": "I Did Something Bad",
+        "duration": "3:30"
+      },
+      {
+        "id": "reputation-4",
+        "title": "Don't Blame Me",
+        "duration": "3:30"
+      },
+      {
+        "id": "reputation-5",
+        "title": "Delicate",
+        "duration": "3:30"
+      },
+      {
+        "id": "reputation-6",
+        "title": "Look What You Made Me Do",
+        "duration": "3:30"
+      },
+      {
+        "id": "reputation-7",
+        "title": "So It Goes...",
+        "duration": "3:30"
+      },
+      {
+        "id": "reputation-8",
+        "title": "Gorgeous",
+        "duration": "3:30"
+      },
+      {
+        "id": "reputation-9",
+        "title": "Getaway Car",
+        "duration": "3:30"
+      },
+      {
+        "id": "reputation-10",
+        "title": "King Of My Heart",
+        "duration": "3:30"
+      },
+      {
+        "id": "reputation-11",
+        "title": "Dancing With Our Hands Tied",
+        "duration": "3:30"
+      },
+      {
+        "id": "reputation-12",
+        "title": "Dress",
+        "duration": "3:30"
+      },
+      {
+        "id": "reputation-13",
+        "title": "This Is Why We Can't Have Nice Things",
+        "duration": "3:30"
+      },
+      {
+        "id": "reputation-14",
+        "title": "Call It What You Want",
+        "duration": "3:30"
+      },
+      {
+        "id": "reputation-15",
+        "title": "New Year's Day",
+        "duration": "3:30"
+      }
+    ]
+  },
+  {
+    "id": "album-lover",
+    "title": "Lover",
+    "coverImageUrl": "/img/covers/lover.jpg",
+    "year": 2019,
+    "color": "#f8c1d9",
+    "songs": [
+      {
+        "id": "lover-1",
+        "title": "I Forgot That You Existed",
+        "duration": "3:30"
+      },
+      {
+        "id": "lover-2",
+        "title": "Cruel Summer",
+        "duration": "3:30"
+      },
+      {
+        "id": "lover-3",
+        "title": "Lover",
+        "duration": "3:30"
+      },
+      {
+        "id": "lover-4",
+        "title": "The Man",
+        "duration": "3:30"
+      },
+      {
+        "id": "lover-5",
+        "title": "The Archer",
+        "duration": "3:30"
+      },
+      {
+        "id": "lover-6",
+        "title": "I Think He Knows",
+        "duration": "3:30"
+      },
+      {
+        "id": "lover-7",
+        "title": "Miss Americana & The Heartbreak Prince",
+        "duration": "3:30"
+      },
+      {
+        "id": "lover-8",
+        "title": "Paper Rings",
+        "duration": "3:30"
+      },
+      {
+        "id": "lover-9",
+        "title": "Cornelia Street",
+        "duration": "3:30"
+      },
+      {
+        "id": "lover-10",
+        "title": "Death By A Thousand Cuts",
+        "duration": "3:30"
+      },
+      {
+        "id": "lover-11",
+        "title": "London Boy",
+        "duration": "3:30"
+      },
+      {
+        "id": "lover-12",
+        "title": "Soon You'll Get Better",
+        "duration": "3:30"
+      },
+      {
+        "id": "lover-13",
+        "title": "False God",
+        "duration": "3:30"
+      },
+      {
+        "id": "lover-14",
+        "title": "You Need To Calm Down",
+        "duration": "3:30"
+      },
+      {
+        "id": "lover-15",
+        "title": "Afterglow",
+        "duration": "3:30"
+      },
+      {
+        "id": "lover-16",
+        "title": "ME!",
+        "duration": "3:30"
+      },
+      {
+        "id": "lover-17",
+        "title": "It's Nice To Have A Friend",
+        "duration": "3:30"
+      },
+      {
+        "id": "lover-18",
+        "title": "Daylight",
+        "duration": "3:30"
+      }
+    ]
+  },
+  {
+    "id": "album-folklore",
+    "title": "Folklore",
+    "coverImageUrl": "/img/covers/folklore.jpg",
+    "year": 2020,
+    "color": "#c0c0c0",
+    "songs": [
+      {
+        "id": "folklore-1",
+        "title": "The 1",
+        "duration": "3:30"
+      },
+      {
+        "id": "folklore-2",
+        "title": "Cardigan",
+        "duration": "3:30"
+      },
+      {
+        "id": "folklore-3",
+        "title": "The Last Great American Dynasty",
+        "duration": "3:30"
+      },
+      {
+        "id": "folklore-4",
+        "title": "Exile",
+        "duration": "3:30"
+      },
+      {
+        "id": "folklore-5",
+        "title": "My Tears Ricochet",
+        "duration": "3:30"
+      },
+      {
+        "id": "folklore-6",
+        "title": "Mirrorball",
+        "duration": "3:30"
+      },
+      {
+        "id": "folklore-7",
+        "title": "Seven",
+        "duration": "3:30"
+      },
+      {
+        "id": "folklore-8",
+        "title": "August",
+        "duration": "3:30"
+      },
+      {
+        "id": "folklore-9",
+        "title": "This Is Me Trying",
+        "duration": "3:30"
+      },
+      {
+        "id": "folklore-10",
+        "title": "Illicit Affairs",
+        "duration": "3:30"
+      },
+      {
+        "id": "folklore-11",
+        "title": "Invisible String",
+        "duration": "3:30"
+      },
+      {
+        "id": "folklore-12",
+        "title": "Mad Woman",
+        "duration": "3:30"
+      },
+      {
+        "id": "folklore-13",
+        "title": "Epiphany",
+        "duration": "3:30"
+      },
+      {
+        "id": "folklore-14",
+        "title": "Betty",
+        "duration": "3:30"
+      },
+      {
+        "id": "folklore-15",
+        "title": "Peace",
+        "duration": "3:30"
+      },
+      {
+        "id": "folklore-16",
+        "title": "Hoax",
+        "duration": "3:30"
+      },
+      {
+        "id": "folklore-17",
+        "title": "The Lakes",
+        "duration": "3:30"
+      }
+    ]
+  },
+  {
+    "id": "album-evermore",
+    "title": "Evermore",
+    "coverImageUrl": "/img/covers/evermore.jpg",
+    "year": 2020,
+    "color": "#8d6a58",
+    "songs": [
+      {
+        "id": "evermore-1",
+        "title": "Willow",
+        "duration": "3:30"
+      },
+      {
+        "id": "evermore-2",
+        "title": "Champagne Problems",
+        "duration": "3:30"
+      },
+      {
+        "id": "evermore-3",
+        "title": "Gold Rush",
+        "duration": "3:30"
+      },
+      {
+        "id": "evermore-4",
+        "title": "'Tis The Damn Season",
+        "duration": "3:30"
+      },
+      {
+        "id": "evermore-5",
+        "title": "Tolerate It",
+        "duration": "3:30"
+      },
+      {
+        "id": "evermore-6",
+        "title": "No Body, No Crime",
+        "duration": "3:30"
+      },
+      {
+        "id": "evermore-7",
+        "title": "Happiness",
+        "duration": "3:30"
+      },
+      {
+        "id": "evermore-8",
+        "title": "Dorothea",
+        "duration": "3:30"
+      },
+      {
+        "id": "evermore-9",
+        "title": "Coney Island",
+        "duration": "3:30"
+      },
+      {
+        "id": "evermore-10",
+        "title": "Ivy",
+        "duration": "3:30"
+      },
+      {
+        "id": "evermore-11",
+        "title": "Cowboy Like Me",
+        "duration": "3:30"
+      },
+      {
+        "id": "evermore-12",
+        "title": "Long Story Short",
+        "duration": "3:30"
+      },
+      {
+        "id": "evermore-13",
+        "title": "Marjorie",
+        "duration": "3:30"
+      },
+      {
+        "id": "evermore-14",
+        "title": "Closure",
+        "duration": "3:30"
+      },
+      {
+        "id": "evermore-15",
+        "title": "Evermore",
+        "duration": "3:30"
+      },
+      {
+        "id": "evermore-16",
+        "title": "Right Where You Left Me",
+        "duration": "3:30"
+      },
+      {
+        "id": "evermore-17",
+        "title": "It's Time To Go",
+        "duration": "3:30"
+      }
+    ]
+  },
+  {
+    "id": "album-midnights",
+    "title": "Midnights",
+    "coverImageUrl": "/img/covers/midnights.jpg",
+    "year": 2022,
+    "color": "#264b5e",
+    "songs": [
+      {
+        "id": "midnights-1",
+        "title": "Lavender Haze",
+        "duration": "3:30"
+      },
+      {
+        "id": "midnights-2",
+        "title": "Maroon",
+        "duration": "3:30"
+      },
+      {
+        "id": "midnights-3",
+        "title": "Anti-Hero",
+        "duration": "3:30"
+      },
+      {
+        "id": "midnights-4",
+        "title": "Snow On The Beach",
+        "duration": "3:30"
+      },
+      {
+        "id": "midnights-5",
+        "title": "You're On Your Own, Kid",
+        "duration": "3:30"
+      },
+      {
+        "id": "midnights-6",
+        "title": "Midnight Rain",
+        "duration": "3:30"
+      },
+      {
+        "id": "midnights-7",
+        "title": "Question...?",
+        "duration": "3:30"
+      },
+      {
+        "id": "midnights-8",
+        "title": "Vigilante Shit",
+        "duration": "3:30"
+      },
+      {
+        "id": "midnights-9",
+        "title": "Bejeweled",
+        "duration": "3:30"
+      },
+      {
+        "id": "midnights-10",
+        "title": "Labyrinth",
+        "duration": "3:30"
+      },
+      {
+        "id": "midnights-11",
+        "title": "Karma",
+        "duration": "3:30"
+      },
+      {
+        "id": "midnights-12",
+        "title": "Sweet Nothing",
+        "duration": "3:30"
+      },
+      {
+        "id": "midnights-13",
+        "title": "Mastermind",
+        "duration": "3:30"
+      },
+      {
+        "id": "midnights-14",
+        "title": "The Great War",
+        "duration": "3:30"
+      },
+      {
+        "id": "midnights-15",
+        "title": "Bigger Than The Whole Sky",
+        "duration": "3:30"
+      },
+      {
+        "id": "midnights-16",
+        "title": "Paris",
+        "duration": "3:30"
+      },
+      {
+        "id": "midnights-17",
+        "title": "High Infidelity",
+        "duration": "3:30"
+      },
+      {
+        "id": "midnights-18",
+        "title": "Glitch",
+        "duration": "3:30"
+      },
+      {
+        "id": "midnights-19",
+        "title": "Would've, Could've, Should've",
+        "duration": "3:30"
+      },
+      {
+        "id": "midnights-20",
+        "title": "Dear Reader",
+        "duration": "3:30"
+      },
+      {
+        "id": "midnights-21",
+        "title": "Hits Different",
+        "duration": "3:30"
+      }
+    ]
+  },
+  {
+    "id": "album-tortured",
+    "title": "The Tortured Poets Department",
+    "coverImageUrl": "/img/covers/tortured.jpg",
+    "year": 2024,
+    "color": "#404040",
+    "songs": [
+      {
+        "id": "tortured-1",
+        "title": "Fortnight",
+        "duration": "3:30"
+      },
+      {
+        "id": "tortured-2",
+        "title": "The Tortured Poets Department",
+        "duration": "3:30"
+      },
+      {
+        "id": "tortured-3",
+        "title": "My Boy Only Breaks His Favorite Toys",
+        "duration": "3:30"
+      },
+      {
+        "id": "tortured-4",
+        "title": "Down Bad",
+        "duration": "3:30"
+      },
+      {
+        "id": "tortured-5",
+        "title": "So Long, London",
+        "duration": "3:30"
+      },
+      {
+        "id": "tortured-6",
+        "title": "But Daddy I Love Him",
+        "duration": "3:30"
+      },
+      {
+        "id": "tortured-7",
+        "title": "Fresh Out The Slammer",
+        "duration": "3:30"
+      },
+      {
+        "id": "tortured-8",
+        "title": "Florida!!!",
+        "duration": "3:30"
+      },
+      {
+        "id": "tortured-9",
+        "title": "Guilty As Sin?",
+        "duration": "3:30"
+      },
+      {
+        "id": "tortured-10",
+        "title": "Who's Afraid Of Little Old Me?",
+        "duration": "3:30"
+      },
+      {
+        "id": "tortured-11",
+        "title": "I Can Fix Him (No Really I Can)",
+        "duration": "3:30"
+      },
+      {
+        "id": "tortured-12",
+        "title": "loml",
+        "duration": "3:30"
+      },
+      {
+        "id": "tortured-13",
+        "title": "I Can Do It With A Broken Heart",
+        "duration": "3:30"
+      },
+      {
+        "id": "tortured-14",
+        "title": "The Smallest Man Who Ever Lived",
+        "duration": "3:30"
+      },
+      {
+        "id": "tortured-15",
+        "title": "The Alchemy",
+        "duration": "3:30"
+      },
+      {
+        "id": "tortured-16",
+        "title": "Clara Bow",
+        "duration": "3:30"
+      },
+      {
+        "id": "tortured-17",
+        "title": "The Black Dog",
+        "duration": "3:30"
+      },
+      {
+        "id": "tortured-18",
+        "title": "imgonnagetyouback",
+        "duration": "3:30"
+      },
+      {
+        "id": "tortured-19",
+        "title": "The Albatross",
+        "duration": "3:30"
+      },
+      {
+        "id": "tortured-20",
+        "title": "Chloe or Sam or Sophia or Marcus",
+        "duration": "3:30"
+      },
+      {
+        "id": "tortured-21",
+        "title": "How Did It End?",
+        "duration": "3:30"
+      },
+      {
+        "id": "tortured-22",
+        "title": "So High School",
+        "duration": "3:30"
+      },
+      {
+        "id": "tortured-23",
+        "title": "I Hate It Here",
+        "duration": "3:30"
+      },
+      {
+        "id": "tortured-24",
+        "title": "thanK you aIMee",
+        "duration": "3:30"
+      },
+      {
+        "id": "tortured-25",
+        "title": "I Look in People's Windows",
+        "duration": "3:30"
+      },
+      {
+        "id": "tortured-26",
+        "title": "The Prophecy",
+        "duration": "3:30"
+      },
+      {
+        "id": "tortured-27",
+        "title": "Cassandra",
+        "duration": "3:30"
+      },
+      {
+        "id": "tortured-28",
+        "title": "Peter",
+        "duration": "3:30"
+      },
+      {
+        "id": "tortured-29",
+        "title": "The Bolter",
+        "duration": "3:30"
+      },
+      {
+        "id": "tortured-30",
+        "title": "Robin",
+        "duration": "3:30"
+      },
+      {
+        "id": "tortured-31",
+        "title": "The Manuscript",
+        "duration": "3:30"
+      }
+    ]
+  }
 ]

@@ -17,6 +17,9 @@
 
 <script>
 import { useUserStore } from '@/store/userStore'
+import { useRankingStore } from '@/store/rankingStore'
+import { checkVersionAndRefresh } from '@/utils/storageUtils'
+import { onMounted } from 'vue'
 import Sidebar from './components/ui/Sidebar.vue'
 
 export default {
@@ -25,6 +28,16 @@ export default {
   },
   setup() {
     const userStore = useUserStore()
+    const rankingStore = useRankingStore()
+    
+    onMounted(() => {
+      // Check app version and refresh data if needed
+      console.log('Checking app version...');
+      const wasRefreshed = checkVersionAndRefresh(rankingStore.appVersion);
+      if (wasRefreshed) {
+        console.log('App data was refreshed due to version change');
+      }
+    })
     
     return {
       userStore

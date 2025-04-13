@@ -152,6 +152,7 @@ import { useUserStore } from '@/store/userStore';
 import { useRankingStore } from '@/store/rankingStore';
 import toastService from '@/services/toastService';
 import AlbumCoverflowCarousel from '@/components/AlbumCoverflowCarousel.vue';
+import staticAlbumsData from '@/data/static-albums.json';
 
 const router = useRouter();
 const userStore = useUserStore();
@@ -284,20 +285,20 @@ const showToast = (title, message) => {
 // Initialize albums if needed
 onMounted(() => {
   if (rankingStore.availableAlbums.length === 0) {
-    // If no albums are available, initialize with static data
-    rankingStore.initializeStaticAlbums([
-      { id: 1, title: 'Taylor Swift', coverImageUrl: 'https://via.placeholder.com/300x300?text=Taylor+Swift', year: '2006' },
-      { id: 2, title: 'Fearless', coverImageUrl: 'https://via.placeholder.com/300x300?text=Fearless', year: '2008' },
-      { id: 3, title: 'Speak Now', coverImageUrl: 'https://via.placeholder.com/300x300?text=Speak+Now', year: '2010' },
-      { id: 4, title: 'Red', coverImageUrl: 'https://via.placeholder.com/300x300?text=Red', year: '2012' },
-      { id: 5, title: '1989', coverImageUrl: 'https://via.placeholder.com/300x300?text=1989', year: '2014' },
-      { id: 6, title: 'Reputation', coverImageUrl: 'https://via.placeholder.com/300x300?text=Reputation', year: '2017' },
-      { id: 7, title: 'Lover', coverImageUrl: 'https://via.placeholder.com/300x300?text=Lover', year: '2019' },
-      { id: 8, title: 'Folklore', coverImageUrl: 'https://via.placeholder.com/300x300?text=Folklore', year: '2020' },
-      { id: 9, title: 'Evermore', coverImageUrl: 'https://via.placeholder.com/300x300?text=Evermore', year: '2020' },
-      { id: 10, title: 'Midnights', coverImageUrl: 'https://via.placeholder.com/300x300?text=Midnights', year: '2022' },
-      { id: 11, title: 'The Tortured Poets Department', coverImageUrl: 'https://via.placeholder.com/300x300?text=TTPD', year: '2023' }
-    ]);
+    console.log('Initializing albums from static data in AlbumRankingCoverflowView');
+    try {
+      // Log the imported data for debugging
+      console.log('Static albums data structure:', 
+        Object.keys(staticAlbumsData).length > 0 ? 'Object with keys' : 'Array with length ' + staticAlbumsData.length);
+      
+      // Ensure we're passing the correct data structure
+      const albumsToInitialize = Array.isArray(staticAlbumsData) ? staticAlbumsData : 
+        (staticAlbumsData.default && Array.isArray(staticAlbumsData.default)) ? staticAlbumsData.default : [];
+      
+      rankingStore.initializeStaticAlbums(albumsToInitialize);
+    } catch (error) {
+      console.error('Error initializing albums:', error);
+    }
   }
 });
 </script>
