@@ -18,6 +18,8 @@
 <script>
 import { useUserStore } from '@/store/userStore'
 import { useRankingStore } from '@/store/rankingStore'
+import { useDatabaseMusicStore } from '@/store/databaseMusicStore'
+import { useDatabase } from '@/utils/useDatabase'
 import { checkVersionAndRefresh } from '@/utils/storageUtils'
 import { onMounted } from 'vue'
 import Sidebar from './components/ui/Sidebar.vue'
@@ -29,18 +31,27 @@ export default {
   setup() {
     const userStore = useUserStore()
     const rankingStore = useRankingStore()
+    const dbMusicStore = useDatabaseMusicStore()
     
     onMounted(() => {
-      // Check app version and refresh data if needed
-      console.log('Checking app version...');
-      const wasRefreshed = checkVersionAndRefresh(rankingStore.appVersion);
-      if (wasRefreshed) {
-        console.log('App data was refreshed due to version change');
+      // Initialize ranking data
+      rankingStore.initializeWithSampleData()
+      
+      // Initialize database music store if enabled
+      if (useDatabase.isEnabled()) {
+        console.log('Database integration is enabled, initializing database store')
+        dbMusicStore.initialize()
+      } else {
+        console.log('Database integration is disabled, using static data')
       }
+      
+      // Check for app version changes
+      checkVersionAndRefresh()
     })
     
     return {
-      userStore
+      userStore,
+      rankingStore
     }
   }
 }

@@ -31,6 +31,54 @@ const routes = [
     }
   },
   {
+    path: '/database-test',
+    name: 'database-test',
+    component: () => import('../components/DatabaseTest.vue'),
+    meta: {
+      title: 'Database Integration Test'
+    }
+  },
+  {
+    path: '/hybrid-songs',
+    name: 'hybrid-songs',
+    component: () => import('../components/HybridSongList.vue'),
+    meta: {
+      title: 'Hybrid Song List - Compare Data Sources'
+    }
+  },
+  {
+    path: '/edition-browser',
+    name: 'edition-browser',
+    component: () => import('../components/EditionBrowser.vue'),
+    meta: {
+      title: 'Edition Browser - Database Feature'
+    }
+  },
+  {
+    path: '/simple-db',
+    name: 'simple-db',
+    component: () => import('../components/SimpleDatabaseView.vue'),
+    meta: {
+      title: 'Simple Database View'
+    }
+  },
+  {
+    path: '/database-diagnostic',
+    name: 'database-diagnostic',
+    component: () => import('../components/DatabaseDiagnostic.vue'),
+    meta: {
+      title: 'Database Connection Diagnostic'
+    }
+  },
+  {
+    path: '/env-checker',
+    name: 'env-checker',
+    component: () => import('../components/EnvChecker.vue'),
+    meta: {
+      title: 'Environment Variables Checker'
+    }
+  },
+  {
     path: '/visualizations/sunburst',
     name: 'sunburst-demo',
     component: () => import('../views/SunburstDemo.vue')

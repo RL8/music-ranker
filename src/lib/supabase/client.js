@@ -21,6 +21,10 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
   }
 });
 
+// Add diagnostic information
+console.log(`Supabase client initialized with URL: ${SUPABASE_URL ? 'Present' : 'Missing'}`);
+console.log(`Supabase key status: ${SUPABASE_ANON_KEY ? 'Present' : 'Missing'}`);
+
 // Export the client
 export { supabase };
 
@@ -30,7 +34,12 @@ export { supabase };
  * @param {string} context - Context where the error occurred
  * @returns {string} Formatted error message
  */
-export function handleSupabaseError(error, context = 'operation') {
-  console.error(`Supabase ${context} error:`, error);
-  return `Error during ${context}: ${error.message || 'Unknown error'}`;
-}
+export const handleSupabaseError = (error, context = 'operation') => {
+  const message = error?.message || 'Unknown error';
+  const details = error?.details || '';
+  const code = error?.code || '';
+  
+  console.error(`Supabase error during ${context}:`, { message, details, code });
+  
+  return `Error ${code ? `(${code})` : ''}: ${message}${details ? ` - ${details}` : ''}`;
+};
