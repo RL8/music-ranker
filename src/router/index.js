@@ -64,6 +64,21 @@ const routes = [
   {
     path: '/rank/songs',
     name: 'song-ranking',
+    redirect: '/rank/songs/carousel'
+  },
+  {
+    path: '/rank/songs/coverflow',
+    name: 'song-ranking-coverflow',
+    redirect: '/rank/songs/carousel'
+  },
+  {
+    path: '/rank/songs/carousel',
+    name: 'song-ranking-carousel',
+    component: () => import('../views/SongRankingCarouselView.vue')
+  },
+  {
+    path: '/rank/songs/tier',
+    name: 'song-ranking-tier',
     component: () => import('../views/SongRankingView.vue')
   },
   {
