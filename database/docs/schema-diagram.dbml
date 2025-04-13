@@ -1,0 +1,45 @@
+// Music Ranker Database Schema Diagram
+// Generated on 13 Apr 2025
+// Use with dbdiagram.io or similar tools
+
+Table "Albums" {
+  "albumId" text [pk]
+  "albumTitle" text
+  "releaseDate" text
+  "albumType" text
+  "eraId" text [ref: > "Eras"."eraId"]
+}
+
+Table "Artists" {
+  "artistId" text
+  "artistName" text
+}
+
+Table "Eras" {
+  "eraId" text
+  "eraName" text
+  "primaryAlbumId" text [ref: > "Albums"."albumId"]
+  "eraStartDate" text
+}
+
+Table "Recordings" {
+  "recordingId" text [pk]
+  "recordingTitle" text
+  "songId" text [ref: > "Songs"."songId"]
+  "albumId" text [ref: > "Albums"."albumId"]
+  "discNumber" bigint
+  "trackNumber" bigint
+  "versionType" text
+  "artistsJson" jsonb
+  "notes" text
+}
+
+Table "Songs" {
+  "songId" text [pk]
+  "canonicalTitle" text
+  "originalEraId" text [ref: > "Eras"."eraId"]
+  "notes" text
+}
+
+// Note: This diagram shows a circular reference between Albums and Eras
+// which is a valid data model but requires careful handling in application code.
