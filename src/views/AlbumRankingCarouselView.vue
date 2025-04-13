@@ -98,52 +98,66 @@
     <!-- Bottom Section: Album Carousel -->
     <div class="bottom-section">
       <div class="carousel-container">
-        <swiper
-          class="album-carousel"
-          :modules="swiperModules"
-          :effect="'coverflow'"
-          :grab-cursor="true"
-          :centered-slides="true"
-          :slides-per-view="'auto'"
-          :loop="true"
-          :coverflow-effect="{
-            rotate: 30,
-            stretch: 0,
-            depth: 100,
-            modifier: 1,
-            slideShadows: true
-          }"
-          @swiper="onSwiper"
-          @slideChange="onSlideChange"
-        >
-          <swiper-slide 
-            v-for="album in rankingStore.availableAlbums" 
-            :key="album.id"
-            class="album-slide"
-            :class="{ 'ranked': isAlbumRanked(album) }"
+        <!-- Only render Swiper when we have enough albums -->
+        <template v-if="rankingStore.availableAlbums.length >= 3">
+          <swiper
+            class="album-carousel"
+            :modules="swiperModules"
+            :effect="'coverflow'"
+            :grab-cursor="true"
+            :centered-slides="true"
+            :slides-per-view="'auto'"
+            :loop="true"
+            :coverflow-effect="{
+              rotate: 30,
+              stretch: 0,
+              depth: 100,
+              modifier: 1,
+              slideShadows: true
+            }"
+            @swiper="onSwiper"
+            @slideChange="onSlideChange"
           >
-            <div 
-              class="album-card"
-              :style="{ 
-                '--album-color': album.color || '#333',
-                '--album-shadow-color': album.color || 'rgba(0,0,0,0.3)'
-              }"
+            <swiper-slide 
+              v-for="album in rankingStore.availableAlbums" 
+              :key="album.id"
+              class="album-slide"
+              :class="{ 'ranked': isAlbumRanked(album) }"
             >
-              <img 
-                :src="album.coverImageUrl" 
-                :alt="album.title" 
-                class="album-cover"
-                loading="lazy"
-              />
-              <div class="album-title-overlay">{{ album.title }}</div>
-              <div v-if="isAlbumRanked(album)" class="ranked-badge">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                </svg>
+              <div 
+                class="album-card"
+                :style="{ 
+                  '--album-color': album.color || '#333',
+                  '--album-shadow-color': album.color || 'rgba(0,0,0,0.3)'
+                }"
+              >
+                <img 
+                  :src="album.coverImageUrl" 
+                  :alt="album.title" 
+                  class="album-cover"
+                  loading="lazy"
+                />
+                <div class="album-title-overlay">{{ album.title }}</div>
+                <div v-if="isAlbumRanked(album)" class="ranked-badge">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                  </svg>
+                </div>
               </div>
-            </div>
-          </swiper-slide>
-        </swiper>
+            </swiper-slide>
+          </swiper>
+        </template>
+        
+        <!-- Placeholder when not enough albums -->
+        <div v-else class="album-carousel-placeholder">
+          <div class="placeholder-message">
+            <svg xmlns="http://www.w3.org/2000/svg" class="placeholder-icon" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" />
+            </svg>
+            <p>Loading albums...</p>
+            <p class="placeholder-subtext">Please wait while we prepare your music collection.</p>
+          </div>
+        </div>
         
         <div class="carousel-controls">
           <button 
@@ -254,6 +268,12 @@ const unrankedAlbums = computed(() => {
   return rankingStore.availableAlbums.filter(album => 
     !rankedAlbums.value.some(rankedAlbum => rankedAlbum.id === album.id)
   );
+});
+
+const shouldEnableLoop = computed(() => {
+  // Only enable loop mode when we have enough albums (3 or more is typically enough for Swiper)
+  // Also check the flag from the store that indicates if there are enough albums
+  return rankingStore.availableAlbums.length >= 3 && !rankingStore.notEnoughAlbumsForLoop;
 });
 
 const currentAlbum = computed(() => {
@@ -895,6 +915,29 @@ function showToast(title, message) {
 button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+}
+
+.album-carousel-placeholder {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  padding: 2rem;
+}
+
+.placeholder-message {
+  text-align: center;
+}
+
+.placeholder-icon {
+  width: 2rem;
+  height: 2rem;
+  margin-bottom: 1rem;
+}
+
+.placeholder-subtext {
+  font-size: 0.875rem;
+  color: #666;
 }
 
 /* Transitions */

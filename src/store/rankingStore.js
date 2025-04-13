@@ -19,6 +19,7 @@ export const useRankingStore = defineStore('ranking', {
       tier4: [], // Max 3 albums
       tier5: []  // Max 2 albums
     },
+    notEnoughAlbumsForLoop: false, // Flag to disable loop mode
     // Local storage key for persisting rankings
     localStorageKey: 'swifties_album_rankings'
   }),
@@ -294,7 +295,14 @@ export const useRankingStore = defineStore('ranking', {
             this.rankedTiers.tier4.length === 0 && 
             this.rankedTiers.tier5.length === 0) {
           
-          this.availableAlbums = [...albumsData];
+          // Only set availableAlbums if there are enough albums to prevent Swiper loop warnings
+          if (albumsData.length >= 3) {
+            this.availableAlbums = [...albumsData];
+          } else {
+            // If there aren't enough albums, disable loop mode by adding a flag
+            this.availableAlbums = [...albumsData];
+            this.notEnoughAlbumsForLoop = true;
+          }
           // Clear tiers just in case
           this.rankedTiers = { tier1: [], tier2: [], tier3: [], tier4: [], tier5: [] };
         }
@@ -381,6 +389,130 @@ export const useRankingStore = defineStore('ranking', {
       } finally {
         this.loading = false;
       }
+    },
+
+    // Get song rankings for a specific album
+    getSongRankingsForAlbum(albumId) {
+      // In a real app, this would fetch from the database
+      // For now, we'll check if we have any stored rankings
+      const localStorageKey = `song_rankings_album_${albumId}`;
+      try {
+        const savedRankings = localStorage.getItem(localStorageKey);
+        if (savedRankings) {
+          return JSON.parse(savedRankings);
+        }
+      } catch (error) {
+        console.error('Error loading song rankings from localStorage:', error);
+      }
+      return [];
+    },
+
+    // Update temporary song rankings (not saved to database yet)
+    updateSongRankingsTemp(albumId, rankings) {
+      // This is just for temporary state management
+      // We'll store it in localStorage for persistence between page reloads
+      const localStorageKey = `song_rankings_album_${albumId}`;
+      try {
+        localStorage.setItem(localStorageKey, JSON.stringify(rankings));
+      } catch (error) {
+        console.error('Error saving song rankings to localStorage:', error);
+      }
+    },
+
+    // Save song rankings to the database
+    saveSongRankings(albumId, rankings) {
+      // In a real app, this would save to the database
+      // For now, we'll just store in localStorage
+      this.updateSongRankingsTemp(albumId, rankings);
+      
+      // Show success in console
+      console.log(`Saved ${rankings.length} song rankings for album ${albumId}`);
+      return true;
+    },
+
+    // Initialize with sample data for development
+    initializeWithSampleData() {
+      const sampleAlbums = [
+        { 
+          id: 1, 
+          title: "Taylor Swift", 
+          year: 2006, 
+          color: "#7B9095", 
+          bgColor: "#e8f0f2",
+          textColor: "#2d4047",
+          coverImageUrl: "https://placehold.co/300x300/7B9095/FFFFFF?text=Taylor+Swift",
+          emoji: "🤠",
+          era: "Country Era",
+          songs: [
+            { id: "1-1", title: "Tim McGraw", duration: "3:52" },
+            { id: "1-2", title: "Picture to Burn", duration: "2:55" },
+            { id: "1-3", title: "Teardrops on My Guitar", duration: "3:35" },
+            { id: "1-4", title: "A Place in This World", duration: "3:22" },
+            { id: "1-5", title: "Cold as You", duration: "4:01" },
+            { id: "1-6", title: "The Outside", duration: "3:29" },
+            { id: "1-7", title: "Tied Together with a Smile", duration: "4:11" },
+            { id: "1-8", title: "Stay Beautiful", duration: "3:58" },
+            { id: "1-9", title: "Should've Said No", duration: "4:04" },
+            { id: "1-10", title: "Mary's Song (Oh My My My)", duration: "3:35" },
+            { id: "1-11", title: "Our Song", duration: "3:22" }
+          ]
+        },
+        { 
+          id: 2, 
+          title: "Fearless", 
+          year: 2008, 
+          color: "#C9B870", 
+          bgColor: "#fff9e6",
+          textColor: "#8f7c24",
+          coverImageUrl: "https://placehold.co/300x300/C9B870/FFFFFF?text=Fearless",
+          emoji: "✨",
+          era: "Fearless Era",
+          songs: [
+            { id: "2-1", title: "Fearless", duration: "4:01" },
+            { id: "2-2", title: "Fifteen", duration: "4:54" },
+            { id: "2-3", title: "Love Story", duration: "3:55" },
+            { id: "2-4", title: "Hey Stephen", duration: "4:14" },
+            { id: "2-5", title: "White Horse", duration: "3:54" },
+            { id: "2-6", title: "You Belong with Me", duration: "3:52" },
+            { id: "2-7", title: "Breathe", duration: "4:23" },
+            { id: "2-8", title: "Tell Me Why", duration: "3:20" },
+            { id: "2-9", title: "You're Not Sorry", duration: "4:21" },
+            { id: "2-10", title: "The Way I Loved You", duration: "4:04" },
+            { id: "2-11", title: "Forever & Always", duration: "3:45" },
+            { id: "2-12", title: "The Best Day", duration: "4:05" },
+            { id: "2-13", title: "Change", duration: "4:40" }
+          ]
+        },
+        { 
+          id: 3, 
+          title: "Speak Now", 
+          year: 2010, 
+          color: "#A95564", 
+          bgColor: "#f9ecef",
+          textColor: "#6d2936",
+          coverImageUrl: "https://placehold.co/300x300/A95564/FFFFFF?text=Speak+Now",
+          emoji: "💜",
+          era: "Speak Now Era",
+          songs: [
+            { id: "3-1", title: "Mine", duration: "3:50" },
+            { id: "3-2", title: "Sparks Fly", duration: "4:20" },
+            { id: "3-3", title: "Back to December", duration: "4:53" },
+            { id: "3-4", title: "Speak Now", duration: "4:00" },
+            { id: "3-5", title: "Dear John", duration: "6:43" },
+            { id: "3-6", title: "Mean", duration: "3:57" },
+            { id: "3-7", title: "The Story of Us", duration: "4:25" },
+            { id: "3-8", title: "Never Grow Up", duration: "4:50" },
+            { id: "3-9", title: "Enchanted", duration: "5:52" },
+            { id: "3-10", title: "Better Than Revenge", duration: "3:37" },
+            { id: "3-11", title: "Innocent", duration: "5:02" },
+            { id: "3-12", title: "Haunted", duration: "4:02" },
+            { id: "3-13", title: "Last Kiss", duration: "6:07" },
+            { id: "3-14", title: "Long Live", duration: "5:17" }
+          ]
+        }
+      ];
+      
+      this.initializeStaticAlbums(sampleAlbums);
     }
   }
 })
