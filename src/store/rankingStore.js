@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
-// Import supabase client when needed
-// import { supabase } from '@/lib/supabase/client'
+// Import supabase client for database operations
+import { supabase } from '@/lib/supabase/client'
 
 export const useRankingStore = defineStore('ranking', {
   // State: reactive data
@@ -88,17 +88,16 @@ export const useRankingStore = defineStore('ranking', {
       
       this.loading = true
       try {
-        // This will be implemented with actual Supabase logic
-        // const { data, error } = await supabase
-        //   .from('user_album_rankings')
-        //   .select('*')
-        //   .eq('user_id', userId)
+        // Use Supabase to fetch album rankings
+        const { data, error } = await supabase
+          .from('user_album_rankings')
+          .select('*')
+          .eq('user_id', userId)
         
-        // if (error) throw error
-        // this.albumRankings = data
+        if (error) throw error
+        this.albumRankings = data
         
-        // Placeholder for now
-        console.log('Fetching album rankings for user:', userId)
+        console.log('Fetched album rankings for user:', userId)
         this.error = null
       } catch (error) {
         this.error = error.message || 'Failed to fetch album rankings'
@@ -113,23 +112,22 @@ export const useRankingStore = defineStore('ranking', {
       
       this.loading = true
       try {
-        // This will be implemented with actual Supabase logic
-        // let query = supabase
-        //   .from('user_song_rankings')
-        //   .select('*')
-        //   .eq('user_id', userId)
+        // Use Supabase to fetch song rankings
+        let query = supabase
+          .from('user_song_rankings')
+          .select('*')
+          .eq('user_id', userId)
         
-        // if (albumContextId) {
-        //   query = query.eq('album_context_id', albumContextId)
-        // }
+        if (albumContextId) {
+          query = query.eq('album_context_id', albumContextId)
+        }
         
-        // const { data, error } = await query
+        const { data, error } = await query
         
-        // if (error) throw error
-        // this.songRankings = data
+        if (error) throw error
+        this.songRankings = data
         
-        // Placeholder for now
-        console.log('Fetching song rankings for user:', userId, 'album:', albumContextId)
+        console.log('Fetched song rankings for user:', userId, 'album:', albumContextId)
         this.error = null
       } catch (error) {
         this.error = error.message || 'Failed to fetch song rankings'
@@ -144,19 +142,19 @@ export const useRankingStore = defineStore('ranking', {
       
       this.loading = true
       try {
-        // This will be implemented with actual Supabase logic
-        // const { data, error } = await supabase
-        //   .from('user_album_rankings')
-        //   .upsert({
-        //     user_id: albumRanking.user_id,
-        //     album_id: albumRanking.album_id,
-        //     tier: albumRanking.tier,
-        //     rank_in_tier: albumRanking.rank_in_tier,
-        //     updated_at: new Date()
-        //   })
-        //   .select()
+        // Use Supabase to save album ranking
+        const { data, error } = await supabase
+          .from('user_album_rankings')
+          .upsert({
+            user_id: albumRanking.user_id,
+            album_id: albumRanking.album_id,
+            tier: albumRanking.tier,
+            rank_in_tier: albumRanking.rank_in_tier,
+            updated_at: new Date()
+          })
+          .select()
         
-        // if (error) throw error
+        if (error) throw error
         
         // Update local state
         const existingIndex = this.albumRankings.findIndex(
@@ -172,14 +170,13 @@ export const useRankingStore = defineStore('ranking', {
         } else {
           this.albumRankings.push({
             ...albumRanking,
-            id: Date.now().toString(), // Temporary ID until we get the real one from the server
+            id: data[0]?.id || Date.now().toString(),
             created_at: new Date(),
             updated_at: new Date()
           })
         }
         
-        // Placeholder for now
-        console.log('Ranking album:', albumRanking)
+        console.log('Saved album ranking:', albumRanking)
         this.error = null
       } catch (error) {
         this.error = error.message || 'Failed to rank album'
@@ -195,20 +192,20 @@ export const useRankingStore = defineStore('ranking', {
       
       this.loading = true
       try {
-        // This will be implemented with actual Supabase logic
-        // const { data, error } = await supabase
-        //   .from('user_song_rankings')
-        //   .upsert({
-        //     user_id: songRanking.user_id,
-        //     song_id: songRanking.song_id,
-        //     album_context_id: songRanking.album_context_id,
-        //     tier: songRanking.tier,
-        //     rank_in_tier: songRanking.rank_in_tier,
-        //     updated_at: new Date()
-        //   })
-        //   .select()
+        // Use Supabase to save song ranking
+        const { data, error } = await supabase
+          .from('user_song_rankings')
+          .upsert({
+            user_id: songRanking.user_id,
+            song_id: songRanking.song_id,
+            album_context_id: songRanking.album_context_id,
+            tier: songRanking.tier,
+            rank_in_tier: songRanking.rank_in_tier,
+            updated_at: new Date()
+          })
+          .select()
         
-        // if (error) throw error
+        if (error) throw error
         
         // Update local state
         const existingIndex = this.songRankings.findIndex(
@@ -226,14 +223,13 @@ export const useRankingStore = defineStore('ranking', {
         } else {
           this.songRankings.push({
             ...songRanking,
-            id: Date.now().toString(), // Temporary ID until we get the real one from the server
+            id: data[0]?.id || Date.now().toString(),
             created_at: new Date(),
             updated_at: new Date()
           })
         }
         
-        // Placeholder for now
-        console.log('Ranking song:', songRanking)
+        console.log('Saved song ranking:', songRanking)
         this.error = null
       } catch (error) {
         this.error = error.message || 'Failed to rank song'
@@ -254,21 +250,19 @@ export const useRankingStore = defineStore('ranking', {
           ? this.albumRankings.filter(r => r.user_id === userId)
           : this.songRankings.filter(r => r.user_id === userId)
         
-        // This will be implemented with actual Supabase logic
-        // const { data, error } = await supabase
-        //   .from('ranking_history')
-        //   .insert({
-        //     user_id: userId,
-        //     ranking_type: rankingType,
-        //     rankings_snapshot: snapshotData,
-        //     created_at: new Date()
-        //   })
-        //   .select()
+        // Use Supabase to save ranking snapshot
+        const { error } = await supabase
+          .from('ranking_history')
+          .insert({
+            user_id: userId,
+            ranking_type: rankingType,
+            rankings_snapshot: snapshotData,
+            created_at: new Date()
+          })
         
-        // if (error) throw error
+        if (error) throw error
         
-        // Placeholder for now
-        console.log('Saving ranking snapshot:', {
+        console.log('Saved ranking snapshot:', {
           user_id: userId,
           ranking_type: rankingType,
           rankings_count: snapshotData.length
@@ -398,26 +392,29 @@ export const useRankingStore = defineStore('ranking', {
     
     // Save rankings to API/database when user is logged in
     async saveRankingsToApi(userId) {
-      if (!userId) return;
+      if (!userId) return false
       
-      this.loading = true;
+      this.loading = true
       try {
-        const flatRankings = this.convertRankingsToApiFormat(userId);
+        // Convert tiered rankings to API format
+        const rankings = this.convertRankingsToApiFormat(userId)
         
-        // For each ranking, call the existing rankAlbum method
-        for (const ranking of flatRankings) {
-          await this.rankAlbum(ranking);
-        }
+        // Use Supabase to save all rankings in a batch
+        const { error } = await supabase
+          .from('user_album_rankings')
+          .upsert(rankings)
         
-        console.log('Rankings saved to API');
-        this.error = null;
-        return true;
+        if (error) throw error
+        
+        console.log('Rankings saved to database successfully')
+        this.error = null
+        return true
       } catch (error) {
-        this.error = error.message || 'Failed to save rankings';
-        console.error('Error saving rankings to API:', error);
-        return false;
+        this.error = error.message || 'Failed to save rankings'
+        console.error('Error saving rankings to API:', error)
+        return false
       } finally {
-        this.loading = false;
+        this.loading = false
       }
     },
 
@@ -450,16 +447,33 @@ export const useRankingStore = defineStore('ranking', {
     },
 
     // Save song rankings to the database
-    saveSongRankings(albumId, rankings) {
-      // In a real app, this would save to the database
-      // For now, we'll just store in localStorage
-      this.updateSongRankingsTemp(albumId, rankings);
+    async saveSongRankings(albumId, rankings) {
+      if (!rankings || rankings.length === 0) return false
       
-      // Show success in console
-      console.log(`Saved ${rankings.length} song rankings for album ${albumId}`);
-      return true;
+      this.loading = true
+      try {
+        // Use Supabase to save song rankings
+        const { error } = await supabase
+          .from('user_song_rankings')
+          .upsert(rankings.map(r => ({
+            ...r,
+            updated_at: new Date()
+          })))
+        
+        if (error) throw error
+        
+        console.log('Song rankings saved to database successfully')
+        this.error = null
+        return true
+      } catch (error) {
+        this.error = error.message || 'Failed to save song rankings'
+        console.error('Error saving song rankings:', error)
+        return false
+      } finally {
+        this.loading = false
+      }
     },
-
+    
     // Initialize with sample data for development
     initializeWithSampleData() {
       // Import the static albums data

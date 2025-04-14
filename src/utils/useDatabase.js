@@ -5,8 +5,8 @@
  * It reads from environment variables but can be overridden programmatically.
  */
 
-// Default to the environment variable if available, otherwise default to false
-let useDatabaseFlag = process.env.VUE_APP_USE_DATABASE === 'true'
+// Default to true to use database as the primary data source
+let useDatabaseFlag = true
 
 /**
  * Database utility object with methods to check, enable, disable, and toggle database usage

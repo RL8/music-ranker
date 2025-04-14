@@ -37,13 +37,15 @@ export default {
       // Initialize ranking data
       rankingStore.initializeWithSampleData()
       
-      // Initialize database music store if enabled
-      if (useDatabase.isEnabled()) {
-        console.log('Database integration is enabled, initializing database store')
-        dbMusicStore.initialize()
-      } else {
-        console.log('Database integration is disabled, using static data')
-      }
+      // Always initialize database music store as we're now using Supabase
+      console.log('Initializing database store with Supabase')
+      dbMusicStore.initialize()
+        .then(() => {
+          console.log('Database store initialized successfully')
+        })
+        .catch(error => {
+          console.error('Failed to initialize database store:', error)
+        })
       
       // Check for app version changes
       checkVersionAndRefresh()
@@ -51,7 +53,8 @@ export default {
     
     return {
       userStore,
-      rankingStore
+      rankingStore,
+      dbMusicStore
     }
   }
 }
