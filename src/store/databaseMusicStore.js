@@ -8,6 +8,7 @@ import { databaseService } from '../services/databaseService'
  * This store manages music data from the database.
  * It provides the same interface as the original musicStore
  * but sources data from the database instead of static JSON.
+ * Enhanced for era-centric approach.
  */
 export const useDatabaseMusicStore = defineStore('databaseMusic', {
   // State: reactive data
@@ -17,12 +18,15 @@ export const useDatabaseMusicStore = defineStore('databaseMusic', {
     eras: [],
     editions: [],
     songsByEra: [],
+    albumsByEra: [],
+    currentEra: null,
     loading: {
       songs: false,
       albums: false,
       eras: false,
       editions: false,
       songsByEra: false,
+      albumsByEra: false,
       vaultSongs: false
     },
     error: null
@@ -47,6 +51,11 @@ export const useDatabaseMusicStore = defineStore('databaseMusic', {
       return eraGroup ? eraGroup.songs : []
     },
     
+    getAlbumsByEra: (state) => (eraId) => {
+      const eraGroup = state.albumsByEra.find(group => group.eraId === eraId)
+      return eraGroup ? eraGroup.albums : []
+    },
+    
     getVaultSongs: (state) => {
       // Find the vault edition in songsByEdition
       const vaultEdition = state.editions.find(edition => 
@@ -59,6 +68,21 @@ export const useDatabaseMusicStore = defineStore('databaseMusic', {
       return state.songs.filter(song => 
         song.editions?.includes(vaultEdition.editionId)
       )
+    },
+    
+    // Get all eras sorted by start date
+    getSortedEras: (state) => {
+      return [...state.eras].sort((a, b) => {
+        return new Date(a.eraStartDate) - new Date(b.eraStartDate)
+      })
+    },
+    
+    // Get primary album for an era
+    getPrimaryAlbumForEra: (state) => (eraId) => {
+      const era = state.eras.find(era => era.eraId === eraId)
+      if (!era || !era.primaryAlbumId) return null
+      
+      return state.albums.find(album => album.albumId === era.primaryAlbumId)
     }
   },
 
@@ -73,9 +97,11 @@ export const useDatabaseMusicStore = defineStore('databaseMusic', {
       
       try {
         this.songs = await dataAdapter.getSongs()
+        return this.songs
       } catch (error) {
         console.error('Error fetching songs:', error)
         this.error = error.message
+        return []
       } finally {
         this.loading.songs = false
       }
@@ -90,9 +116,11 @@ export const useDatabaseMusicStore = defineStore('databaseMusic', {
       
       try {
         this.albums = await dataAdapter.getAlbums()
+        return this.albums
       } catch (error) {
         console.error('Error fetching albums:', error)
         this.error = error.message
+        return []
       } finally {
         this.loading.albums = false
       }
@@ -108,9 +136,11 @@ export const useDatabaseMusicStore = defineStore('databaseMusic', {
       try {
         const eras = await databaseService.eras.getAll()
         this.eras = eras
+        return eras
       } catch (error) {
         console.error('Error fetching eras:', error)
         this.error = error.message
+        return []
       } finally {
         this.loading.eras = false
       }
@@ -126,9 +156,11 @@ export const useDatabaseMusicStore = defineStore('databaseMusic', {
       try {
         const editions = await databaseService.editions.getAll()
         this.editions = editions
+        return editions
       } catch (error) {
         console.error('Error fetching editions:', error)
         this.error = error.message
+        return []
       } finally {
         this.loading.editions = false
       }
@@ -142,12 +174,37 @@ export const useDatabaseMusicStore = defineStore('databaseMusic', {
       this.error = null
       
       try {
-        this.songsByEra = await dataAdapter.getSongsByEra()
+        // Use the new getByEraGrouped method from databaseService
+        const songsByEra = await databaseService.songs.getByEraGrouped()
+        this.songsByEra = songsByEra
+        return songsByEra
       } catch (error) {
         console.error('Error fetching songs by era:', error)
         this.error = error.message
+        return []
       } finally {
         this.loading.songsByEra = false
+      }
+    },
+    
+    /**
+     * Fetch albums grouped by era
+     */
+    async fetchAlbumsByEra() {
+      this.loading.albumsByEra = true
+      this.error = null
+      
+      try {
+        // Use the new getByEraGrouped method from databaseService
+        const albumsByEra = await databaseService.albums.getByEraGrouped()
+        this.albumsByEra = albumsByEra
+        return albumsByEra
+      } catch (error) {
+        console.error('Error fetching albums by era:', error)
+        this.error = error.message
+        return []
+      } finally {
+        this.loading.albumsByEra = false
       }
     },
     
@@ -177,12 +234,47 @@ export const useDatabaseMusicStore = defineStore('databaseMusic', {
             isVault: true
           }))
         }
+        
+        return vaultSongs
       } catch (error) {
         console.error('Error fetching vault songs:', error)
         this.error = error.message
+        return []
       } finally {
         this.loading.vaultSongs = false
       }
+    },
+    
+    /**
+     * Fetch a complete era with its songs and albums
+     */
+    async fetchCompleteEra(eraId) {
+      this.error = null
+      
+      try {
+        const era = await databaseService.eras.getComplete(eraId)
+        
+        // Update the current era
+        this.currentEra = era
+        
+        return era
+      } catch (error) {
+        console.error(`Error fetching complete era ${eraId}:`, error)
+        this.error = error.message
+        return null
+      }
+    },
+    
+    /**
+     * Set the current era
+     */
+    setCurrentEra(eraId) {
+      const era = this.getEraById(eraId)
+      if (era) {
+        this.currentEra = era
+        return true
+      }
+      return false
     },
     
     /**
@@ -198,16 +290,25 @@ export const useDatabaseMusicStore = defineStore('databaseMusic', {
           this.fetchAlbums(),
           this.fetchEras(),
           this.fetchEditions(),
-          this.fetchSongsByEra()
+          this.fetchSongsByEra(),
+          this.fetchAlbumsByEra()
         ])
         
-        // After basic data is loaded, fetch vault songs to enhance the data
-        await this.fetchVaultSongs()
+        // If we have eras, set the first one as current
+        if (this.eras.length > 0) {
+          // Find the earliest era by start date
+          const sortedEras = [...this.eras].sort((a, b) => 
+            new Date(a.eraStartDate) - new Date(b.eraStartDate)
+          )
+          this.currentEra = sortedEras[0]
+        }
         
         console.log('Database music store initialized successfully')
+        return true
       } catch (error) {
         console.error('Error initializing database music store:', error)
         this.error = error.message
+        return false
       }
     }
   }

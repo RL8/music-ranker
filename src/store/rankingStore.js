@@ -1,17 +1,21 @@
 import { defineStore } from 'pinia'
 // Import supabase client for database operations
 import { supabase } from '@/lib/supabase/client'
+// Import database service for enhanced operations
+import { databaseService } from '@/services/databaseService'
 
 export const useRankingStore = defineStore('ranking', {
   // State: reactive data
   state: () => ({
     albumRankings: [],
     songRankings: [],
+    eraRankings: [], // New state for era rankings
     rankingHistory: [],
     loading: false,
     error: null,
     // New state for drag-and-drop functionality
     availableAlbums: [], // Albums available to be ranked (on the shelf)
+    availableEras: [], // Eras available to be ranked
     rankedTiers: {     // Albums placed in tiers
       tier1: [], // Max 1 album { id, title, coverImageUrl }
       tier2: [], // Max 2 albums
@@ -19,11 +23,21 @@ export const useRankingStore = defineStore('ranking', {
       tier4: [], // Max 3 albums
       tier5: []  // Max 2 albums
     },
+    eraRankedTiers: {  // Eras placed in tiers (same structure)
+      tier1: [],
+      tier2: [],
+      tier3: [],
+      tier4: [],
+      tier5: []
+    },
+    currentEraContext: null, // Currently selected era for song rankings
     notEnoughAlbumsForLoop: false, // Flag to disable loop mode
     // Local storage key for persisting rankings
     localStorageKey: 'swifties_album_rankings',
+    eraLocalStorageKey: 'swifties_era_rankings',
+    songLocalStorageKey: 'swifties_song_rankings',
     // App version for data structure changes
-    appVersion: '1.1'
+    appVersion: '2.0' // Updated for era-centric approach
   }),
 
   // Getters: computed properties for the state
@@ -32,18 +46,36 @@ export const useRankingStore = defineStore('ranking', {
       return state.albumRankings.filter(ranking => ranking.tier === tier)
     },
     
+    getEraRankingsByTier: (state) => (tier) => {
+      return state.eraRankings.filter(ranking => ranking.tier === tier)
+    },
+    
     getSongRankingsByAlbum: (state) => (albumId) => {
       return state.songRankings.filter(ranking => ranking.album_context_id === albumId)
+    },
+    
+    getSongRankingsByEra: (state) => (eraId) => {
+      return state.songRankings.filter(ranking => ranking.era_context_id === eraId)
     },
     
     getAlbumRankingById: (state) => (albumId) => {
       return state.albumRankings.find(ranking => ranking.album_id === albumId)
     },
     
-    getSongRankingById: (state) => (songId, albumContextId) => {
-      return state.songRankings.find(
-        ranking => ranking.song_id === songId && ranking.album_context_id === albumContextId
-      )
+    getEraRankingById: (state) => (eraId) => {
+      return state.eraRankings.find(ranking => ranking.era_id === eraId)
+    },
+    
+    getSongRankingById: (state) => (songId, contextId, isEraContext = false) => {
+      if (isEraContext) {
+        return state.songRankings.find(
+          ranking => ranking.song_id === songId && ranking.era_context_id === contextId
+        )
+      } else {
+        return state.songRankings.find(
+          ranking => ranking.song_id === songId && ranking.album_context_id === contextId
+        )
+      }
     },
     
     // New getters for drag-and-drop functionality
@@ -58,7 +90,7 @@ export const useRankingStore = defineStore('ranking', {
       return capacities[tier] || 0;
     },
     
-    isTierFull: (state) => (tier) => {
+    isTierFull: (state) => (tier, isEraRanking = false) => {
       const capacities = {
         tier1: 1,
         tier2: 2,
@@ -66,7 +98,12 @@ export const useRankingStore = defineStore('ranking', {
         tier4: 3,
         tier5: 2
       };
-      return state.rankedTiers[tier].length >= capacities[tier];
+      
+      if (isEraRanking) {
+        return state.eraRankedTiers[tier].length >= capacities[tier];
+      } else {
+        return state.rankedTiers[tier].length >= capacities[tier];
+      }
     },
     
     // Get all ranked albums across all tiers
@@ -78,6 +115,17 @@ export const useRankingStore = defineStore('ranking', {
         ...state.rankedTiers.tier4,
         ...state.rankedTiers.tier5
       ];
+    },
+    
+    // Get all ranked eras across all tiers
+    allRankedEras: (state) => {
+      return [
+        ...state.eraRankedTiers.tier1,
+        ...state.eraRankedTiers.tier2,
+        ...state.eraRankedTiers.tier3,
+        ...state.eraRankedTiers.tier4,
+        ...state.eraRankedTiers.tier5
+      ];
     }
   },
 
@@ -88,13 +136,8 @@ export const useRankingStore = defineStore('ranking', {
       
       this.loading = true
       try {
-        // Use Supabase to fetch album rankings
-        const { data, error } = await supabase
-          .from('user_album_rankings')
-          .select('*')
-          .eq('user_id', userId)
-        
-        if (error) throw error
+        // Use database service to fetch album rankings
+        const data = await databaseService.rankings.getAlbumRankings(userId)
         this.albumRankings = data
         
         console.log('Fetched album rankings for user:', userId)
@@ -107,27 +150,55 @@ export const useRankingStore = defineStore('ranking', {
       }
     },
     
-    async fetchSongRankings(userId, albumContextId = null) {
+    async fetchEraRankings(userId) {
       if (!userId) return
       
       this.loading = true
       try {
-        // Use Supabase to fetch song rankings
-        let query = supabase
-          .from('user_song_rankings')
+        // Use Supabase to fetch era rankings (from the same table as album rankings)
+        const { data, error } = await supabase
+          .from('user_album_rankings')
           .select('*')
           .eq('user_id', userId)
-        
-        if (albumContextId) {
-          query = query.eq('album_context_id', albumContextId)
-        }
-        
-        const { data, error } = await query
+          .not('era_id', 'is', null)
         
         if (error) throw error
+        this.eraRankings = data
+        
+        console.log('Fetched era rankings for user:', userId)
+        this.error = null
+      } catch (error) {
+        this.error = error.message || 'Failed to fetch era rankings'
+        console.error('Error fetching era rankings:', error)
+      } finally {
+        this.loading = false
+      }
+    },
+    
+    async fetchSongRankings(userId, contextId = null, isEraContext = false) {
+      if (!userId) return
+      
+      this.loading = true
+      try {
+        // Use database service to fetch song rankings with context
+        const options = {}
+        if (contextId) {
+          if (isEraContext) {
+            options.eraContextId = contextId
+          } else {
+            options.albumContextId = contextId
+          }
+        }
+        
+        const data = await databaseService.rankings.getSongRankings(userId, options)
         this.songRankings = data
         
-        console.log('Fetched song rankings for user:', userId, 'album:', albumContextId)
+        if (isEraContext && contextId) {
+          this.currentEraContext = contextId
+        }
+        
+        console.log('Fetched song rankings for user:', userId, 
+          isEraContext ? 'era:' : 'album:', contextId)
         this.error = null
       } catch (error) {
         this.error = error.message || 'Failed to fetch song rankings'
@@ -187,20 +258,19 @@ export const useRankingStore = defineStore('ranking', {
       }
     },
     
-    async rankSong(songRanking) {
-      if (!songRanking.user_id || !songRanking.song_id || !songRanking.album_context_id) return
+    async rankEra(eraRanking) {
+      if (!eraRanking.user_id || !eraRanking.era_id) return
       
       this.loading = true
       try {
-        // Use Supabase to save song ranking
+        // Use Supabase to save era ranking
         const { data, error } = await supabase
-          .from('user_song_rankings')
+          .from('user_album_rankings')
           .upsert({
-            user_id: songRanking.user_id,
-            song_id: songRanking.song_id,
-            album_context_id: songRanking.album_context_id,
-            tier: songRanking.tier,
-            rank_in_tier: songRanking.rank_in_tier,
+            user_id: eraRanking.user_id,
+            era_id: eraRanking.era_id,
+            tier: eraRanking.tier,
+            rank_in_tier: eraRanking.rank_in_tier,
             updated_at: new Date()
           })
           .select()
@@ -208,28 +278,96 @@ export const useRankingStore = defineStore('ranking', {
         if (error) throw error
         
         // Update local state
-        const existingIndex = this.songRankings.findIndex(
-          r => r.song_id === songRanking.song_id && 
-               r.album_context_id === songRanking.album_context_id && 
-               r.user_id === songRanking.user_id
+        const existingIndex = this.eraRankings.findIndex(
+          r => r.era_id === eraRanking.era_id && r.user_id === eraRanking.user_id
         )
         
         if (existingIndex >= 0) {
-          this.songRankings[existingIndex] = { 
-            ...this.songRankings[existingIndex], 
-            ...songRanking,
+          this.eraRankings[existingIndex] = { 
+            ...this.eraRankings[existingIndex], 
+            ...eraRanking,
             updated_at: new Date()
           }
         } else {
-          this.songRankings.push({
-            ...songRanking,
+          this.eraRankings.push({
+            ...eraRanking,
             id: data[0]?.id || Date.now().toString(),
             created_at: new Date(),
             updated_at: new Date()
           })
         }
         
-        console.log('Saved song ranking:', songRanking)
+        console.log('Saved era ranking:', eraRanking)
+        this.error = null
+      } catch (error) {
+        this.error = error.message || 'Failed to rank era'
+        console.error('Error ranking era:', error)
+        throw error
+      } finally {
+        this.loading = false
+      }
+    },
+    
+    async rankSong(songRanking) {
+      if (!songRanking.user_id || !songRanking.song_id) return
+      
+      // Ensure we have at least one context ID (era or album)
+      if (!songRanking.era_context_id && !songRanking.album_context_id) {
+        console.error('Song ranking must have either era_context_id or album_context_id')
+        return
+      }
+      
+      this.loading = true
+      try {
+        // Use database service to save song ranking
+        const rankingData = {
+          user_id: songRanking.user_id,
+          song_id: songRanking.song_id,
+          rank: songRanking.rank,
+          notes: songRanking.notes || '',
+          updated_at: new Date()
+        }
+        
+        // Add context IDs if present
+        if (songRanking.album_context_id) {
+          rankingData.album_context_id = songRanking.album_context_id
+        }
+        
+        if (songRanking.era_context_id) {
+          rankingData.era_context_id = songRanking.era_context_id
+        }
+        
+        const data = await databaseService.rankings.saveSongRankings([rankingData])
+        
+        // Update local state
+        const existingIndex = this.songRankings.findIndex(r => {
+          if (songRanking.era_context_id) {
+            return r.song_id === songRanking.song_id && 
+                   r.era_context_id === songRanking.era_context_id && 
+                   r.user_id === songRanking.user_id
+          } else {
+            return r.song_id === songRanking.song_id && 
+                   r.album_context_id === songRanking.album_context_id && 
+                   r.user_id === songRanking.user_id
+          }
+        })
+        
+        if (existingIndex >= 0) {
+          this.songRankings[existingIndex] = { 
+            ...this.songRankings[existingIndex], 
+            ...rankingData,
+            updated_at: new Date()
+          }
+        } else {
+          this.songRankings.push({
+            ...rankingData,
+            id: data[0]?.id || Date.now().toString(),
+            created_at: new Date(),
+            updated_at: new Date()
+          })
+        }
+        
+        console.log('Saved song ranking:', rankingData)
         this.error = null
       } catch (error) {
         this.error = error.message || 'Failed to rank song'
@@ -243,232 +381,364 @@ export const useRankingStore = defineStore('ranking', {
     async saveRankingSnapshot(userId, rankingType) {
       if (!userId) return
       
-      this.loading = true
       try {
-        // Prepare snapshot data based on ranking type
-        const snapshotData = rankingType === 'album' 
-          ? this.albumRankings.filter(r => r.user_id === userId)
-          : this.songRankings.filter(r => r.user_id === userId)
+        let rankings = []
+        let snapshotType = ''
         
-        // Use Supabase to save ranking snapshot
-        const { error } = await supabase
-          .from('ranking_history')
-          .insert({
-            user_id: userId,
-            ranking_type: rankingType,
-            rankings_snapshot: snapshotData,
-            created_at: new Date()
-          })
+        if (rankingType === 'album') {
+          rankings = this.albumRankings
+          snapshotType = 'album_rankings'
+        } else if (rankingType === 'era') {
+          rankings = this.eraRankings
+          snapshotType = 'era_rankings'
+        } else if (rankingType === 'song') {
+          rankings = this.songRankings
+          snapshotType = 'song_rankings'
+        } else {
+          throw new Error('Invalid ranking type')
+        }
+        
+        const snapshot = {
+          user_id: userId,
+          snapshot_type: snapshotType,
+          snapshot_data: JSON.stringify(rankings),
+          created_at: new Date()
+        }
+        
+        const { data, error } = await supabase
+          .from('ranking_snapshots')
+          .insert(snapshot)
+          .select()
         
         if (error) throw error
         
-        console.log('Saved ranking snapshot:', {
-          user_id: userId,
-          ranking_type: rankingType,
-          rankings_count: snapshotData.length
+        // Add to history
+        this.rankingHistory.push({
+          id: data[0].id,
+          type: snapshotType,
+          createdAt: data[0].created_at
         })
-        this.error = null
+        
+        console.log(`Saved ${rankingType} ranking snapshot`)
+        return data[0]
       } catch (error) {
-        this.error = error.message || 'Failed to save ranking snapshot'
-        console.error('Error saving ranking snapshot:', error)
-      } finally {
-        this.loading = false
+        console.error(`Error saving ${rankingType} ranking snapshot:`, error)
+        throw error
       }
     },
     
     // New actions for drag-and-drop functionality
     initializeStaticAlbums(albumsData) {
-      // Add debug logging to help identify issues
-      console.log("Initializing with static albums data");
+      // Reset state
+      this.availableAlbums = []
       
-      // Only initialize if availableAlbums is empty to prevent overwriting during navigation
-      if (this.availableAlbums.length === 0) {
-        // First try to load from localStorage
-        const loadedFromStorage = this.loadRankingsFromLocalStorage();
-        
-        // If we still don't have any ranked albums, initialize with static data
-        if (!loadedFromStorage && 
-            this.availableAlbums.length === 0 && 
-            this.rankedTiers.tier1.length === 0 && 
-            this.rankedTiers.tier2.length === 0 && 
-            this.rankedTiers.tier3.length === 0 && 
-            this.rankedTiers.tier4.length === 0 && 
-            this.rankedTiers.tier5.length === 0) {
-          
-          // Process albums to ensure songs are properly structured
-          const processedAlbums = albumsData.map(album => {
-            // Ensure songs array exists and is properly formatted
-            const songs = Array.isArray(album.songs) ? album.songs : [];
-            
-            // Log for debugging
-            console.log(`Album ${album.title} has ${songs.length} songs`);
-            
-            return {
-              ...album,
-              songs: songs
-            };
-          });
-          
-          // Only set availableAlbums if there are enough albums to prevent Swiper loop warnings
-          if (processedAlbums.length >= 3) {
-            this.availableAlbums = processedAlbums;
-          } else {
-            // If there aren't enough albums, disable loop mode by adding a flag
-            this.availableAlbums = processedAlbums;
-            this.notEnoughAlbumsForLoop = true;
-          }
-          
-          // Clear tiers just in case
-          this.rankedTiers = { tier1: [], tier2: [], tier3: [], tier4: [], tier5: [] };
-          
-          // Save to localStorage with the current version
-          this.saveRankingsToLocalStorage();
-        }
+      Object.keys(this.rankedTiers).forEach(tier => {
+        this.rankedTiers[tier] = []
+      })
+      
+      // Initialize available albums
+      if (albumsData && albumsData.length) {
+        this.availableAlbums = albumsData.map(album => ({
+          id: album.albumId,
+          title: album.albumTitle,
+          coverImageUrl: album.coverImageUrl || '',
+          releaseDate: album.releaseDate
+        }))
       }
+      
+      // Check if we have enough albums for loop mode
+      this.notEnoughAlbumsForLoop = this.availableAlbums.length < 11
+      
+      console.log('Initialized static albums:', this.availableAlbums.length)
+    },
+    
+    initializeStaticEras(erasData) {
+      // Reset state
+      this.availableEras = []
+      
+      Object.keys(this.eraRankedTiers).forEach(tier => {
+        this.eraRankedTiers[tier] = []
+      })
+      
+      // Initialize available eras
+      if (erasData && erasData.length) {
+        this.availableEras = erasData.map(era => ({
+          id: era.eraId,
+          title: era.eraName,
+          coverImageUrl: era.coverImageUrl || '',
+          startDate: era.eraStartDate,
+          primaryAlbumId: era.primaryAlbumId
+        }))
+      }
+      
+      console.log('Initialized static eras:', this.availableEras.length)
     },
     
     // Save rankings to localStorage for persistence
     saveRankingsToLocalStorage() {
       try {
-        const rankings = {
-          availableAlbums: this.availableAlbums,
-          rankedTiers: this.rankedTiers,
-          timestamp: new Date().toISOString(),
-          appVersion: this.appVersion
-        };
-        localStorage.setItem(this.localStorageKey, JSON.stringify(rankings));
+        const rankingsData = {
+          version: this.appVersion,
+          albumRankings: this.allRankedAlbums,
+          eraRankings: this.allRankedEras,
+          timestamp: new Date().toISOString()
+        }
+        
+        localStorage.setItem(this.localStorageKey, JSON.stringify(rankingsData))
+        console.log('Rankings saved to localStorage')
       } catch (error) {
-        console.error('Error saving rankings to localStorage:', error);
+        console.error('Error saving rankings to localStorage:', error)
+      }
+    },
+    
+    // Save song rankings to localStorage
+    saveSongRankingsToLocalStorage() {
+      try {
+        const songRankingsData = {
+          version: this.appVersion,
+          songRankings: this.songRankings,
+          timestamp: new Date().toISOString()
+        }
+        
+        localStorage.setItem(this.songLocalStorageKey, JSON.stringify(songRankingsData))
+        console.log('Song rankings saved to localStorage')
+      } catch (error) {
+        console.error('Error saving song rankings to localStorage:', error)
       }
     },
     
     // Load rankings from localStorage
     loadRankingsFromLocalStorage() {
       try {
-        const savedRankings = localStorage.getItem(this.localStorageKey);
+        const savedRankings = localStorage.getItem(this.localStorageKey)
+        
         if (savedRankings) {
-          const { availableAlbums, rankedTiers, appVersion } = JSON.parse(savedRankings);
-          if (appVersion === this.appVersion) {
-            this.availableAlbums = availableAlbums;
-            this.rankedTiers = rankedTiers;
-            return true;
+          const parsedRankings = JSON.parse(savedRankings)
+          
+          // Check version compatibility
+          if (parsedRankings.version === this.appVersion) {
+            // Restore album rankings
+            Object.keys(this.rankedTiers).forEach(tier => {
+              this.rankedTiers[tier] = []
+            })
+            
+            // Filter albums by tier and add to appropriate tier arrays
+            if (parsedRankings.albumRankings) {
+              parsedRankings.albumRankings.forEach(album => {
+                const tier = album.tier || 'tier3'
+                if (this.rankedTiers[tier]) {
+                  this.rankedTiers[tier].push(album)
+                }
+              })
+            }
+            
+            // Restore era rankings if available
+            if (parsedRankings.eraRankings) {
+              Object.keys(this.eraRankedTiers).forEach(tier => {
+                this.eraRankedTiers[tier] = []
+              })
+              
+              parsedRankings.eraRankings.forEach(era => {
+                const tier = era.tier || 'tier3'
+                if (this.eraRankedTiers[tier]) {
+                  this.eraRankedTiers[tier].push(era)
+                }
+              })
+            }
+            
+            console.log('Rankings loaded from localStorage')
           } else {
-            // Clear localStorage if app version has changed
-            localStorage.removeItem(this.localStorageKey);
+            console.log('Saved rankings version mismatch, not loading')
           }
         }
       } catch (error) {
-        console.error('Error loading rankings from localStorage:', error);
+        console.error('Error loading rankings from localStorage:', error)
       }
-      return false;
+    },
+    
+    // Load song rankings from localStorage
+    loadSongRankingsFromLocalStorage() {
+      try {
+        const savedRankings = localStorage.getItem(this.songLocalStorageKey)
+        
+        if (savedRankings) {
+          const parsedRankings = JSON.parse(savedRankings)
+          
+          // Check version compatibility
+          if (parsedRankings.version === this.appVersion) {
+            if (parsedRankings.songRankings) {
+              this.songRankings = parsedRankings.songRankings
+            }
+            
+            console.log('Song rankings loaded from localStorage')
+          } else {
+            console.log('Saved song rankings version mismatch, not loading')
+          }
+        }
+      } catch (error) {
+        console.error('Error loading song rankings from localStorage:', error)
+      }
     },
     
     // Clear all rankings and reset to initial state
-    resetRankings(albumsData) {
-      this.availableAlbums = [...albumsData];
-      this.rankedTiers = { tier1: [], tier2: [], tier3: [], tier4: [], tier5: [] };
-      this.saveRankingsToLocalStorage();
+    resetRankings(albumsData, erasData) {
+      this.albumRankings = []
+      this.songRankings = []
+      this.eraRankings = []
+      
+      // Reset tiered rankings
+      this.initializeStaticAlbums(albumsData)
+      if (erasData) {
+        this.initializeStaticEras(erasData)
+      }
+      
+      // Clear localStorage
+      localStorage.removeItem(this.localStorageKey)
+      localStorage.removeItem(this.songLocalStorageKey)
+      localStorage.removeItem(this.eraLocalStorageKey)
     },
     
     // Convert tiered rankings to flat structure for API/database
     convertRankingsToApiFormat(userId) {
-      const flatRankings = [];
+      const apiRankings = []
       
       // Process each tier
-      Object.entries(this.rankedTiers).forEach(([tier, albums], tierIndex) => {
-        albums.forEach((album, albumIndex) => {
-          flatRankings.push({
+      Object.keys(this.rankedTiers).forEach(tier => {
+        this.rankedTiers[tier].forEach((album, index) => {
+          apiRankings.push({
             user_id: userId,
             album_id: album.id,
-            tier: tierIndex + 1, // Convert tier name to number
-            rank_in_tier: albumIndex + 1,
-            updated_at: new Date()
-          });
-        });
-      });
+            tier: tier,
+            rank_in_tier: index + 1
+          })
+        })
+      })
       
-      return flatRankings;
+      return apiRankings
+    },
+    
+    // Convert era tiered rankings to flat structure for API/database
+    convertEraRankingsToApiFormat(userId) {
+      const apiRankings = []
+      
+      // Process each tier
+      Object.keys(this.eraRankedTiers).forEach(tier => {
+        this.eraRankedTiers[tier].forEach((era, index) => {
+          apiRankings.push({
+            user_id: userId,
+            era_id: era.id,
+            tier: tier,
+            rank_in_tier: index + 1
+          })
+        })
+      })
+      
+      return apiRankings
     },
     
     // Save rankings to API/database when user is logged in
-    async saveRankingsToApi(userId) {
-      if (!userId) return false
+    async saveRankingsToApi(userId, rankingType = 'album') {
+      if (!userId) return
       
       this.loading = true
       try {
-        // Convert tiered rankings to API format
-        const rankings = this.convertRankingsToApiFormat(userId)
+        let rankings = []
         
-        // Use Supabase to save all rankings in a batch
-        const { error } = await supabase
-          .from('user_album_rankings')
-          .upsert(rankings)
+        if (rankingType === 'album') {
+          rankings = this.convertRankingsToApiFormat(userId)
+          
+          // Use database service to save album rankings
+          await databaseService.rankings.saveAlbumRankings(rankings)
+        } else if (rankingType === 'era') {
+          rankings = this.convertEraRankingsToApiFormat(userId)
+          
+          // Use database service to save era rankings
+          await databaseService.rankings.saveAlbumRankings(rankings)
+        } else {
+          throw new Error('Invalid ranking type')
+        }
         
-        if (error) throw error
-        
-        console.log('Rankings saved to database successfully')
+        console.log(`Saved ${rankingType} rankings to API for user:`, userId)
         this.error = null
-        return true
+        
+        // Create a snapshot of the rankings
+        await this.saveRankingSnapshot(userId, rankingType)
       } catch (error) {
-        this.error = error.message || 'Failed to save rankings'
-        console.error('Error saving rankings to API:', error)
-        return false
+        this.error = error.message || `Failed to save ${rankingType} rankings to API`
+        console.error(`Error saving ${rankingType} rankings to API:`, error)
+        throw error
       } finally {
         this.loading = false
       }
     },
-
+    
+    // Get song rankings for a specific era
+    getSongRankingsForEra(eraId) {
+      return this.songRankings.filter(ranking => ranking.era_context_id === eraId)
+        .sort((a, b) => a.rank - b.rank)
+    },
+    
     // Get song rankings for a specific album
     getSongRankingsForAlbum(albumId) {
-      // In a real app, this would fetch from the database
-      // For now, we'll check if we have any stored rankings
-      const localStorageKey = `song_rankings_album_${albumId}`;
-      try {
-        const savedRankings = localStorage.getItem(localStorageKey);
-        if (savedRankings) {
-          return JSON.parse(savedRankings);
-        }
-      } catch (error) {
-        console.error('Error loading song rankings from localStorage:', error);
-      }
-      return [];
+      return this.songRankings.filter(ranking => ranking.album_context_id === albumId)
+        .sort((a, b) => a.rank - b.rank)
     },
-
+    
     // Update temporary song rankings (not saved to database yet)
-    updateSongRankingsTemp(albumId, rankings) {
-      // This is just for temporary state management
-      // We'll store it in localStorage for persistence between page reloads
-      const localStorageKey = `song_rankings_album_${albumId}`;
-      try {
-        localStorage.setItem(localStorageKey, JSON.stringify(rankings));
-      } catch (error) {
-        console.error('Error saving song rankings to localStorage:', error);
-      }
+    updateSongRankingsTemp(contextId, rankings, isEraContext = false) {
+      // Remove existing rankings for this context
+      this.songRankings = this.songRankings.filter(r => {
+        if (isEraContext) {
+          return r.era_context_id !== contextId
+        } else {
+          return r.album_context_id !== contextId
+        }
+      })
+      
+      // Add new rankings
+      this.songRankings.push(...rankings)
     },
-
+    
     // Save song rankings to the database
-    async saveSongRankings(albumId, rankings) {
-      if (!rankings || rankings.length === 0) return false
+    async saveSongRankings(contextId, rankings, userId, isEraContext = false) {
+      if (!userId || !rankings.length) return
       
       this.loading = true
       try {
-        // Use Supabase to save song rankings
-        const { error } = await supabase
-          .from('user_song_rankings')
-          .upsert(rankings.map(r => ({
-            ...r,
-            updated_at: new Date()
-          })))
+        // Format rankings for database
+        const formattedRankings = rankings.map((song, index) => {
+          const ranking = {
+            user_id: userId,
+            song_id: song.id,
+            rank: index + 1,
+            notes: song.notes || ''
+          }
+          
+          // Add context ID based on type
+          if (isEraContext) {
+            ranking.era_context_id = contextId
+          } else {
+            ranking.album_context_id = contextId
+          }
+          
+          return ranking
+        })
         
-        if (error) throw error
+        // Use database service to save song rankings
+        await databaseService.rankings.saveSongRankings(formattedRankings)
         
-        console.log('Song rankings saved to database successfully')
+        // Update local state
+        this.updateSongRankingsTemp(contextId, formattedRankings, isEraContext)
+        
+        console.log(`Saved song rankings for ${isEraContext ? 'era' : 'album'}:`, contextId)
         this.error = null
-        return true
+        
+        // Create a snapshot of the song rankings
+        await this.saveRankingSnapshot(userId, 'song')
       } catch (error) {
         this.error = error.message || 'Failed to save song rankings'
         console.error('Error saving song rankings:', error)
-        return false
+        throw error
       } finally {
         this.loading = false
       }
@@ -476,16 +746,17 @@ export const useRankingStore = defineStore('ranking', {
     
     // Initialize with sample data for development
     initializeWithSampleData() {
-      // Import the static albums data
-      try {
-        const staticAlbumsData = require('@/data/static-albums.json');
-        this.initializeStaticAlbums(staticAlbumsData);
-      } catch (error) {
-        console.error('Error loading static albums data:', error);
-        // Fallback to empty albums if the file can't be loaded
-        this.availableAlbums = [];
-        this.notEnoughAlbumsForLoop = true;
-      }
+      // This method can be used to populate the store with sample data for testing
+      console.log('Initializing with sample data')
+      
+      // Sample implementation left empty for now
+      // This would be filled with sample data as needed for development
+    },
+    
+    // Set the current era context for song rankings
+    setCurrentEraContext(eraId) {
+      this.currentEraContext = eraId
+      console.log('Set current era context:', eraId)
     }
   }
 })

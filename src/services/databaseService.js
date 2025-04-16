@@ -1,8 +1,10 @@
 import { supabase } from '../lib/supabase/client'
+import { handleSupabaseError } from '../lib/supabase/client'
 
 /**
  * Service for handling database operations with the new schema
  * Provides comprehensive access to all tables in the database
+ * Enhanced for era-centric approach
  */
 export const databaseService = {
   /**
@@ -145,6 +147,64 @@ export const databaseService = {
       }
       
       return data
+    },
+
+    /**
+     * Get songs grouped by era using the SongsByEra view
+     * @param {Object} options - Query options
+     * @returns {Promise} - Query result with songs grouped by era
+     */
+    getByEraGrouped: async (options = {}) => {
+      const { limit = 500, orderBy = 'eraStartDate', ascending = true } = options
+      
+      try {
+        // Get songs grouped by era using the SongsByEra view
+        const { data, error } = await supabase
+          .from('SongsByEra')
+          .select('*')
+          .order(orderBy, { ascending })
+          .limit(limit)
+        
+        if (error) {
+          console.error('Error fetching songs by era:', error)
+          throw error
+        }
+        
+        // Group the songs by era
+        const groupedSongs = data.reduce((groups, song) => {
+          const eraId = song.originalEraId
+          
+          if (!groups[eraId]) {
+            groups[eraId] = {
+              eraId,
+              eraName: song.eraName,
+              eraStartDate: song.eraStartDate,
+              primaryAlbumId: song.primaryAlbumId,
+              songs: []
+            }
+          }
+          
+          groups[eraId].songs.push({
+            songId: song.songId,
+            canonicalTitle: song.canonicalTitle,
+            notes: song.notes
+          })
+          
+          return groups
+        }, {})
+        
+        // Convert to array and sort by era start date
+        return Object.values(groupedSongs).sort((a, b) => {
+          if (ascending) {
+            return new Date(a.eraStartDate) - new Date(b.eraStartDate)
+          } else {
+            return new Date(b.eraStartDate) - new Date(a.eraStartDate)
+          }
+        })
+      } catch (error) {
+        console.error('Error in songs.getByEraGrouped:', error)
+        throw error
+      }
     }
   },
   
@@ -296,6 +356,66 @@ export const databaseService = {
       }
       
       return data
+    },
+
+    /**
+     * Get albums grouped by era using the AlbumsByEra view
+     * @param {Object} options - Query options
+     * @returns {Promise} - Query result with albums grouped by era
+     */
+    getByEraGrouped: async (options = {}) => {
+      const { limit = 100, orderBy = 'eraStartDate', ascending = true } = options
+      
+      try {
+        // Get albums grouped by era using the AlbumsByEra view
+        const { data, error } = await supabase
+          .from('AlbumsByEra')
+          .select('*')
+          .order(orderBy, { ascending })
+          .limit(limit)
+        
+        if (error) {
+          console.error('Error fetching albums by era:', error)
+          throw error
+        }
+        
+        // Group the albums by era
+        const groupedAlbums = data.reduce((groups, album) => {
+          const eraId = album.eraId
+          
+          if (!groups[eraId]) {
+            groups[eraId] = {
+              eraId,
+              eraName: album.eraName,
+              eraStartDate: album.eraStartDate,
+              primaryAlbumId: album.primaryAlbumId,
+              albums: []
+            }
+          }
+          
+          groups[eraId].albums.push({
+            albumId: album.albumId,
+            albumTitle: album.albumTitle,
+            releaseDate: album.releaseDate,
+            albumType: album.albumType,
+            isPrimaryAlbum: album.isPrimaryAlbum
+          })
+          
+          return groups
+        }, {})
+        
+        // Convert to array and sort by era start date
+        return Object.values(groupedAlbums).sort((a, b) => {
+          if (ascending) {
+            return new Date(a.eraStartDate) - new Date(b.eraStartDate)
+          } else {
+            return new Date(b.eraStartDate) - new Date(a.eraStartDate)
+          }
+        })
+      } catch (error) {
+        console.error('Error in albums.getByEraGrouped:', error)
+        throw error
+      }
     }
   },
   
@@ -309,12 +429,13 @@ export const databaseService = {
      * @returns {Promise} - Query result
      */
     getAll: async (options = {}) => {
-      const { orderBy = 'eraStartDate', ascending = true } = options
+      const { limit = 20, orderBy = 'eraStartDate', ascending = true } = options
       
       const { data, error } = await supabase
         .from('Eras')
         .select('*')
         .order(orderBy, { ascending })
+        .limit(limit)
       
       if (error) {
         console.error('Error fetching eras:', error)
@@ -345,6 +466,74 @@ export const databaseService = {
       }
       
       return data
+    },
+
+    /**
+     * Get era with its albums
+     * @param {string} id - Era ID
+     * @returns {Promise} - Query result
+     */
+    getWithAlbums: async (id) => {
+      const { data, error } = await supabase
+        .from('Eras')
+        .select(`
+          *,
+          Albums(*)
+        `)
+        .eq('eraId', id)
+        .single()
+      
+      if (error) {
+        console.error(`Error fetching era ${id} with albums:`, error)
+        throw error
+      }
+      
+      return data
+    },
+
+    /**
+     * Get era with both songs and albums
+     * @param {string} id - Era ID
+     * @returns {Promise} - Query result
+     */
+    getComplete: async (id) => {
+      try {
+        // Get the era with its albums
+        const { data: eraWithAlbums, error: albumsError } = await supabase
+          .from('Eras')
+          .select(`
+            *,
+            Albums(*)
+          `)
+          .eq('eraId', id)
+          .single()
+        
+        if (albumsError) {
+          console.error(`Error fetching era ${id} with albums:`, albumsError)
+          throw albumsError
+        }
+        
+        // Get songs for this era
+        const { data: songs, error: songsError } = await supabase
+          .from('UniqueSongs')
+          .select('*')
+          .eq('originalEraId', id)
+          .order('canonicalTitle')
+        
+        if (songsError) {
+          console.error(`Error fetching songs for era ${id}:`, songsError)
+          throw songsError
+        }
+        
+        // Combine the data
+        return {
+          ...eraWithAlbums,
+          songs: songs || []
+        }
+      } catch (error) {
+        console.error(`Error in eras.getComplete for era ${id}:`, error)
+        throw error
+      }
     }
   },
   
@@ -427,6 +616,134 @@ export const databaseService = {
         return songs || []
       } catch (error) {
         console.error(`Error in editions.getSongs for edition ${editionId}:`, error)
+        throw error
+      }
+    }
+  },
+
+  /**
+   * Rankings related operations
+   */
+  rankings: {
+    /**
+     * Get all song rankings for a user
+     * @param {string} userId - User ID
+     * @param {Object} options - Query options
+     * @returns {Promise} - Query result
+     */
+    getSongRankings: async (userId, options = {}) => {
+      const { eraContextId = null, albumContextId = null } = options
+      
+      try {
+        let query = supabase
+          .from('user_song_rankings')
+          .select('*')
+          .eq('user_id', userId)
+        
+        if (eraContextId) {
+          query = query.eq('era_context_id', eraContextId)
+        }
+        
+        if (albumContextId) {
+          query = query.eq('album_context_id', albumContextId)
+        }
+        
+        const { data, error } = await query
+        
+        if (error) {
+          console.error(`Error fetching song rankings for user ${userId}:`, error)
+          throw error
+        }
+        
+        return data
+      } catch (error) {
+        console.error('Error in rankings.getSongRankings:', error)
+        throw error
+      }
+    },
+    
+    /**
+     * Save song rankings for a user
+     * @param {Array} rankings - Array of ranking objects
+     * @returns {Promise} - Query result
+     */
+    saveSongRankings: async (rankings) => {
+      if (!rankings || !rankings.length) {
+        return []
+      }
+      
+      try {
+        const { data, error } = await supabase
+          .from('user_song_rankings')
+          .upsert(rankings.map(r => ({
+            ...r,
+            updated_at: new Date()
+          })))
+          .select()
+        
+        if (error) {
+          console.error('Error saving song rankings:', error)
+          throw error
+        }
+        
+        return data
+      } catch (error) {
+        console.error('Error in rankings.saveSongRankings:', error)
+        throw error
+      }
+    },
+    
+    /**
+     * Get all album/era rankings for a user
+     * @param {string} userId - User ID
+     * @returns {Promise} - Query result
+     */
+    getAlbumRankings: async (userId) => {
+      try {
+        const { data, error } = await supabase
+          .from('user_album_rankings')
+          .select('*')
+          .eq('user_id', userId)
+        
+        if (error) {
+          console.error(`Error fetching album rankings for user ${userId}:`, error)
+          throw error
+        }
+        
+        return data
+      } catch (error) {
+        console.error('Error in rankings.getAlbumRankings:', error)
+        throw error
+      }
+    },
+    
+    /**
+     * Save album/era rankings for a user
+     * @param {Array} rankings - Array of ranking objects
+     * @returns {Promise} - Query result
+     */
+    saveAlbumRankings: async (rankings) => {
+      if (!rankings || !rankings.length) {
+        return []
+      }
+      
+      try {
+        const { data, error } = await supabase
+          .from('user_album_rankings')
+          .upsert(rankings.map(r => ({
+            ...r,
+            updated_at: new Date()
+          })))
+          .select()
+        
+        if (error) {
+          console.error('Error saving album rankings:', error)
+          throw error
+        }
+        
+        return data
+      } catch (error) {
+        console.error('Error in rankings.saveAlbumRankings:', error)
         throw error
       }
     }

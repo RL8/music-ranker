@@ -21,7 +21,7 @@ import { useRankingStore } from '@/store/rankingStore'
 import { useDatabaseMusicStore } from '@/store/databaseMusicStore'
 import { useDatabase } from '@/utils/useDatabase'
 import { checkVersionAndRefresh } from '@/utils/storageUtils'
-import { onMounted } from 'vue'
+import { onMounted, ref } from 'vue'
 import Sidebar from './components/ui/Sidebar.vue'
 
 export default {
@@ -32,20 +32,95 @@ export default {
     const userStore = useUserStore()
     const rankingStore = useRankingStore()
     const dbMusicStore = useDatabaseMusicStore()
+    const initializationStatus = ref({
+      database: 'pending',
+      albums: 'pending',
+      eras: 'pending',
+      songs: 'pending'
+    })
+    
+    // Initialize the database music store and load era-centric data
+    const initializeApplication = async () => {
+      try {
+        // Initialize database music store
+        console.log('Initializing database store with Supabase')
+        initializationStatus.value.database = 'loading'
+        await dbMusicStore.initialize()
+        initializationStatus.value.database = 'success'
+        console.log('Database store initialized successfully')
+        
+        // Load albums data
+        initializationStatus.value.albums = 'loading'
+        const albums = await dbMusicStore.fetchAlbums()
+        if (albums && albums.length) {
+          rankingStore.initializeStaticAlbums(albums)
+          initializationStatus.value.albums = 'success'
+          console.log(`Loaded ${albums.length} albums from database`)
+        } else {
+          initializationStatus.value.albums = 'error'
+          console.warn('No albums found in database')
+        }
+        
+        // Load eras data
+        initializationStatus.value.eras = 'loading'
+        const eras = await dbMusicStore.fetchEras()
+        if (eras && eras.length) {
+          rankingStore.initializeStaticEras(eras)
+          initializationStatus.value.eras = 'success'
+          console.log(`Loaded ${eras.length} eras from database`)
+        } else {
+          initializationStatus.value.eras = 'error'
+          console.warn('No eras found in database')
+        }
+        
+        // Load songs data (just to cache them)
+        initializationStatus.value.songs = 'loading'
+        const songs = await dbMusicStore.fetchSongs()
+        if (songs && songs.length) {
+          initializationStatus.value.songs = 'success'
+          console.log(`Loaded ${songs.length} songs from database`)
+        } else {
+          initializationStatus.value.songs = 'error'
+          console.warn('No songs found in database')
+        }
+        
+        // Load user rankings if user is logged in
+        if (userStore.isLoggedIn && userStore.user) {
+          try {
+            await rankingStore.fetchAlbumRankings(userStore.user.id)
+            await rankingStore.fetchEraRankings(userStore.user.id)
+            await rankingStore.fetchSongRankings(userStore.user.id)
+            console.log('User rankings loaded successfully')
+          } catch (error) {
+            console.error('Failed to load user rankings:', error)
+          }
+        } else {
+          // If not logged in, try to load from localStorage
+          rankingStore.loadRankingsFromLocalStorage()
+          rankingStore.loadSongRankingsFromLocalStorage()
+        }
+      } catch (error) {
+        console.error('Application initialization error:', error)
+        
+        // Update status for failed components
+        if (initializationStatus.value.database === 'loading') {
+          initializationStatus.value.database = 'error'
+        }
+        if (initializationStatus.value.albums === 'loading') {
+          initializationStatus.value.albums = 'error'
+        }
+        if (initializationStatus.value.eras === 'loading') {
+          initializationStatus.value.eras = 'error'
+        }
+        if (initializationStatus.value.songs === 'loading') {
+          initializationStatus.value.songs = 'error'
+        }
+      }
+    }
     
     onMounted(() => {
-      // Initialize ranking data
-      rankingStore.initializeWithSampleData()
-      
-      // Always initialize database music store as we're now using Supabase
-      console.log('Initializing database store with Supabase')
-      dbMusicStore.initialize()
-        .then(() => {
-          console.log('Database store initialized successfully')
-        })
-        .catch(error => {
-          console.error('Failed to initialize database store:', error)
-        })
+      // Initialize application with Supabase data
+      initializeApplication()
       
       // Check for app version changes
       checkVersionAndRefresh()
@@ -54,7 +129,8 @@ export default {
     return {
       userStore,
       rankingStore,
-      dbMusicStore
+      dbMusicStore,
+      initializationStatus
     }
   }
 }
