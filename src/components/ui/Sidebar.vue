@@ -65,71 +65,67 @@
           <span class="ml-3 font-medium">Profile</span>
         </router-link>
         
-        <!-- Database Integration Section -->
-        <div class="mt-6 px-6 py-2">
-          <h3 class="text-xs uppercase font-bold text-gray-500">Database Integration</h3>
-        </div>
-        
-        <router-link 
-          to="/database-test" 
-          class="flex items-center px-6 py-3 text-gray-700 hover:bg-green-50 hover:text-green-600 transition-colors"
-          :class="{ 'bg-green-50 text-green-600': $route.path === '/database-test' }"
-          @click="mobileClose"
-        >
-          <i class="database-icon w-6 h-6 bg-center bg-no-repeat bg-contain"></i>
-          <span class="ml-3 font-medium">Database Test</span>
-        </router-link>
-        
-        <router-link 
-          to="/hybrid-songs" 
-          class="flex items-center px-6 py-3 text-gray-700 hover:bg-green-50 hover:text-green-600 transition-colors"
-          :class="{ 'bg-green-50 text-green-600': $route.path === '/hybrid-songs' }"
-          @click="mobileClose"
-        >
-          <i class="song-icon w-6 h-6 bg-center bg-no-repeat bg-contain"></i>
-          <span class="ml-3 font-medium">Hybrid Song List</span>
-        </router-link>
-        
-        <router-link 
-          to="/edition-browser" 
-          class="flex items-center px-6 py-3 text-gray-700 hover:bg-green-50 hover:text-green-600 transition-colors"
-          :class="{ 'bg-green-50 text-green-600': $route.path === '/edition-browser' }"
-          @click="mobileClose"
-        >
-          <i class="album-icon w-6 h-6 bg-center bg-no-repeat bg-contain"></i>
-          <span class="ml-3 font-medium">Edition Browser</span>
-        </router-link>
-        
-        <router-link 
-          to="/simple-db" 
-          class="flex items-center px-6 py-3 text-gray-700 hover:bg-green-50 hover:text-green-600 transition-colors"
-          :class="{ 'bg-green-50 text-green-600': $route.path === '/simple-db' }"
-          @click="mobileClose"
-        >
-          <i class="database-icon w-6 h-6 bg-center bg-no-repeat bg-contain"></i>
-          <span class="ml-3 font-medium">Simple DB View</span>
-        </router-link>
-        
-        <router-link 
-          to="/database-diagnostic" 
-          class="flex items-center px-6 py-3 text-gray-700 hover:bg-green-50 hover:text-green-600 transition-colors"
-          :class="{ 'bg-green-50 text-green-600': $route.path === '/database-diagnostic' }"
-          @click="mobileClose"
-        >
-          <i class="settings-icon w-6 h-6 bg-center bg-no-repeat bg-contain"></i>
-          <span class="ml-3 font-medium text-amber-700 font-semibold">Connection Diagnostic</span>
-        </router-link>
-        
-        <router-link 
-          to="/env-checker" 
-          class="flex items-center px-6 py-3 text-gray-700 hover:bg-green-50 hover:text-green-600 transition-colors"
-          :class="{ 'bg-green-50 text-green-600': $route.path === '/env-checker' }"
-          @click="mobileClose"
-        >
-          <i class="settings-icon w-6 h-6 bg-center bg-no-repeat bg-contain"></i>
-          <span class="ml-3 font-medium text-amber-700 font-semibold">Env Variables Checker</span>
-        </router-link>
-        
+        <!-- Database Integration Section (Admin Only) -->
+        <template v-if="userStore.profile && userStore.profile.role === 'admin'">
+          <div class="mt-6 px-6 py-2">
+            <h3 class="text-xs uppercase font-bold text-gray-500">Database Integration</h3>
+          </div>
+          <router-link 
+            to="/database-test" 
+            class="flex items-center px-6 py-3 text-gray-700 hover:bg-green-50 hover:text-green-600 transition-colors"
+            :class="{ 'bg-green-50 text-green-600': $route.path === '/database-test' }"
+            @click="mobileClose"
+          >
+            <i class="database-icon w-6 h-6 bg-center bg-no-repeat bg-contain"></i>
+            <span class="ml-3 font-medium">Database Test</span>
+          </router-link>
+          <router-link 
+            to="/hybrid-songs" 
+            class="flex items-center px-6 py-3 text-gray-700 hover:bg-green-50 hover:text-green-600 transition-colors"
+            :class="{ 'bg-green-50 text-green-600': $route.path === '/hybrid-songs' }"
+            @click="mobileClose"
+          >
+            <i class="song-icon w-6 h-6 bg-center bg-no-repeat bg-contain"></i>
+            <span class="ml-3 font-medium">Hybrid Song List</span>
+          </router-link>
+          <router-link 
+            to="/edition-browser" 
+            class="flex items-center px-6 py-3 text-gray-700 hover:bg-green-50 hover:text-green-600 transition-colors"
+            :class="{ 'bg-green-50 text-green-600': $route.path === '/edition-browser' }"
+            @click="mobileClose"
+          >
+            <i class="album-icon w-6 h-6 bg-center bg-no-repeat bg-contain"></i>
+            <span class="ml-3 font-medium">Edition Browser</span>
+          </router-link>
+          <router-link 
+            to="/simple-db" 
+            class="flex items-center px-6 py-3 text-gray-700 hover:bg-green-50 hover:text-green-600 transition-colors"
+            :class="{ 'bg-green-50 text-green-600': $route.path === '/simple-db' }"
+            @click="mobileClose"
+          >
+            <i class="database-icon w-6 h-6 bg-center bg-no-repeat bg-contain"></i>
+            <span class="ml-3 font-medium">Simple DB View</span>
+          </router-link>
+          <router-link 
+            to="/database-diagnostic" 
+            class="flex items-center px-6 py-3 text-gray-700 hover:bg-green-50 hover:text-green-600 transition-colors"
+            :class="{ 'bg-green-50 text-green-600': $route.path === '/database-diagnostic' }"
+            @click="mobileClose"
+          >
+            <i class="settings-icon w-6 h-6 bg-center bg-no-repeat bg-contain"></i>
+            <span class="ml-3 font-medium text-amber-700 font-semibold">Connection Diagnostic</span>
+          </router-link>
+          <router-link 
+            to="/env-checker" 
+            class="flex items-center px-6 py-3 text-gray-700 hover:bg-green-50 hover:text-green-600 transition-colors"
+            :class="{ 'bg-green-50 text-green-600': $route.path === '/env-checker' }"
+            @click="mobileClose"
+          >
+            <i class="settings-icon w-6 h-6 bg-center bg-no-repeat bg-contain"></i>
+            <span class="ml-3 font-medium text-amber-700 font-semibold">Env Variables Checker</span>
+          </router-link>
+        </template>
+        <!-- Settings and About (Always Visible) -->
         <router-link 
           to="/settings" 
           class="flex items-center px-6 py-3 text-gray-700 hover:bg-green-50 hover:text-green-600 transition-colors"
@@ -139,7 +135,6 @@
           <i class="settings-icon w-6 h-6 bg-center bg-no-repeat bg-contain"></i>
           <span class="ml-3 font-medium">Settings</span>
         </router-link>
-        
         <router-link 
           to="/about" 
           class="flex items-center px-6 py-3 text-gray-700 hover:bg-green-50 hover:text-green-600 transition-colors"
