@@ -1,0 +1,101 @@
+[
+  {
+    "id": "era-ts",
+    "title": "Taylor Swift Era",
+    "coverImageUrl": "/img/covers/ts.jpg",
+    "year": 2006,
+    "color": "#7fb1b3",
+    "primaryAlbumId": "album-ts",
+    "description": "The debut era that launched Taylor Swift's career with country music roots"
+  },
+  {
+    "id": "era-fearless",
+    "title": "Fearless Era",
+    "coverImageUrl": "/img/covers/fearless.jpg",
+    "year": 2008,
+    "color": "#e0c16f",
+    "primaryAlbumId": "album-fearless",
+    "description": "The era that established Taylor as a crossover artist with her first Grammy-winning album"
+  },
+  {
+    "id": "era-speaknow",
+    "title": "Speak Now Era",
+    "coverImageUrl": "/img/covers/speaknow.jpg",
+    "year": 2010,
+    "color": "#a83752",
+    "primaryAlbumId": "album-speaknow",
+    "description": "The era where Taylor wrote every song solo, proving her songwriting abilities"
+  },
+  {
+    "id": "era-red",
+    "title": "Red Era",
+    "coverImageUrl": "/img/covers/red.jpg",
+    "year": 2012,
+    "color": "#8c1616",
+    "primaryAlbumId": "album-red",
+    "description": "The transitional era that began Taylor's shift from country to pop music"
+  },
+  {
+    "id": "era-1989",
+    "title": "1989 Era",
+    "coverImageUrl": "/img/covers/1989.jpg",
+    "year": 2014,
+    "color": "#82c1d7",
+    "primaryAlbumId": "album-1989",
+    "description": "The era that marked Taylor's official transition to pop music with a retro 80s influence"
+  },
+  {
+    "id": "era-reputation",
+    "title": "Reputation Era",
+    "coverImageUrl": "/img/covers/reputation.jpg",
+    "year": 2017,
+    "color": "#242424",
+    "primaryAlbumId": "album-reputation",
+    "description": "The darker era that responded to media controversies with a bold new sound"
+  },
+  {
+    "id": "era-lover",
+    "title": "Lover Era",
+    "coverImageUrl": "/img/covers/lover.jpg",
+    "year": 2019,
+    "color": "#f8b0cd",
+    "primaryAlbumId": "album-lover",
+    "description": "The colorful era celebrating love and showcasing Taylor's ownership of her music"
+  },
+  {
+    "id": "era-folklore",
+    "title": "Folklore Era",
+    "coverImageUrl": "/img/covers/folklore.jpg",
+    "year": 2020,
+    "color": "#b3b3b3",
+    "primaryAlbumId": "album-folklore",
+    "description": "The surprise indie-folk era created during the pandemic with introspective storytelling"
+  },
+  {
+    "id": "era-evermore",
+    "title": "Evermore Era",
+    "coverImageUrl": "/img/covers/evermore.jpg",
+    "year": 2020,
+    "color": "#6d4c41",
+    "primaryAlbumId": "album-evermore",
+    "description": "The sister era to Folklore, continuing the indie-folk sound with wintry themes"
+  },
+  {
+    "id": "era-midnights",
+    "title": "Midnights Era",
+    "coverImageUrl": "/img/covers/midnights.jpg",
+    "year": 2022,
+    "color": "#0a1172",
+    "primaryAlbumId": "album-midnights",
+    "description": "The era exploring sleepless nights and late-night reflections with a return to pop"
+  },
+  {
+    "id": "era-tortured",
+    "title": "The Tortured Poets Department Era",
+    "coverImageUrl": "/img/covers/tortured.jpg",
+    "year": 2024,
+    "color": "#d0d0d0",
+    "primaryAlbumId": "album-tortured",
+    "description": "The latest era featuring poetic explorations of relationships and personal growth"
+  }
+]

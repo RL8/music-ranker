@@ -91,6 +91,7 @@ export const dataAdapter = {
           releaseDate: album.releaseDate,
           albumType: album.albumType,
           isPrimaryAlbum: album.isPrimaryAlbum,
+          coverImageUrl: album.image_url || album.coverImageUrl || '',
           eraId: group.eraId
         }))
       }))
@@ -117,7 +118,7 @@ export const dataAdapter = {
         releaseDate: album.releaseDate,
         eraId: album.eraId,
         albumType: album.albumType,
-        coverImageUrl: album.coverImageUrl || '',
+        coverImageUrl: album.image_url || album.coverImageUrl || '',
         // Transform recordings
         tracks: album.Recordings?.map(recording => ({
           id: recording.recordingId,
@@ -165,7 +166,7 @@ export const dataAdapter = {
         eraEndDate: era.eraEndDate,
         primaryAlbumId: era.primaryAlbumId,
         description: era.description || '',
-        coverImageUrl: era.coverImageUrl || '',
+        coverImageUrl: era.image_url || era.coverImageUrl || '',
         // Transform albums
         albums: era.Albums?.map(album => ({
           id: album.albumId,
@@ -175,7 +176,7 @@ export const dataAdapter = {
           releaseDate: album.releaseDate,
           albumType: album.albumType,
           isPrimaryAlbum: album.albumId === era.primaryAlbumId,
-          coverImageUrl: album.coverImageUrl || '',
+          coverImageUrl: album.image_url || album.coverImageUrl || '',
           eraId: era.eraId
         })) || [],
         // Transform songs

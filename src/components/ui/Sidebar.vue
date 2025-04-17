@@ -42,7 +42,7 @@
           @click="mobileClose"
         >
           <i class="album-icon w-6 h-6 bg-center bg-no-repeat bg-contain"></i>
-          <span class="ml-3 font-medium">Rank Albums</span>
+          <span class="ml-3 font-medium">Rank Eras</span>
         </router-link>
         
         <router-link 
@@ -143,6 +143,24 @@
         >
           <i class="about-icon w-6 h-6 bg-center bg-no-repeat bg-contain"></i>
           <span class="ml-3 font-medium">About</span>
+        </router-link>
+        <router-link 
+          to="/eras" 
+          class="flex items-center px-6 py-3 text-gray-700 hover:bg-green-50 hover:text-green-600 transition-colors"
+          :class="{ 'bg-green-50 text-green-600': $route.path === '/eras' }"
+          @click="mobileClose"
+        >
+          <i class="music-icon w-6 h-6 bg-center bg-no-repeat bg-contain"></i>
+          <span class="ml-3 font-medium">Musical Eras</span>
+        </router-link>
+        <router-link 
+          to="/image-diagnostic" 
+          class="flex items-center px-6 py-3 pl-12 text-gray-700 hover:bg-green-50 hover:text-green-600 transition-colors"
+          :class="{ 'bg-green-50 text-green-600': $route.path === '/image-diagnostic' }"
+          @click="mobileClose"
+        >
+          <i class="settings-icon w-5 h-5 bg-center bg-no-repeat bg-contain"></i>
+          <span class="ml-2 font-medium text-amber-700">Image Diagnostic</span>
         </router-link>
       </nav>
       

@@ -110,6 +110,11 @@ const routes = [
     component: () => import('../views/AlbumRankingCarouselView.vue')
   },
   {
+    path: '/rank/eras',
+    name: 'era-ranking',
+    redirect: '/rank/albums/carousel'
+  },
+  {
     path: '/rank/songs',
     name: 'song-ranking',
     redirect: '/rank/songs/carousel'
@@ -138,6 +143,22 @@ const routes = [
     path: '/settings',
     name: 'settings',
     component: () => import('../views/SettingsView.vue')
+  },
+  {
+    path: '/eras',
+    name: 'eras',
+    component: () => import('../components/ErasView.vue'),
+    meta: {
+      title: 'Musical Eras'
+    }
+  },
+  {
+    path: '/image-diagnostic',
+    name: 'image-diagnostic',
+    component: () => import('../components/ImageLoadingDiagnostic.vue'),
+    meta: {
+      title: 'Image Loading Diagnostic'
+    }
   }
 ]
 

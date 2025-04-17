@@ -1,12 +1,12 @@
 <template>
-  <div class="album-ranking-carousel" :style="dynamicBackgroundStyle">
+  <div class="era-ranking-carousel" :style="dynamicBackgroundStyle">
     <!-- Top Section: Instructions and Status -->
     <div class="top-section">
       <div class="header-bar">
-        <h1 class="title">Album Ranker</h1>
+        <h1 class="title">Era Ranker</h1>
         <div class="navigation-actions">
           <button 
-            @click="showToast('Album Ranking Help', 'Swipe through albums and rank them in your preferred order.')"
+            @click="showToast('Era Ranking Help', 'Swipe through eras and rank them in your preferred order.')"
             class="nav-button help-button"
             aria-label="Help">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
@@ -27,56 +27,56 @@
       
       <div class="status-bar">
         <div class="progress-indicator">
-          <div class="progress-text">{{ rankedAlbums.length }} of {{ totalAlbums }} ranked</div>
+          <div class="progress-text">{{ rankedEras.length }} of {{ totalEras }} ranked</div>
           <div class="progress-bar-container">
             <div class="progress-bar" :style="{ width: progressPercentage + '%' }"></div>
           </div>
         </div>
-        <div class="album-emoji" v-if="currentAlbum">
-          {{ getAlbumEmoji(currentAlbum) }}
+        <div class="era-emoji" v-if="currentEra">
+          {{ getEraEmoji(currentEra) }}
         </div>
       </div>
     </div>
 
-    <!-- Middle Section: Ranked Albums List -->
+    <!-- Middle Section: Ranked Eras List -->
     <div class="middle-section" :class="{ 'expanded': showRankedList }">
       <div class="section-header" @click="toggleRankedList">
-        <h2>Your Ranked Albums</h2>
+        <h2>Your Ranked Eras</h2>
         <button class="toggle-button">
           {{ showRankedList ? '▲ Hide' : '▼ Show' }}
         </button>
       </div>
       
       <transition name="slide">
-        <div class="ranked-albums-container" v-if="showRankedList">
-          <div class="empty-state" v-if="rankedAlbums.length === 0">
-            <p>You haven't ranked any albums yet. Use the carousel below to start ranking!</p>
+        <div class="ranked-eras-container" v-if="showRankedList">
+          <div class="empty-state" v-if="rankedEras.length === 0">
+            <p>You haven't ranked any eras yet. Use the carousel below to start ranking!</p>
           </div>
           <draggable 
             v-else
-            v-model="rankedAlbums" 
+            v-model="rankedEras" 
             item-key="id"
-            class="ranked-albums-list"
+            class="ranked-eras-list"
             handle=".drag-handle"
             @end="saveRankings"
           >
             <template #item="{ element, index }">
               <div 
-                class="ranked-album-card" 
+                class="ranked-era-card" 
                 :style="{ 
-                  '--album-color': element.color || '#333',
-                  '--album-gradient': `linear-gradient(135deg, ${element.color || '#333'}, transparent)`
+                  '--era-color': element.color || '#333',
+                  '--era-gradient': `linear-gradient(135deg, ${element.color || '#333'}, transparent)`
                 }"
               >
                 <div class="rank-number">{{ index + 1 }}</div>
-                <div class="album-thumbnail">
+                <div class="era-thumbnail">
                   <img :src="element.coverImageUrl" :alt="element.title">
                 </div>
-                <div class="album-info">
-                  <div class="album-title">{{ element.title }}</div>
-                  <div class="album-year">{{ element.year }}</div>
+                <div class="era-info">
+                  <div class="era-title">{{ element.title }}</div>
+                  <div class="era-year">{{ element.year }}</div>
                 </div>
-                <div class="album-actions">
+                <div class="era-actions">
                   <button class="drag-handle" aria-label="Drag to reorder">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16" />
@@ -95,13 +95,13 @@
       </transition>
     </div>
 
-    <!-- Bottom Section: Album Carousel -->
+    <!-- Bottom Section: Era Carousel -->
     <div class="bottom-section">
       <div class="carousel-container">
-        <!-- Only render Swiper when we have enough albums -->
-        <template v-if="rankingStore.availableAlbums.length >= 3">
+        <!-- Only render Swiper when we have enough eras -->
+        <template v-if="rankingStore.availableEras.length >= 3">
           <swiper
-            class="album-carousel"
+            class="era-carousel"
             :modules="swiperModules"
             :effect="'coverflow'"
             :grab-cursor="true"
@@ -119,42 +119,42 @@
             @slideChange="onSlideChange"
           >
             <swiper-slide 
-              v-for="album in rankingStore.availableAlbums" 
-              :key="album.id"
-              class="album-slide"
-              :class="{ 'ranked': isAlbumRanked(album) }"
+              v-for="era in rankingStore.availableEras" 
+              :key="era.id"
+              class="era-slide"
+              :class="{ 'ranked': isEraRanked(era) }"
             >
               <div 
-                class="album-card"
+                class="era-card"
                 :style="{ 
-                  '--album-color': album.color || '#333',
-                  '--album-shadow-color': album.color || 'rgba(0,0,0,0.3)'
+                  '--era-color': era.color || '#333',
+                  '--era-shadow-color': era.color || 'rgba(0,0,0,0.3)'
                 }"
               >
                 <img 
-                  :src="album.coverImageUrl" 
-                  :alt="album.title" 
-                  class="album-cover"
+                  :src="getEraImageUrl(era)" 
+                  :alt="era.title" 
+                  class="era-cover"
                   loading="lazy"
                 />
-                <div class="album-title-overlay">{{ album.title }}</div>
-                <div v-if="isAlbumRanked(album)" class="ranked-badge">
+                <div class="era-title-overlay">{{ era.title }}</div>
+                <div v-if="isEraRanked(era)" class="ranked-badge">
                   <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" />
                   </svg>
                 </div>
-              </div>
-            </swiper-slide>
-          </swiper>
-        </template>
+            </div>
+          </swiper-slide>
+        </swiper>
+      </template>
         
-        <!-- Placeholder when not enough albums -->
-        <div v-else class="album-carousel-placeholder">
+        <!-- Placeholder when not enough eras -->
+        <div v-else class="era-carousel-placeholder">
           <div class="placeholder-message">
             <svg xmlns="http://www.w3.org/2000/svg" class="placeholder-icon" viewBox="0 0 20 20" fill="currentColor">
               <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" />
             </svg>
-            <p>Loading albums...</p>
+            <p>Loading eras...</p>
             <p class="placeholder-subtext">Please wait while we prepare your music collection.</p>
           </div>
         </div>
@@ -163,7 +163,7 @@
           <button 
             class="control-button prev-button" 
             @click="prevSlide"
-            aria-label="Previous album"
+            aria-label="Previous era"
           >
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
@@ -172,16 +172,16 @@
           
           <button 
             class="control-button rank-button" 
-            @click="addToRanking(currentAlbum)"
-            :disabled="!currentAlbum || isAlbumRanked(currentAlbum)"
+            @click="addToRanking(currentEra)"
+            :disabled="!currentEra || isEraRanked(currentEra)"
           >
-            {{ isAlbumRanked(currentAlbum) ? 'Already Ranked' : 'Add to Ranking' }}
+            {{ isEraRanked(currentEra) ? 'Already Ranked' : 'Add to Ranking' }}
           </button>
           
           <button 
             class="control-button next-button" 
             @click="nextSlide"
-            aria-label="Next album"
+            aria-label="Next era"
           >
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
@@ -193,7 +193,7 @@
           <button 
             @click="saveRankings"
             class="bottom-action-button save-button"
-            :disabled="rankedAlbums.length === 0 || !userStore.isLoggedInSimulation">
+            :disabled="rankedEras.length === 0 || !userStore.isLoggedInSimulation">
             <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 20 20" fill="currentColor">
               <path d="M7.707 10.293a1 1 0 10-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 11.586V6h1a2 2 0 012 2v7a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h1v5.586l-1.293-1.293z" />
             </svg>
@@ -203,9 +203,9 @@
           <button 
             @click="resetRankings"
             class="bottom-action-button reset-button"
-            :disabled="rankedAlbums.length === 0">
+            :disabled="rankedEras.length === 0">
             <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd" />
+              <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 110-2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd" />
             </svg>
             <span>Reset Rankings</span>
           </button>
@@ -224,6 +224,7 @@ import toastService from '@/services/toastService';
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import { EffectCoverflow, Pagination } from 'swiper/modules';
 import draggable from 'vuedraggable';
+import { supabase } from '@/lib/supabase/client';
 
 // Import Swiper styles
 import 'swiper/css';
@@ -238,71 +239,108 @@ const rankingStore = useRankingStore();
 const swiperInstance = ref(null);
 const currentIndex = ref(0);
 const showRankedList = ref(false);
-const rankedAlbums = ref([]);
+const rankedEras = ref([]);
 const swiperModules = [EffectCoverflow, Pagination];
+const loading = ref(true);
+const error = ref(null);
 
 // Initialize from the store if available
-onMounted(() => {
-  // Initialize albums if needed
-  if (rankingStore.availableAlbums.length === 0) {
-    // Load static album data
-    import('@/data/static-albums.json').then(albumsData => {
-      rankingStore.initializeStaticAlbums(albumsData.default);
-    });
+onMounted(async () => {
+  // Initialize eras from database
+  if (rankingStore.availableEras.length === 0) {
+    try {
+      loading.value = true;
+      console.log('Attempting to load eras from database...');
+      
+      // Direct database query to fetch all eras
+      const { data, error: dbError } = await supabase
+        .from('Eras')
+        .select('*')
+        .order('eraName');
+      
+      if (dbError) {
+        console.error('Database error:', dbError);
+        throw dbError;
+      }
+      
+      // Transform database eras to the format needed for the carousel
+      const formattedEras = data.map(era => ({
+        id: era.eraId,
+        title: era.eraName,
+        coverImageUrl: era.image_url || getEraImageUrl(era),
+        year: era.eraStartDate ? new Date(era.eraStartDate).getFullYear() : null,
+        color: era.color || getRandomColor(era.eraName),
+        primaryAlbumId: era.primaryAlbumId
+      }));
+      
+      console.log(`Loaded ${formattedEras.length} eras from database`);
+      rankingStore.initializeStaticEras(formattedEras);
+    } catch (err) {
+      console.error('Error loading eras from database:', err);
+      error.value = `Failed to load eras: ${err.message || 'Unknown error'}`;
+      
+      // Fallback to static data if database fails
+      console.log('Falling back to static era data');
+      import('@/data/static-eras.json').then(erasData => {
+        rankingStore.initializeStaticEras(erasData.default);
+      });
+    } finally {
+      loading.value = false;
+    }
   }
   
-  // Initialize ranked albums from any existing rankings
+  // Initialize ranked eras from any existing rankings
   const existingRankings = [];
   Object.values(rankingStore.rankedTiers).forEach(tier => {
     existingRankings.push(...tier);
   });
   
   if (existingRankings.length > 0) {
-    rankedAlbums.value = [...existingRankings];
+    rankedEras.value = [...existingRankings];
     showRankedList.value = true;
   }
 });
 
 // Computed properties
-const unrankedAlbums = computed(() => {
-  return rankingStore.availableAlbums.filter(album => 
-    !rankedAlbums.value.some(rankedAlbum => rankedAlbum.id === album.id)
+const unrankedEras = computed(() => {
+  return rankingStore.availableEras.filter(era => 
+    !rankedEras.value.some(rankedEra => rankedEra.id === era.id)
   );
 });
 
 const shouldEnableLoop = computed(() => {
-  // Only enable loop mode when we have enough albums (3 or more is typically enough for Swiper)
-  // Also check the flag from the store that indicates if there are enough albums
-  return rankingStore.availableAlbums.length >= 3 && !rankingStore.notEnoughAlbumsForLoop;
+  // Only enable loop mode when we have enough eras (3 or more is typically enough for Swiper)
+  // Also check the flag from the store that indicates if there are enough eras
+  return rankingStore.availableEras.length >= 3 && !rankingStore.notEnoughErasForLoop;
 });
 
-const currentAlbum = computed(() => {
-  if (rankingStore.availableAlbums.length === 0) return null;
-  if (!swiperInstance.value) return rankingStore.availableAlbums[0];
+const currentEra = computed(() => {
+  if (rankingStore.availableEras.length === 0) return null;
+  if (!swiperInstance.value) return rankingStore.availableEras[0];
   const index = swiperInstance.value.activeIndex;
   // Handle loop mode index adjustment
   const realIndex = swiperInstance.value.realIndex;
-  return rankingStore.availableAlbums[realIndex] || rankingStore.availableAlbums[0];
+  return rankingStore.availableEras[realIndex] || rankingStore.availableEras[0];
 });
 
-const totalAlbums = computed(() => {
-  return rankingStore.availableAlbums.length;
+const totalEras = computed(() => {
+  return rankingStore.availableEras.length;
 });
 
 const progressPercentage = computed(() => {
-  return (rankedAlbums.value.length / totalAlbums.value) * 100;
+  return (rankedEras.value.length / totalEras.value) * 100;
 });
 
 const dynamicBackgroundStyle = computed(() => {
-  if (!currentAlbum.value) return {};
+  if (!currentEra.value) return {};
   
-  const albumColor = currentAlbum.value.color || '#333';
-  const lighterColor = adjustColor(albumColor, 40);
+  const eraColor = currentEra.value.color || '#333';
+  const lighterColor = adjustColor(eraColor, 40);
   
   return {
-    '--album-primary-color': albumColor,
-    '--album-secondary-color': lighterColor,
-    background: `linear-gradient(135deg, ${albumColor}22, ${lighterColor}55)`
+    '--era-primary-color': eraColor,
+    '--era-secondary-color': lighterColor,
+    background: `linear-gradient(135deg, ${eraColor}22, ${lighterColor}55)`
   };
 });
 
@@ -322,13 +360,13 @@ function adjustColor(color, amount) {
   return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
 }
 
-function getAlbumEmoji(album) {
-  // Map albums to appropriate emojis based on their characteristics
-  if (!album) return '🎵';
+function getEraEmoji(era) {
+  // Map eras to appropriate emojis based on their characteristics
+  if (!era) return '🎵';
   
-  const title = album.title.toLowerCase();
+  const title = era.title.toLowerCase();
   
-  if (title.includes('taylor swift')) return '🤠'; // Cowboy hat for Taylor Swift album
+  if (title.includes('taylor swift')) return '🤠'; // Cowboy hat for Taylor Swift era
   if (title.includes('fearless')) return '✨';
   if (title.includes('speak now')) return '💜';
   if (title.includes('red')) return '❤️';
@@ -342,6 +380,74 @@ function getAlbumEmoji(album) {
   
   // Default emoji
   return '🎵';
+}
+
+// Helper function for generating colors if not provided in the database
+function getRandomColor(seed) {
+  // Generate a consistent color based on the era name
+  let hash = 0;
+  for (let i = 0; i < seed.length; i++) {
+    hash = seed.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  
+  // Generate a pastel-ish color
+  const h = Math.abs(hash) % 360;
+  return `hsl(${h}, 70%, 65%)`;
+}
+
+// Helper function to get the correct image URL for an era
+function getEraImageUrl(era) {
+  // First check if the era has an image URL from the database
+  // Check both coverImageUrl and image_url fields
+  if (era.coverImageUrl) {
+    return era.coverImageUrl;
+  }
+  
+  if (era.image_url) {
+    return era.image_url;
+  }
+  
+  // If no database URL, fall back to local image mapping
+  const eraNameToFileName = {
+    'Taylor Swift': 'ts',
+    'Debut Era': 'ts',  
+    'Fearless': 'fearless',
+    'Speak Now': 'speaknow',
+    'Red': 'red',
+    '1989': '1989',
+    'Reputation': 'reputation',
+    'Lover': 'lover',
+    'Folklore': 'folklore',
+    'Evermore': 'evermore',
+    'Midnights': 'midnights',
+    'The Tortured Poets Department': 'tortured',
+    'TTPD Era': 'tortured'
+  };
+  
+  // Special case for TTPD Era
+  if ((era.eraName === 'TTPD Era' || era.title === 'TTPD Era' || era.eraId === 'ERA_TTPD' || era.id === 'ERA_TTPD') && era.image_url) {
+    return era.image_url;
+  }
+  
+  // Try to find a matching file name based on era name
+  const fileName = eraNameToFileName[era.eraName || era.title] || era.eraId || era.id?.toLowerCase();
+  
+  if (fileName) {
+    // Check if the image is already using the era_ prefix format
+    if (era.coverImageUrl && era.coverImageUrl.includes(`era_${fileName}.jpg`)) {
+      return era.coverImageUrl;
+    }
+    
+    // Try both formats - with and without the era_ prefix
+    // First check if the era_*.jpg format exists
+    const eraFormat = `/img/covers/era_${fileName}.jpg`;
+    
+    // Return the era_*.jpg format since that's what we're seeing in the DOM
+    return eraFormat;
+  }
+  
+  // Default fallback
+  return '/img/covers/default.jpg';
 }
 
 // Swiper handlers
@@ -368,31 +474,31 @@ function prevSlide() {
 }
 
 // Ranking functions
-function addToRanking(album) {
-  if (!album || isAlbumRanked(album)) return;
+function addToRanking(era) {
+  if (!era || isEraRanked(era)) return;
   
-  // Add the album to the ranked list
-  rankedAlbums.value.push(album);
+  // Add the era to the ranked list
+  rankedEras.value.push(era);
   
-  // Auto-show the ranked list if it's the first album
-  if (rankedAlbums.value.length === 1) {
+  // Auto-show the ranked list if it's the first era
+  if (rankedEras.value.length === 1) {
     showRankedList.value = true;
   }
   
-  // Move to the next album if available
+  // Move to the next era if available
   nextSlide();
 }
 
-function removeFromRanking(album) {
-  const index = rankedAlbums.value.findIndex(a => a.id === album.id);
+function removeFromRanking(era) {
+  const index = rankedEras.value.findIndex(e => e.id === era.id);
   if (index !== -1) {
-    rankedAlbums.value.splice(index, 1);
+    rankedEras.value.splice(index, 1);
   }
 }
 
-function isAlbumRanked(album) {
-  if (!album) return false;
-  return rankedAlbums.value.some(a => a.id === album.id);
+function isEraRanked(era) {
+  if (!era) return false;
+  return rankedEras.value.some(e => e.id === era.id);
 }
 
 function toggleRankedList() {
@@ -406,16 +512,16 @@ function saveRankings() {
     return;
   }
   
-  if (rankedAlbums.value.length === 0) {
-    showToast('No Rankings', 'You need to rank at least one album to save');
+  if (rankedEras.value.length === 0) {
+    showToast('No Rankings', 'You need to rank at least one era to save');
     return;
   }
   
-  // Convert ranked albums to tiers for compatibility with existing store
+  // Convert ranked eras to tiers for compatibility with existing store
   convertRankingsToTiers();
   
   // Show success message
-  showToast('Rankings Saved', 'Your album rankings have been saved successfully');
+  showToast('Rankings Saved', 'Your era rankings have been saved successfully');
 }
 
 function convertRankingsToTiers() {
@@ -424,33 +530,33 @@ function convertRankingsToTiers() {
     rankingStore.rankedTiers[tier] = [];
   });
   
-  // Distribute ranked albums into tiers based on their position
-  const totalRanked = rankedAlbums.value.length;
+  // Distribute ranked eras into tiers based on their position
+  const totalRanked = rankedEras.value.length;
   
-  rankedAlbums.value.forEach((album, index) => {
+  rankedEras.value.forEach((era, index) => {
     const position = index + 1;
     
-    // Determine which tier this album belongs to
+    // Determine which tier this era belongs to
     if (position === 1) {
-      rankingStore.rankedTiers.tier1.push(album);
+      rankingStore.rankedTiers.tier1.push(era);
     } else if (position <= 3) {
-      rankingStore.rankedTiers.tier2.push(album);
+      rankingStore.rankedTiers.tier2.push(era);
     } else if (position <= 6) {
-      rankingStore.rankedTiers.tier3.push(album);
+      rankingStore.rankedTiers.tier3.push(era);
     } else if (position <= 9) {
-      rankingStore.rankedTiers.tier4.push(album);
+      rankingStore.rankedTiers.tier4.push(era);
     } else {
-      rankingStore.rankedTiers.tier5.push(album);
+      rankingStore.rankedTiers.tier5.push(era);
     }
   });
 }
 
 function resetRankings() {
   // Confirm before resetting
-  if (rankedAlbums.value.length > 0) {
+  if (rankedEras.value.length > 0) {
     if (confirm('Are you sure you want to reset your rankings?')) {
-      rankedAlbums.value = [];
-      showToast('Rankings Reset', 'Your album rankings have been reset');
+      rankedEras.value = [];
+      showToast('Rankings Reset', 'Your era rankings have been reset');
       
       // Reset the store as well
       Object.keys(rankingStore.rankedTiers).forEach(tier => {
@@ -477,7 +583,7 @@ function showToast(title, message) {
 </script>
 
 <style scoped>
-.album-ranking-carousel {
+.era-ranking-carousel {
   display: flex;
   flex-direction: column;
   height: 100vh;
@@ -561,11 +667,11 @@ function showToast(title, message) {
 
 .progress-bar {
   height: 100%;
-  background-color: var(--album-primary-color, #4caf50);
+  background-color: var(--era-primary-color, #4caf50);
   transition: width 0.3s ease;
 }
 
-.album-emoji {
+.era-emoji {
   font-size: 1.25rem;
   margin-left: 0.5rem;
 }
@@ -614,7 +720,7 @@ function showToast(title, message) {
   font-size: 0.75rem;
 }
 
-.ranked-albums-container {
+.ranked-eras-container {
   padding: 0 0.75rem 0.75rem;
   overflow-y: auto;
   max-height: calc(67vh - 8.75rem);
@@ -627,32 +733,32 @@ function showToast(title, message) {
   font-size: 0.875rem;
 }
 
-.ranked-albums-list {
+.ranked-eras-list {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
 }
 
-.ranked-album-card {
+.ranked-era-card {
   display: flex;
   align-items: center;
   padding: 0.5rem;
   background-color: white;
   border-radius: 0.375rem;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  border-left: 3px solid var(--album-color);
+  border-left: 3px solid var(--era-color);
   position: relative;
   overflow: hidden;
 }
 
-.ranked-album-card::before {
+.ranked-era-card::before {
   content: '';
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: var(--album-gradient);
+  background: var(--era-gradient);
   opacity: 0.1;
   pointer-events: none;
 }
@@ -663,7 +769,7 @@ function showToast(title, message) {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--album-color);
+  background-color: var(--era-color);
   color: white;
   border-radius: 50%;
   font-weight: bold;
@@ -672,7 +778,7 @@ function showToast(title, message) {
   font-size: 0.75rem;
 }
 
-.album-thumbnail {
+.era-thumbnail {
   width: 2.5rem;
   height: 2.5rem;
   border-radius: 0.25rem;
@@ -681,18 +787,18 @@ function showToast(title, message) {
   flex-shrink: 0;
 }
 
-.album-thumbnail img {
+.era-thumbnail img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.album-info {
+.era-info {
   flex: 1;
   min-width: 0;
 }
 
-.album-title {
+.era-title {
   font-weight: 600;
   white-space: nowrap;
   overflow: hidden;
@@ -700,12 +806,12 @@ function showToast(title, message) {
   font-size: 0.875rem;
 }
 
-.album-year {
+.era-year {
   font-size: 0.7rem;
   color: #666;
 }
 
-.album-actions {
+.era-actions {
   display: flex;
   gap: 0.25rem;
 }
@@ -751,13 +857,13 @@ function showToast(title, message) {
   flex-direction: column;
 }
 
-.album-carousel {
+.era-carousel {
   width: 100%;
   height: 60%;
   padding: 0.5rem 0;
 }
 
-.album-slide {
+.era-slide {
   width: 180px;
   height: 180px;
   display: flex;
@@ -766,34 +872,34 @@ function showToast(title, message) {
   transition: transform 0.3s ease;
 }
 
-.album-slide.ranked {
+.era-slide.ranked {
   opacity: 0.8;
 }
 
-.album-card {
+.era-card {
   width: 160px;
   height: 160px;
   border-radius: 0.5rem;
   overflow: hidden;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(0, 0, 0, 0.05), 0 0 0 4px var(--album-shadow-color, rgba(0, 0, 0, 0.1));
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(0, 0, 0, 0.05), 0 0 0 4px var(--era-shadow-color, rgba(0, 0, 0, 0.1));
   background-color: white;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   transform-origin: center bottom;
   position: relative;
 }
 
-.album-card:hover {
+.era-card:hover {
   transform: translateY(-5px) scale(1.02);
-  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(0, 0, 0, 0.05), 0 0 0 4px var(--album-shadow-color, rgba(0, 0, 0, 0.2));
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(0, 0, 0, 0.05), 0 0 0 4px var(--era-shadow-color, rgba(0, 0, 0, 0.2));
 }
 
-.album-cover {
+.era-cover {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.album-title-overlay {
+.era-title-overlay {
   position: absolute;
   bottom: 0;
   left: 0;
@@ -855,14 +961,14 @@ function showToast(title, message) {
   border-radius: 2rem;
   width: auto;
   padding: 0 1.25rem;
-  background-color: var(--album-primary-color, #4caf50);
+  background-color: var(--era-primary-color, #4caf50);
   color: white;
   font-weight: 600;
   font-size: 0.875rem;
 }
 
 .rank-button:hover:not(:disabled) {
-  background-color: var(--album-primary-color, #43a047);
+  background-color: var(--era-primary-color, #43a047);
 }
 
 .bottom-actions {
@@ -917,7 +1023,7 @@ button:disabled {
   cursor: not-allowed;
 }
 
-.album-carousel-placeholder {
+.era-carousel-placeholder {
   display: flex;
   justify-content: center;
   align-items: center;

@@ -463,10 +463,10 @@ export const useRankingStore = defineStore('ranking', {
       // Initialize available eras
       if (erasData && erasData.length) {
         this.availableEras = erasData.map(era => ({
-          id: era.eraId,
-          title: era.eraName,
-          coverImageUrl: era.coverImageUrl || '',
-          startDate: era.eraStartDate,
+          id: era.id || era.eraId,
+          title: era.title || era.eraName,
+          coverImageUrl: era.image_url || era.coverImageUrl || '',
+          startDate: era.eraStartDate || era.startDate,
           primaryAlbumId: era.primaryAlbumId
         }))
       }
