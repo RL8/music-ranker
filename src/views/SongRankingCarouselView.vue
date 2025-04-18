@@ -133,10 +133,10 @@
           }"
           @swiper="onSwiper"
           @slideChange="onSlideChange"
-          v-if="selectedEra && selectedEra.songs && selectedEra.songs.length > 0"
+          v-if="selectedEra && selectedEraSongs && selectedEraSongs.length > 0"
         >
           <swiper-slide 
-            v-for="song in (selectedEra.songs || [])" 
+            v-for="song in (selectedEraSongs || [])" 
             :key="song ? song.id : 'unknown'"
             class="song-slide"
             :class="{ 'ranked': song && isSongRanked(song) }"
@@ -166,10 +166,10 @@
         <!-- Fallback when no era is selected or no songs available -->
         <div class="empty-state" v-else>
           <p v-if="!selectedEra">Select an era above to see its songs</p>
-          <p v-else-if="!selectedEra.songs || selectedEra.songs.length === 0">No songs available for this era</p>
+          <p v-else-if="!selectedEraSongs || selectedEraSongs.length === 0">No songs available for this era</p>
         </div>
         
-        <div class="carousel-controls" v-if="selectedEra && selectedEra.songs && selectedEra.songs.length > 0">
+        <div class="carousel-controls" v-if="selectedEra && selectedEraSongs && selectedEraSongs.length > 0">
           <button 
             class="control-button prev-button" 
             @click="prevSlide"
@@ -294,15 +294,18 @@ export default {
       return rankingStore.availableEras.find(era => era.id === selectedEraId.value);
     });
     
+    // Add a new reactive state for the songs
+    const selectedEraSongs = ref([]);
+    
     const rankedSongs = ref([]);
     const showRankedList = ref(false);
     const swiper = ref(null);
     const currentSlideIndex = ref(0);
     const currentSong = computed(() => {
-      if (!selectedEra.value || !selectedEra.value.songs || selectedEra.value.songs.length === 0) return null;
+      if (!selectedEra.value || !selectedEraSongs.value || selectedEraSongs.value.length === 0) return null;
       
       // Add safety check for undefined songs
-      const songAtIndex = selectedEra.value.songs[currentSlideIndex.value];
+      const songAtIndex = selectedEraSongs.value[currentSlideIndex.value];
       if (!songAtIndex) {
         console.warn(`No song found at index ${currentSlideIndex.value}`);
         return null;
@@ -312,7 +315,7 @@ export default {
     });
     
     const totalSongs = computed(() => {
-      return selectedEra.value && selectedEra.value.songs ? selectedEra.value.songs.length : 0;
+      return selectedEraSongs.value ? selectedEraSongs.value.length : 0;
     });
     
     const progressPercentage = computed(() => {
@@ -405,30 +408,22 @@ export default {
         const eraWithSongs = erasWithSongs.find(era => era.eraId === selectedEra.value.id);
         
         // Update the selectedEra with songs - always initialize as empty array if not found
-        selectedEra.value = {
-          ...selectedEra.value,
-          songs: eraWithSongs ? eraWithSongs.songs : []
-        };
+        selectedEraSongs.value = eraWithSongs ? eraWithSongs.songs : [];
         
-        console.log(`Loaded ${selectedEra.value.songs.length} songs for era: ${selectedEra.value.title}`);
+        // Reset state
+        currentSlideIndex.value = 0;
+        
+        // Load existing rankings if available
+        const existingRankings = rankingStore.getSongRankingsForEra(selectedEra.value.id);
+        if (existingRankings && existingRankings.length > 0) {
+          rankedSongs.value = existingRankings;
+          showToast('Rankings Loaded', 'Your previous rankings for this era have been loaded.');
+        } else {
+          rankedSongs.value = [];
+        }
       } catch (error) {
         console.error(`Error loading songs for era: ${selectedEra.value.title}`, error);
-        selectedEra.value = {
-          ...selectedEra.value,
-          songs: []
-        };
-      }
-      
-      // Reset state
-      currentSlideIndex.value = 0;
-      
-      // Load existing rankings if available
-      const existingRankings = rankingStore.getSongRankingsForEra(selectedEra.value.id);
-      if (existingRankings && existingRankings.length > 0) {
-        rankedSongs.value = existingRankings;
-        showToast('Rankings Loaded', 'Your previous rankings for this era have been loaded.');
-      } else {
-        rankedSongs.value = [];
+        selectedEraSongs.value = [];
       }
     }
     
@@ -534,10 +529,10 @@ export default {
     
     function randomizeRankings() {
       console.log('Randomizing rankings...');
-      if (!selectedEra.value || !selectedEra.value.songs) return;
+      if (!selectedEra.value || !selectedEraSongs.value) return;
       
       // Create a copy of all songs
-      const allSongs = [...selectedEra.value.songs];
+      const allSongs = [...selectedEraSongs.value];
       
       // Shuffle the array
       for (let i = allSongs.length - 1; i > 0; i--) {
@@ -588,6 +583,7 @@ export default {
       userStore,
       selectedEraId,
       selectedEra,
+      selectedEraSongs,
       rankedSongs,
       showRankedList,
       swiper,
