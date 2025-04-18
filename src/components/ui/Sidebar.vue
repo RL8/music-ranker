@@ -136,6 +136,15 @@
           <span class="ml-3 font-medium">Settings</span>
         </router-link>
         <router-link 
+          to="/compliance" 
+          class="flex items-center px-6 py-3 text-gray-700 hover:bg-green-50 hover:text-green-600 transition-colors"
+          :class="{ 'bg-green-50 text-green-600': $route.path.startsWith('/compliance') }"
+          @click="mobileClose"
+        >
+          <i class="about-icon w-6 h-6 bg-center bg-no-repeat bg-contain"></i>
+          <span class="ml-3 font-medium">Legal & Compliance</span>
+        </router-link>
+        <router-link 
           to="/about" 
           class="flex items-center px-6 py-3 text-gray-700 hover:bg-green-50 hover:text-green-600 transition-colors"
           :class="{ 'bg-green-50 text-green-600': $route.path === '/about' }"

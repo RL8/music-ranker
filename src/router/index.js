@@ -145,6 +145,14 @@ const routes = [
     component: () => import('../views/SettingsView.vue')
   },
   {
+    path: '/compliance',
+    name: 'compliance',
+    component: () => import('../views/ComplianceView.vue'),
+    meta: {
+      title: 'Legal & Compliance'
+    }
+  },
+  {
     path: '/eras',
     name: 'eras',
     component: () => import('../components/ErasView.vue'),
