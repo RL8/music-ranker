@@ -25,27 +25,27 @@
         </div>
       </div>
       
-      <!-- Album Selector -->
+      <!-- Era Selector -->
       <div class="album-selector">
         <div class="album-carousel">
           <div 
-            v-for="album in rankingStore.availableAlbums" 
-            :key="album.id"
+            v-for="era in rankingStore.availableEras" 
+            :key="era.id"
             class="album-option"
-            :class="{ 'selected': selectedAlbumId === album.id }"
-            @click="selectAlbum(album.id)"
+            :class="{ 'selected': selectedEraId === era.id }"
+            @click="selectEra(era.id)"
             :style="{ 
-              '--album-color': album.color || '#333',
-              '--album-shadow-color': album.color || 'rgba(0,0,0,0.3)'
+              '--album-color': era.color || '#333',
+              '--album-shadow-color': era.color || 'rgba(0,0,0,0.3)'
             }"
           >
-            <img :src="album.coverImageUrl" :alt="album.title" class="album-thumbnail">
-            <span class="album-name">{{ album.title }}</span>
+            <img :src="getEraImageUrl(era)" :alt="era.title" class="album-thumbnail">
+            <span class="album-name">{{ era.title }}</span>
           </div>
         </div>
       </div>
       
-      <div class="status-bar" v-if="selectedAlbum">
+      <div class="status-bar" v-if="selectedEra">
         <div class="progress-indicator">
           <div class="progress-text">{{ rankedSongs.length }} of {{ totalSongs }} ranked</div>
           <div class="progress-bar-container">
@@ -53,13 +53,13 @@
           </div>
         </div>
         <div class="album-info">
-          {{ selectedAlbum.title }}
+          {{ selectedEra.title }}
         </div>
       </div>
     </div>
 
     <!-- Middle Section: Ranked Songs List -->
-    <div class="middle-section" :class="{ 'expanded': showRankedList }" v-if="selectedAlbum">
+    <div class="middle-section" :class="{ 'expanded': showRankedList }" v-if="selectedEra">
       <div class="section-header" @click="toggleRankedList">
         <h2>Your Ranked Songs</h2>
         <button class="toggle-button">
@@ -84,14 +84,14 @@
               <div 
                 class="ranked-song-card" 
                 :style="{ 
-                  '--song-color': selectedAlbum.color || '#333',
-                  '--song-gradient': `linear-gradient(135deg, ${selectedAlbum.color || '#333'}, transparent)`
+                  '--song-color': selectedEra.color || '#333',
+                  '--song-gradient': `linear-gradient(135deg, ${selectedEra.color || '#333'}, transparent)`
                 }"
               >
                 <div class="rank-number">{{ index + 1 }}</div>
                 <div class="song-info">
                   <div class="song-title">{{ element.title }}</div>
-                  <div class="song-album">{{ selectedAlbum.title }}</div>
+                  <div class="song-album">{{ selectedEra.title }}</div>
                 </div>
                 <div class="song-actions">
                   <button class="drag-handle" aria-label="Drag to reorder">
@@ -133,10 +133,10 @@
           }"
           @swiper="onSwiper"
           @slideChange="onSlideChange"
-          v-if="selectedAlbum && selectedAlbum.songs && selectedAlbum.songs.length > 0"
+          v-if="selectedEra && selectedEra.songs && selectedEra.songs.length > 0"
         >
           <swiper-slide 
-            v-for="song in (selectedAlbum.songs || [])" 
+            v-for="song in (selectedEra.songs || [])" 
             :key="song ? song.id : 'unknown'"
             class="song-slide"
             :class="{ 'ranked': song && isSongRanked(song) }"
@@ -144,8 +144,8 @@
             <div 
               class="song-card"
               :style="{ 
-                '--song-color': selectedAlbum.color || '#333',
-                '--song-shadow-color': selectedAlbum.color || 'rgba(0,0,0,0.3)'
+                '--song-color': selectedEra.color || '#333',
+                '--song-shadow-color': selectedEra.color || 'rgba(0,0,0,0.3)'
               }"
             >
               <div class="song-icon">
@@ -163,13 +163,13 @@
           </swiper-slide>
         </swiper>
         
-        <!-- Fallback when no album is selected or no songs available -->
+        <!-- Fallback when no era is selected or no songs available -->
         <div class="empty-state" v-else>
-          <p v-if="!selectedAlbum">Select an album above to see its songs</p>
-          <p v-else-if="!selectedAlbum.songs || selectedAlbum.songs.length === 0">No songs available for this album</p>
+          <p v-if="!selectedEra">Select an era above to see its songs</p>
+          <p v-else-if="!selectedEra.songs || selectedEra.songs.length === 0">No songs available for this era</p>
         </div>
         
-        <div class="carousel-controls" v-if="selectedAlbum && selectedAlbum.songs && selectedAlbum.songs.length > 0">
+        <div class="carousel-controls" v-if="selectedEra && selectedEra.songs && selectedEra.songs.length > 0">
           <button 
             class="control-button prev-button" 
             @click="prevSlide"
@@ -203,7 +203,7 @@
       </div>
 
       <!-- Action Buttons -->
-      <div class="action-buttons" v-if="selectedAlbum">
+      <div class="action-buttons" v-if="selectedEra">
         <button 
           @click="saveRankings"
           class="action-button save-button"
@@ -237,7 +237,7 @@
     </div>
 
     <!-- Placeholder for the rest of the components -->
-    <div v-if="selectedAlbum" v-show="false">
+    <div v-if="selectedEra" v-show="false">
       <!-- This section is now hidden and replaced with the song carousel -->
     </div>
   </div>
@@ -251,7 +251,7 @@ import { Swiper, SwiperSlide } from 'swiper/vue';
 import { EffectCoverflow, Navigation } from 'swiper/modules';
 import draggable from 'vuedraggable';
 import toastService from '@/services/toastService';
-import staticAlbumsData from '@/data/static-albums.json';
+import staticErasData from '@/data/static-eras.json';
 
 // Import Swiper styles
 import 'swiper/css';
@@ -269,29 +269,29 @@ export default {
     const rankingStore = useRankingStore();
     const userStore = useUserStore();
 
-    // Initialize with data from static-albums.json if needed
-    if (rankingStore.availableAlbums.length === 0) {
-      console.log('Initializing albums from static data in SongRankingCarouselView');
+    // Initialize with data from static-eras.json if needed
+    if (rankingStore.availableEras.length === 0) {
+      console.log('Initializing eras from static data in SongRankingCarouselView');
       try {
         // Log the imported data for debugging
-        console.log('Static albums data structure:', 
-          Object.keys(staticAlbumsData).length > 0 ? 'Object with keys' : 'Array with length ' + staticAlbumsData.length);
+        console.log('Static eras data structure:', 
+          Object.keys(staticErasData).length > 0 ? 'Object with keys' : 'Array with length ' + staticErasData.length);
         
         // Ensure we're passing the correct data structure
-        const albumsToInitialize = Array.isArray(staticAlbumsData) ? staticAlbumsData : 
-          (staticAlbumsData.default && Array.isArray(staticAlbumsData.default)) ? staticAlbumsData.default : [];
+        const erasToInitialize = Array.isArray(staticErasData) ? staticErasData : 
+          (staticErasData.default && Array.isArray(staticErasData.default)) ? staticErasData.default : [];
         
-        rankingStore.initializeStaticAlbums(albumsToInitialize);
+        rankingStore.initializeStaticEras(erasToInitialize);
       } catch (error) {
-        console.error('Error initializing albums:', error);
+        console.error('Error initializing eras:', error);
       }
     }
 
     // State
-    const selectedAlbumId = ref(null);
-    const selectedAlbum = computed(() => {
-      if (!selectedAlbumId.value) return null;
-      return rankingStore.availableAlbums.find(album => album.id === selectedAlbumId.value);
+    const selectedEraId = ref(null);
+    const selectedEra = computed(() => {
+      if (!selectedEraId.value) return null;
+      return rankingStore.availableEras.find(era => era.id === selectedEraId.value);
     });
     
     const rankedSongs = ref([]);
@@ -299,10 +299,10 @@ export default {
     const swiper = ref(null);
     const currentSlideIndex = ref(0);
     const currentSong = computed(() => {
-      if (!selectedAlbum.value || !selectedAlbum.value.songs || selectedAlbum.value.songs.length === 0) return null;
+      if (!selectedEra.value || !selectedEra.value.songs || selectedEra.value.songs.length === 0) return null;
       
       // Add safety check for undefined songs
-      const songAtIndex = selectedAlbum.value.songs[currentSlideIndex.value];
+      const songAtIndex = selectedEra.value.songs[currentSlideIndex.value];
       if (!songAtIndex) {
         console.warn(`No song found at index ${currentSlideIndex.value}`);
         return null;
@@ -312,7 +312,7 @@ export default {
     });
     
     const totalSongs = computed(() => {
-      return selectedAlbum.value && selectedAlbum.value.songs ? selectedAlbum.value.songs.length : 0;
+      return selectedEra.value && selectedEra.value.songs ? selectedEra.value.songs.length : 0;
     });
     
     const progressPercentage = computed(() => {
@@ -325,10 +325,10 @@ export default {
     });
     
     const dynamicBackgroundStyle = computed(() => {
-      if (selectedAlbum.value && selectedAlbum.value.color) {
+      if (selectedEra.value && selectedEra.value.color) {
         return {
-          '--bg-gradient-start': `${selectedAlbum.value.color}22`,
-          '--bg-gradient-end': `${selectedAlbum.value.color}11`
+          '--bg-gradient-start': `${selectedEra.value.color}22`,
+          '--bg-gradient-end': `${selectedEra.value.color}11`
         };
       }
       return {
@@ -348,39 +348,95 @@ export default {
     }
 
     // Methods
-    function selectAlbum(albumId) {
-      console.log(`Selecting album: ${albumId}`);
-      selectedAlbumId.value = albumId;
-      loadSongsForAlbum();
-      showToast('Album Selected', `Now ranking songs from ${selectedAlbum.value.title}`);
+    function getEraImageUrl(era) {
+      // Check both coverImageUrl and image_url fields
+      if (era.coverImageUrl) {
+        return era.coverImageUrl;
+      }
+      
+      if (era.image_url) {
+        return era.image_url;
+      }
+      
+      // If no database URL, fall back to local image mapping
+      const eraNameToFileName = {
+        'Taylor Swift': 'ts',
+        'Debut Era': 'ts',  
+        'Fearless': 'fearless',
+        'Speak Now': 'speaknow',
+        'Red': 'red',
+        '1989': '1989',
+        'Reputation': 'reputation',
+        'Lover': 'lover',
+        'Folklore': 'folklore',
+        'Evermore': 'evermore',
+        'Midnights': 'midnights',
+        'The Tortured Poets Department': 'tortured',
+        'TTPD Era': 'tortured'
+      };
+      
+      // Special case for TTPD Era
+      if ((era.eraName === 'TTPD Era' || era.title === 'TTPD Era' || era.eraId === 'ERA_TTPD' || era.id === 'ERA_TTPD') && era.image_url) {
+        return era.image_url;
+      }
+      
+      // Try to find a matching file name based on era name
+      const fileName = eraNameToFileName[era.eraName || era.title] || era.eraId || era.id?.toLowerCase();
+      
+      if (fileName) {
+        return `/img/covers/era_${fileName}.jpg`;
+      }
+      
+      // Default fallback
+      return '/img/covers/default.jpg';
     }
-    
-    function loadSongsForAlbum() {
-      console.log(`Loading songs for album: ${selectedAlbum.value.title}`);
-      console.log(`Album data:`, JSON.stringify(selectedAlbum.value).substring(0, 200) + '...');
+
+    async function loadSongsForEra() {
+      console.log(`Loading songs for era: ${selectedEra.value.title}`);
       
-      if (!selectedAlbum.value) return;
+      if (!selectedEra.value) return;
       
-      if (selectedAlbum.value.songs) {
-        console.log(`Number of songs: ${selectedAlbum.value.songs.length}`);
-        if (selectedAlbum.value.songs.length > 0) {
-          console.log(`First song: ${JSON.stringify(selectedAlbum.value.songs[0])}`);
-        }
-      } else {
-        console.warn(`No songs array found for album: ${selectedAlbum.value.title}`);
+      try {
+        // Fetch songs for this era from the database
+        const { dataAdapter } = await import('@/services/dataAdapter');
+        const erasWithSongs = await dataAdapter.getSongsByEra();
+        
+        // Find the era with its songs - using the same pattern as ErasView
+        const eraWithSongs = erasWithSongs.find(era => era.eraId === selectedEra.value.id);
+        
+        // Update the selectedEra with songs - always initialize as empty array if not found
+        selectedEra.value = {
+          ...selectedEra.value,
+          songs: eraWithSongs ? eraWithSongs.songs : []
+        };
+        
+        console.log(`Loaded ${selectedEra.value.songs.length} songs for era: ${selectedEra.value.title}`);
+      } catch (error) {
+        console.error(`Error loading songs for era: ${selectedEra.value.title}`, error);
+        selectedEra.value = {
+          ...selectedEra.value,
+          songs: []
+        };
       }
       
       // Reset state
       currentSlideIndex.value = 0;
       
       // Load existing rankings if available
-      const existingRankings = rankingStore.getSongRankingsForAlbum(selectedAlbum.value.id);
+      const existingRankings = rankingStore.getSongRankingsForEra(selectedEra.value.id);
       if (existingRankings && existingRankings.length > 0) {
         rankedSongs.value = existingRankings;
-        showToast('Rankings Loaded', 'Your previous rankings for this album have been loaded.');
+        showToast('Rankings Loaded', 'Your previous rankings for this era have been loaded.');
       } else {
         rankedSongs.value = [];
       }
+    }
+    
+    function selectEra(eraId) {
+      console.log(`Selecting era: ${eraId}`);
+      selectedEraId.value = eraId;
+      loadSongsForEra();
+      showToast('Era Selected', `Now ranking songs from ${selectedEra.value.title}`);
     }
     
     function onSwiper(swiperInstance) {
@@ -450,15 +506,15 @@ export default {
     
     function updateRankings() {
       console.log('Updating rankings...');
-      if (selectedAlbum.value) {
-        rankingStore.updateSongRankingsTemp(selectedAlbum.value.id, rankedSongs.value);
+      if (selectedEra.value) {
+        rankingStore.updateSongRankingsTemp(selectedEra.value.id, rankedSongs.value);
       }
     }
     
     function saveRankings() {
       console.log('Saving rankings...');
-      if (selectedAlbum.value && rankedSongs.value.length > 0) {
-        rankingStore.saveSongRankings(selectedAlbum.value.id, rankedSongs.value);
+      if (selectedEra.value && rankedSongs.value.length > 0) {
+        rankingStore.saveSongRankings(selectedEra.value.id, rankedSongs.value);
         showToast('Rankings Saved', 'Your song rankings have been saved successfully!');
       } else {
         showToast('Cannot Save', 'You need to rank at least one song before saving.', 'error');
@@ -469,8 +525,8 @@ export default {
       console.log('Resetting rankings...');
       if (confirm('Are you sure you want to reset your rankings?')) {
         rankedSongs.value = [];
-        if (selectedAlbum.value) {
-          rankingStore.updateSongRankingsTemp(selectedAlbum.value.id, []);
+        if (selectedEra.value) {
+          rankingStore.updateSongRankingsTemp(selectedEra.value.id, []);
         }
         showToast('Rankings Reset', 'Your song rankings have been reset.');
       }
@@ -478,10 +534,10 @@ export default {
     
     function randomizeRankings() {
       console.log('Randomizing rankings...');
-      if (!selectedAlbum.value || !selectedAlbum.value.songs) return;
+      if (!selectedEra.value || !selectedEra.value.songs) return;
       
       // Create a copy of all songs
-      const allSongs = [...selectedAlbum.value.songs];
+      const allSongs = [...selectedEra.value.songs];
       
       // Shuffle the array
       for (let i = allSongs.length - 1; i > 0; i--) {
@@ -500,26 +556,26 @@ export default {
     // Lifecycle hooks
     onMounted(() => {
       console.log('Component mounted...');
-      // Check if there's a default album to load
-      if (rankingStore.availableAlbums.length > 0) {
-        // Auto-select the first album for a better initial experience
-        selectAlbum(rankingStore.availableAlbums[0].id);
+      // Check if there's a default era to load
+      if (rankingStore.availableEras.length > 0) {
+        // Auto-select the first era for a better initial experience
+        selectEra(rankingStore.availableEras[0].id);
       }
     });
 
     onBeforeUnmount(() => {
       console.log('Component unmounted...');
       // Save any unsaved rankings when leaving
-      if (selectedAlbum.value && rankedSongs.value.length > 0) {
-        rankingStore.updateSongRankingsTemp(selectedAlbum.value.id, rankedSongs.value);
+      if (selectedEra.value && rankedSongs.value.length > 0) {
+        rankingStore.updateSongRankingsTemp(selectedEra.value.id, rankedSongs.value);
       }
     });
 
-    // Watch for changes to selectedAlbum
-    watch(selectedAlbum, (newAlbum) => {
-      console.log('Selected album changed:', newAlbum);
-      if (newAlbum) {
-        // Reset the swiper when album changes
+    // Watch for changes to selectedEra
+    watch(selectedEra, (newEra) => {
+      console.log('Selected era changed:', newEra);
+      if (newEra) {
+        // Reset the swiper when era changes
         if (swiper.value) {
           swiper.value.slideTo(0);
           currentSlideIndex.value = 0;
@@ -530,8 +586,8 @@ export default {
     return {
       rankingStore,
       userStore,
-      selectedAlbumId,
-      selectedAlbum,
+      selectedEraId,
+      selectedEra,
       rankedSongs,
       showRankedList,
       swiper,
@@ -544,8 +600,8 @@ export default {
       swiperModules: [EffectCoverflow, Navigation],
       
       // Methods
-      selectAlbum,
-      loadSongsForAlbum,
+      selectEra,
+      loadSongsForEra,
       onSwiper,
       onSlideChange,
       nextSlide,
@@ -559,7 +615,8 @@ export default {
       saveRankings,
       resetRankings,
       randomizeRankings,
-      showToast
+      showToast,
+      getEraImageUrl
     };
   }
 };

@@ -28,6 +28,34 @@
             <h3>{{ era.eraName }}</h3>
             <p v-if="era.eraStartDate">Start Date: {{ formatDate(era.eraStartDate) }}</p>
             <p v-if="era.primaryAlbumId">Primary Album ID: {{ era.primaryAlbumId }}</p>
+            
+            <!-- Song count and toggle button -->
+            <div class="songs-header">
+              <p class="song-count" v-if="era.songs">
+                <strong>{{ era.songs.length }}</strong> unique songs
+              </p>
+              <button 
+                @click="toggleSongsList(era.eraId)" 
+                class="toggle-songs-btn"
+                :class="{ 'active': expandedEras.includes(era.eraId) }"
+              >
+                {{ expandedEras.includes(era.eraId) ? 'Hide Songs' : 'Show Songs' }}
+              </button>
+            </div>
+            
+            <!-- Songs list (expandable) -->
+            <div v-if="expandedEras.includes(era.eraId)" class="songs-list">
+              <div v-if="!era.songs || era.songs.length === 0" class="no-songs">
+                <p>No songs found for this era</p>
+              </div>
+              <div v-else>
+                <ul>
+                  <li v-for="song in era.songs" :key="song.songId" class="song-item">
+                    {{ song.canonicalTitle || song.title }}
+                  </li>
+                </ul>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -38,6 +66,7 @@
 <script>
 import { ref, onMounted } from 'vue'
 import { supabase } from '../lib/supabase/client'
+import { dataAdapter } from '../services/dataAdapter'
 
 export default {
   name: 'ErasView',
@@ -46,6 +75,7 @@ export default {
     const eras = ref([])
     const loading = ref(true)
     const error = ref(null)
+    const expandedEras = ref([])
     
     const loadEras = async () => {
       loading.value = true
@@ -54,7 +84,7 @@ export default {
       try {
         console.log('Attempting to load eras from database...')
         
-        // Direct database query to fetch all eras
+        // First, load all eras with basic information
         const { data, error: dbError } = await supabase
           .from('Eras')
           .select('*')
@@ -65,8 +95,34 @@ export default {
           throw dbError
         }
         
-        eras.value = data || []
-        console.log(`Loaded ${eras.value.length} eras from database:`, eras.value)
+        // Store basic era information
+        const basicEras = data || []
+        console.log(`Loaded ${basicEras.length} eras from database`)
+        
+        // Then, fetch songs by era to get the complete data
+        try {
+          console.log('Fetching songs by era...')
+          const erasWithSongs = await dataAdapter.getSongsByEra()
+          console.log(`Loaded songs for ${erasWithSongs.length} eras`)
+          
+          // Merge the data - keep all eras but add songs where available
+          eras.value = basicEras.map(basicEra => {
+            const eraWithSongs = erasWithSongs.find(e => e.eraId === basicEra.eraId)
+            return {
+              ...basicEra,
+              songs: eraWithSongs ? eraWithSongs.songs : []
+            }
+          })
+          
+          // Log song counts for debugging
+          eras.value.forEach(era => {
+            console.log(`Era: ${era.eraName}, Songs: ${era.songs ? era.songs.length : 0}`)
+          })
+        } catch (songsError) {
+          console.error('Error loading songs by era:', songsError)
+          // If songs fail to load, still show eras without songs
+          eras.value = basicEras.map(era => ({ ...era, songs: [] }))
+        }
         
         // Debug log for image paths
         eras.value.forEach(era => {
@@ -140,6 +196,14 @@ export default {
       console.log(`Image for era ${era.eraName} failed to load, using default image`);
     }
     
+    const toggleSongsList = (eraId) => {
+      if (expandedEras.value.includes(eraId)) {
+        expandedEras.value = expandedEras.value.filter(id => id !== eraId)
+      } else {
+        expandedEras.value.push(eraId)
+      }
+    }
+    
     onMounted(() => {
       loadEras()
     })
@@ -150,7 +214,9 @@ export default {
       error,
       formatDate,
       handleImageError,
-      getImageUrl
+      getImageUrl,
+      expandedEras,
+      toggleSongsList
     }
   }
 }
@@ -239,5 +305,49 @@ h1 {
   margin: 0.25rem 0;
   font-size: 0.9rem;
   color: #666;
+}
+
+.songs-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.song-count {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.toggle-songs-btn {
+  background-color: #f9f9f9;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.toggle-songs-btn.active {
+  background-color: #ccc;
+}
+
+.songs-list {
+  margin-top: 1rem;
+}
+
+.no-songs {
+  padding: 1rem;
+  text-align: center;
+  background-color: #f9f9f9;
+  border-radius: 4px;
+}
+
+.song-item {
+  padding: 0.5rem;
+  border-bottom: 1px solid #ccc;
+}
+
+.song-item:last-child {
+  border-bottom: none;
 }
 </style>

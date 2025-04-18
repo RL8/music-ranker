@@ -685,61 +685,71 @@ export const useRankingStore = defineStore('ranking', {
     },
     
     // Update temporary song rankings (not saved to database yet)
-    updateSongRankingsTemp(contextId, rankings, isEraContext = false) {
-      // Remove existing rankings for this context
-      this.songRankings = this.songRankings.filter(r => {
-        if (isEraContext) {
-          return r.era_context_id !== contextId
-        } else {
-          return r.album_context_id !== contextId
-        }
-      })
-      
-      // Add new rankings
-      this.songRankings.push(...rankings)
+    updateSongRankingsTemp(contextId, rankings, isEraContext = true) {
+      try {
+        console.log(`Updating temp rankings for ${isEraContext ? 'era' : 'album'} ${contextId}:`, rankings.length)
+        
+        // Filter out any existing rankings for this context
+        this.songRankings = this.songRankings.filter(ranking => {
+          if (isEraContext) {
+            return ranking.eraId !== contextId
+          } else {
+            return ranking.albumId !== contextId
+          }
+        })
+        
+        // Add the new rankings
+        this.songRankings.push(...rankings.map((song, index) => ({
+          id: song.id,
+          songId: song.id,
+          rank: index + 1,
+          albumId: isEraContext ? null : contextId,
+          eraId: isEraContext ? contextId : null,
+          userId: 'temp-user'
+        })))
+        
+        // Save to localStorage
+        this.saveSongRankingsToLocalStorage()
+      } catch (error) {
+        console.error('Error in updateSongRankingsTemp:', error)
+      }
     },
     
     // Save song rankings to the database
-    async saveSongRankings(contextId, rankings, userId, isEraContext = false) {
-      if (!userId || !rankings.length) return
-      
-      this.loading = true
+    async saveSongRankings(contextId, rankings, userId = 'temp-user', isEraContext = true) {
       try {
-        // Format rankings for database
-        const formattedRankings = rankings.map((song, index) => {
-          const ranking = {
-            user_id: userId,
-            song_id: song.id,
+        console.log(`Saving rankings for ${isEraContext ? 'era' : 'album'} ${contextId}:`, rankings.length)
+        
+        // First update the temporary rankings
+        this.updateSongRankingsTemp(contextId, rankings, isEraContext)
+        
+        // If user is logged in, save to database
+        if (userId && userId !== 'temp-user') {
+          this.loading = true
+          
+          // Format rankings for the database
+          const formattedRankings = rankings.map((song, index) => ({
+            songId: song.id,
             rank: index + 1,
-            notes: song.notes || ''
-          }
+            albumId: isEraContext ? null : contextId,
+            eraId: isEraContext ? contextId : null,
+            userId
+          }))
           
-          // Add context ID based on type
-          if (isEraContext) {
-            ranking.era_context_id = contextId
-          } else {
-            ranking.album_context_id = contextId
+          try {
+            // Save to database
+            await databaseService.rankings.saveSongRankings(formattedRankings)
+            console.log('Rankings saved to database successfully')
+          } catch (dbError) {
+            console.error('Database error saving rankings:', dbError)
+            this.error = 'Failed to save rankings to database'
           }
-          
-          return ranking
-        })
+        }
         
-        // Use database service to save song rankings
-        await databaseService.rankings.saveSongRankings(formattedRankings)
-        
-        // Update local state
-        this.updateSongRankingsTemp(contextId, formattedRankings, isEraContext)
-        
-        console.log(`Saved song rankings for ${isEraContext ? 'era' : 'album'}:`, contextId)
-        this.error = null
-        
-        // Create a snapshot of the song rankings
-        await this.saveRankingSnapshot(userId, 'song')
+        this.loading = false
       } catch (error) {
-        this.error = error.message || 'Failed to save song rankings'
-        console.error('Error saving song rankings:', error)
-        throw error
-      } finally {
+        console.error('Error in saveSongRankings:', error)
+        this.error = 'Failed to save rankings'
         this.loading = false
       }
     },
