@@ -1,5 +1,5 @@
 <template>
-  <div class="p-4 pb-20">
+  <div class="p-4">
     <h1 class="text-2xl font-bold mb-4">Legal & Compliance</h1>
     <p class="mb-6">Important legal information regarding the use of our service with Paddle payment processing</p>
     

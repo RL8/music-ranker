@@ -1,5 +1,5 @@
 <template>
-  <div class="p-4 pb-20">
+  <div class="p-4">
     <h1 class="text-2xl font-bold mb-4">Rank Your Favorite Albums 
       <button 
         @click="showToast('Album Ranking Help', 'This screen allows you to rank Taylor Swift albums by dragging them from the shelf into different tiers.')"

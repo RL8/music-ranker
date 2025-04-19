@@ -1,5 +1,5 @@
 <template>
-  <div class="about max-w-lg mx-auto p-2 pb-20">
+  <div class="about max-w-lg mx-auto p-2">
     <!-- Tab Navigation -->
     <nav class="flex border-b border-gray-200 mb-4 sticky top-0 bg-white z-10">
       <button

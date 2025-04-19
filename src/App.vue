@@ -4,7 +4,7 @@
     <Sidebar />
     
     <!-- Main Content Area -->
-    <div class="flex flex-col flex-1 h-full overflow-hidden transition-all duration-300" :class="{ 'md:ml-[250px]': true }">
+    <div class="flex flex-col flex-1 h-full overflow-hidden transition-all duration-300" :class="{ 'lg:ml-[250px]': true }">
       <!-- Page-specific header can be added by individual views -->
       
       <!-- Main Content (Scrollable) -->

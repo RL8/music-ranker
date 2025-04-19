@@ -1,5 +1,5 @@
 <template>
-  <div class="p-4 pb-20" :style="dynamicBackgroundStyle">
+  <div class="p-4" :style="dynamicBackgroundStyle">
     <h1 class="text-2xl font-bold mb-4">Rank Your Favorite Songs 
       <button 
         @click="showToast('Song Ranking Help', 'This screen allows you to rank songs from Taylor Swift albums by dragging them from the shelf into different tiers.')"

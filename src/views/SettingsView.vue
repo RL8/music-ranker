@@ -1,5 +1,5 @@
 <template>
-  <div class="p-4 pb-20">
+  <div class="p-4">
     <h1 class="text-2xl font-bold mb-4">Settings</h1>
     <p class="mb-6">Spec: Settings page with tabs for different configuration sections</p>
     

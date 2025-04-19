@@ -9,8 +9,8 @@
     
     <!-- Sidebar -->
     <aside 
-      class="fixed top-0 left-0 h-full bg-white shadow-lg z-50 transition-transform duration-300 ease-in-out transform"
-      :class="isOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'"
+      class="fixed top-0 left-0 h-full bg-white shadow-lg z-50 transition-transform duration-300 ease-in-out transform overflow-y-auto"
+      :class="isOpen ? 'translate-x-0' : '-translate-x-full'"
       :style="{ width: sidebarWidth + 'px' }"
     >
       <!-- App Logo and Name -->
@@ -187,9 +187,9 @@
       </div>
     </aside>
     
-    <!-- Toggle Button (only visible on mobile) -->
+    <!-- Toggle Button (optimized for mobile) -->
     <button 
-      class="fixed top-4 left-4 z-30 md:hidden w-10 h-10 rounded-full bg-white shadow-md flex items-center justify-center text-gray-700 hover:text-green-600 transition-colors"
+      class="fixed top-4 left-4 z-30 w-10 h-10 rounded-full bg-white shadow-md flex items-center justify-center text-gray-700 hover:text-green-600 transition-colors"
       @click="toggleSidebar"
       aria-label="Toggle navigation menu"
     >
@@ -247,10 +247,10 @@ export default {
     
     // Close sidebar when clicking outside on mobile
     const handleResize = () => {
-      if (window.innerWidth >= 768) {
+      // Don't auto-close on desktop anymore
+      if (window.innerWidth >= 1024) {
+        // Only open automatically on large screens
         isOpen.value = true;
-      } else {
-        isOpen.value = false;
       }
     };
     

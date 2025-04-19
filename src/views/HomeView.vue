@@ -1,5 +1,5 @@
 <template>
-  <div class="p-4 pb-20">
+  <div class="p-4">
     <h1 class="text-2xl font-bold mb-4">Taylor Swift Discography 
       <button 
         @click="showToast('Information', 'This visualization shows Taylor Swift\'s complete discography organized by albums and songs.')"
