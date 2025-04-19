@@ -64,7 +64,6 @@ async function makeRequest(config) {
     const response = await axios(config);
     return response.data;
   } catch (error) {
-    console.error('Error making request to MusicBrainz API:', error.message);
     throw error;
   }
 }
@@ -76,13 +75,13 @@ function cache(duration) {
     const cachedBody = mcache.get(key);
     
     if (cachedBody) {
-      res.send(cachedBody);
+      res.json(JSON.parse(cachedBody));
       return;
     }
     
-    res.sendResponse = res.send;
-    res.send = (body) => {
-      mcache.put(key, body, duration);
+    res.sendResponse = res.json;
+    res.json = (body) => {
+      mcache.put(key, JSON.stringify(body), duration);
       res.sendResponse(body);
     };
     
@@ -232,5 +231,8 @@ app.get('/', (req, res) => {
   });
 });
 
-// Export for serverless function
-module.exports = app;
+// Export the Express API as a Vercel serverless function
+module.exports = (req, res) => {
+  // This is the handler for Vercel serverless functions
+  return app(req, res);
+};

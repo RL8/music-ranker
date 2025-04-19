@@ -1,17 +1,11 @@
 {
-  "buildCommand": "yarn build",
-  "installCommand": "yarn install",
+  "buildCommand": "npm run build",
+  "installCommand": "npm install",
   "framework": "vue",
   "rewrites": [
     {
       "source": "/api/(.*)",
       "destination": "/api"
     }
-  ],
-  "functions": {
-    "api": {
-      "memory": 1024,
-      "maxDuration": 10
-    }
-  }
+  ]
 }
