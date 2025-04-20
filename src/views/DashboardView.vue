@@ -1,8 +1,10 @@
 <template>
   <div class="p-4">
-    <h1 class="text-2xl font-bold mb-4">
-      <span>Welcome to your Swiftie Universe, <span class="text-green-600">{{ userStore.user?.username || 'Swiftie' }}</span>!</span>
-    </h1>
+    <MobileHeader>
+      <template #title>
+        Welcome to your Swiftie Universe, <span class="text-green-600">{{ userStore.user?.username || 'Swiftie' }}</span>!
+      </template>
+    </MobileHeader>
     
     <!-- View Toggle Buttons -->
     <div class="flex mb-6 border border-gray-200 rounded-lg overflow-hidden shadow-sm">
@@ -254,6 +256,7 @@ import { useRankingStore } from '@/store/rankingStore';
 import toastService from '@/services/toastService';
 import SunburstChart from '@/components/visualizations/SunburstChart.vue';
 import staticAlbumsData from '@/data/static-albums.json';
+import MobileHeader from '@/components/ui/MobileHeader.vue';
 
 // Store setup
 const userStore = useUserStore();
@@ -276,30 +279,37 @@ function toggleShareMenu() {
 }
 
 // Show toast notification
-function showToast(title, message) {
-  toast.show({
-    title,
-    message,
-    type: 'info',
-    timeout: 3000
-  });
+function showToast(title, message, type = 'info') {
+  switch (type) {
+    case 'success':
+      toast.success(title, message);
+      break;
+    case 'error':
+      toast.error(title, message);
+      break;
+    case 'warning':
+      toast.warning(title, message);
+      break;
+    default:
+      toast.info(title, message);
+  }
 }
 
 // Download visualization as PNG
 function downloadAsPNG() {
-  showToast('Download Started', 'Your visualization is being prepared for download.');
+  showToast('Download Started', 'Your visualization is being prepared for download.', 'info');
   // This would be implemented with actual export functionality
 }
 
 // Share as animation
 function shareAsAnimation() {
-  showToast('Share Animation', 'Preparing animation for sharing...');
+  showToast('Share Animation', 'Preparing animation for sharing...', 'info');
   // This would be implemented with actual sharing functionality
 }
 
 // Share profile link
 function shareProfileLink() {
-  showToast('Link Copied', 'Your profile link has been copied to clipboard.');
+  showToast('Link Copied', 'Your profile link has been copied to clipboard.', 'success');
   // This would be implemented with actual clipboard functionality
 }
 
@@ -308,7 +318,8 @@ function toggleLogin(status) {
   userStore.setIsLoggedInSimulation(status);
   showToast(
     status ? 'Logged In' : 'Logged Out', 
-    status ? 'You are now logged in.' : 'You have been logged out.'
+    status ? 'You are now logged in.' : 'You have been logged out.',
+    status ? 'success' : 'error'
   );
 }
 

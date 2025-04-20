@@ -60,7 +60,7 @@
     <!-- CTA Buttons -->
     <div class="mt-10 flex flex-col items-center">
       <router-link 
-        to="/rank/albums/carousel"
+        to="/rank/eras"
         class="w-full max-w-xs p-3 bg-green-600 text-white rounded-full font-bold hover:bg-green-700 transition-colors shadow-md active:scale-95 transform duration-150 text-center mb-3"
       >
         Create Your Own Album Rankings

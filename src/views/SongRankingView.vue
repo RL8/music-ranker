@@ -213,7 +213,7 @@
       </button>
       
       <router-link 
-        to="/rank/songs/carousel"
+        to="/rank/songs"
         class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-6 rounded-lg transition-colors flex items-center justify-center"
       >
         <span>Try Carousel Ranking</span>

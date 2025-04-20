@@ -1,6 +1,8 @@
 <template>
   <div class="p-4">
-    <h1 class="text-2xl font-bold mb-4">Profile</h1>
+    <MobileHeader title="Profile">
+      <!-- Optional actions can be added here if needed -->
+    </MobileHeader>
     
     <!-- Not Logged In View -->
     <div v-if="!userStore.isLoggedInSimulation" class="flex flex-col items-center justify-center py-10">
@@ -412,44 +414,53 @@
 import { ref } from 'vue';
 import { useUserStore } from '@/store/userStore';
 import toastService from '@/services/toastService';
+import MobileHeader from '@/components/ui/MobileHeader.vue';
 
 // Active tab state
 const activeTab = ref('info');
 const userStore = useUserStore();
 
 // Show toast notification (used sparingly for confirmations only)
-const showToast = (title, message) => {
-  toastService.show({
-    title,
-    message,
-    duration: 3000
-  });
+const showToast = (title, message, type = 'info') => {
+  switch (type) {
+    case 'success':
+      toastService.success(title, message);
+      break;
+    case 'error':
+      toastService.error(title, message);
+      break;
+    case 'warning':
+      toastService.warning(title, message);
+      break;
+    default:
+      toastService.info(title, message);
+  }
 };
 
 // Login function
 const login = () => {
   userStore.setIsLoggedInSimulation(true);
-  showToast('Logged In', 'You are now logged in and can access your profile information.');
+  showToast('Logged In', 'You are now logged in and can access your profile information.', 'success');
 };
 
 // Save profile changes
 const saveProfileChanges = () => {
-  showToast('Profile Updated', 'Your profile information has been successfully updated.');
+  showToast('Profile Updated', 'Your profile information has been successfully updated.', 'success');
 };
 
 // Copy profile link
 const copyProfileLink = () => {
-  showToast('Link Copied', 'Your profile link has been copied to clipboard.');
+  showToast('Link Copied', 'Your profile link has been copied to clipboard.', 'success');
 };
 
 // Start game
 const startGame = () => {
-  showToast('Game Starting', 'The Taylor Swift knowledge game would start here.');
+  showToast('Game Starting', 'The Taylor Swift knowledge game would start here.', 'info');
 };
 
 // Subscribe to premium
 const subscribeToPremium = () => {
-  showToast('Premium Subscription', 'This would initiate the premium subscription process.');
+  showToast('Premium Subscription', 'This would initiate the premium subscription process.', 'info');
 };
 </script>
 

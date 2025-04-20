@@ -195,14 +195,7 @@
       </button>
       
       <router-link 
-        to="/rank/albums/coverflow"
-        class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-6 rounded-lg transition-colors flex items-center justify-center"
-      >
-        <span>Try Coverflow Ranking</span>
-      </router-link>
-      
-      <router-link 
-        to="/rank/albums/carousel"
+        to="/rank/eras"
         class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-6 rounded-lg transition-colors flex items-center justify-center"
       >
         <span>Try Carousel Ranking</span>

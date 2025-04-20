@@ -1,7 +1,7 @@
 <template>
   <div class="p-4">
     <h1 class="text-2xl font-bold mb-4">Legal & Compliance</h1>
-    <p class="mb-6">Important legal information regarding the use of our service with Paddle payment processing</p>
+    <p class="mb-6">Important legal information regarding the use of our service and payment processing</p>
     
     <!-- Compliance Tabs -->
     <div class="flex border-b border-gray-200 mb-6 overflow-x-auto">
@@ -56,7 +56,7 @@
         <h3 class="text-lg font-medium mb-3">2. Description of Service</h3>
         <p class="mb-4">
           Swifties.io provides a platform for users to rank music albums, songs, and eras. The Service may include premium features 
-          that require payment through our payment processor, Paddle.
+          that require payment through our secure payment processing system.
         </p>
         
         <div class="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-4">
@@ -94,7 +94,7 @@
         <h3 class="text-lg font-medium mb-3">5. Subscription and Billing</h3>
         <p class="mb-4">
           5.1 Subscription fees are billed in advance on a recurring annual basis.<br>
-          5.2 Payment processing is handled by Paddle, and you agree to be bound by Paddle's terms of service.<br>
+          5.2 Payment processing is handled by our secure payment processor, and you agree to be bound by their terms of service.<br>
           5.3 You can cancel your subscription at any time through your account settings or by contacting customer support.<br>
           5.4 Cancellation will take effect at the end of your current billing period.
         </p>
@@ -181,7 +181,7 @@
         <h3 class="text-lg font-medium mb-3">2. Information We Collect</h3>
         <p class="mb-4">
           2.1 <strong>Information you provide to us:</strong> When you register for an account, we collect your email address, username, and password.<br>
-          2.2 <strong>Payment information:</strong> When you make a purchase, our payment processor Paddle collects payment information.<br>
+          2.2 <strong>Payment information:</strong> When you make a purchase, our payment processor collects payment information.<br>
           2.3 <strong>Usage data:</strong> We collect information about how you interact with our service, including your rankings, preferences, and activity logs.<br>
           2.4 <strong>Device information:</strong> We collect information about the device you use to access our service.
         </p>
@@ -199,7 +199,7 @@
         
         <h3 class="text-lg font-medium mb-3">4. Sharing Your Information</h3>
         <p class="mb-4">
-          4.1 <strong>Service providers:</strong> We share information with third-party vendors, including Paddle for payment processing.<br>
+          4.1 <strong>Service providers:</strong> We share information with third-party vendors, including our payment processor for handling transactions.<br>
           4.2 <strong>Legal requirements:</strong> We may disclose information if required by law or in response to valid requests by public authorities.<br>
           4.3 <strong>Business transfers:</strong> We may share information in connection with a merger, sale, or acquisition.
         </p>
@@ -282,7 +282,7 @@
         
         <h3 class="text-lg font-medium mb-3">4. Processing of Refunds</h3>
         <p class="mb-4">
-          4.1 Refunds will be processed through Paddle, our payment processor.<br>
+          4.1 Refunds will be processed through our payment processor.<br>
           4.2 Refunds will be issued to the original payment method used for the purchase.<br>
           4.3 Processing time may vary depending on your payment provider, typically 5-10 business days.
         </p>
@@ -395,7 +395,7 @@
         <div class="bg-green-50 p-4 rounded-lg border border-green-200 mb-4">
           <h4 class="font-medium text-green-800">Premium Subscription:</h4>
           <p class="text-green-800 font-bold text-xl">$19.99 per year</p>
-          <p class="text-green-700">Billed annually through our secure payment processor, Paddle.</p>
+          <p class="text-green-700">Billed annually through our secure payment processor.</p>
           <p class="text-green-700 mt-2">14-day money-back guarantee for new subscribers.</p>
         </div>
         

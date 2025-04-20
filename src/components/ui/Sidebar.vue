@@ -36,9 +36,9 @@
         </router-link>
         
         <router-link 
-          to="/rank/albums" 
+          to="/rank/eras" 
           class="flex items-center px-6 py-3 text-gray-700 hover:bg-green-50 hover:text-green-600 transition-colors"
-          :class="{ 'bg-green-50 text-green-600': $route.path.startsWith('/rank/albums') }"
+          :class="{ 'bg-green-50 text-green-600': $route.path.startsWith('/rank/eras') || $route.path.startsWith('/rank/albums') }"
           @click="mobileClose"
         >
           <i class="album-icon w-6 h-6 bg-center bg-no-repeat bg-contain"></i>
@@ -189,7 +189,7 @@
     
     <!-- Toggle Button (optimized for mobile) -->
     <button 
-      class="fixed top-4 left-4 z-30 w-10 h-10 rounded-full bg-white shadow-md flex items-center justify-center text-gray-700 hover:text-green-600 transition-colors"
+      class="fixed top-4 left-4 z-50 w-10 h-10 rounded-full bg-white shadow-md flex items-center justify-center text-gray-700 hover:text-green-600 transition-colors"
       @click="toggleSidebar"
       aria-label="Toggle navigation menu"
     >

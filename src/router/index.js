@@ -94,40 +94,27 @@ const routes = [
     name: 'dashboard',
     component: () => import('../views/DashboardView.vue')
   },
-  {
-    path: '/rank/albums',
-    name: 'album-ranking',
-    redirect: '/rank/albums/carousel'
-  },
-  {
-    path: '/rank/albums/coverflow',
-    name: 'album-ranking-coverflow',
-    redirect: '/rank/albums/carousel'
-  },
-  {
-    path: '/rank/albums/carousel',
-    name: 'album-ranking-carousel',
-    component: () => import('../views/AlbumRankingCarouselView.vue')
-  },
+  // Updated routes for era ranking
   {
     path: '/rank/eras',
     name: 'era-ranking',
-    redirect: '/rank/albums/carousel'
+    component: () => import('../views/AlbumRankingCarouselView.vue')
   },
+  // Legacy routes that redirect to the new structure
+  {
+    path: '/rank/albums/carousel',
+    redirect: '/rank/eras'
+  },
+  // Updated routes for song ranking
   {
     path: '/rank/songs',
     name: 'song-ranking',
-    redirect: '/rank/songs/carousel'
+    component: () => import('../views/SongRankingCarouselView.vue')
   },
-  {
-    path: '/rank/songs/coverflow',
-    name: 'song-ranking-coverflow',
-    redirect: '/rank/songs/carousel'
-  },
+  // Legacy routes that redirect to the new structure
   {
     path: '/rank/songs/carousel',
-    name: 'song-ranking-carousel',
-    component: () => import('../views/SongRankingCarouselView.vue')
+    redirect: '/rank/songs'
   },
   {
     path: '/rank/songs/tier',
