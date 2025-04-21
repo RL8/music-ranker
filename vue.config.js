@@ -23,5 +23,13 @@ module.exports = defineConfig({
       }
       return args
     })
+  },
+  // Force development server to use localhost for WebSocket connections
+  devServer: {
+    host: 'localhost',
+    port: 8080,
+    client: {
+      webSocketURL: 'ws://localhost:8080/ws'
+    }
   }
 })

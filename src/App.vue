@@ -1,10 +1,10 @@
 <template>
   <div class="flex h-screen w-full overflow-hidden">
     <!-- Sidebar Navigation -->
-    <Sidebar />
+    <Sidebar :is-open="sidebarOpen" :toggle-sidebar="toggleSidebar" />
     
     <!-- Main Content Area -->
-    <div class="flex flex-col flex-1 h-full overflow-hidden transition-all duration-300" :class="{ 'lg:ml-[250px]': true }">
+    <div class="flex flex-col flex-1 h-full overflow-hidden transition-all duration-300" :class="{ 'lg:ml-[250px]': sidebarOpen }">
       <!-- Page-specific header can be added by individual views -->
       
       <!-- Main Content (Scrollable) -->
@@ -38,6 +38,14 @@ export default {
       eras: 'pending',
       songs: 'pending'
     })
+    
+    // Sidebar state
+    const sidebarOpen = ref(false)
+    
+    // Toggle sidebar function
+    const toggleSidebar = () => {
+      sidebarOpen.value = !sidebarOpen.value
+    }
     
     // Initialize the database music store and load era-centric data
     const initializeApplication = async () => {
@@ -123,14 +131,18 @@ export default {
       initializeApplication()
       
       // Check for app version changes
-      checkVersionAndRefresh()
+      // Use the version from package.json
+      const appVersion = '0.1.0' // Hardcoded from package.json
+      checkVersionAndRefresh(appVersion)
     })
     
     return {
       userStore,
       rankingStore,
       dbMusicStore,
-      initializationStatus
+      initializationStatus,
+      sidebarOpen,
+      toggleSidebar
     }
   }
 }

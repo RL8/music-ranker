@@ -17,21 +17,15 @@ const routes = [
     component: () => import('../views/AboutView.vue')
   },
   {
-    path: '/song/:id',
-    name: 'song-detail',
-    component: () => import('../views/SongDetailView.vue'),
-    props: true // Pass route params as component props
-  },
-  {
-    path: '/admin/taylor-swift',
-    name: 'taylor-swift-manager',
+    path: '/admin/disco-overview',
+    name: 'disco-overview',
     component: () => import('../components/admin/TaylorSwiftDataManager.vue'),
     meta: {
       requiresAuth: true // This route requires authentication
     }
   },
   {
-    path: '/database-test',
+    path: '/admin/database-test',
     name: 'database-test',
     component: () => import('../components/DatabaseTest.vue'),
     meta: {
@@ -39,7 +33,7 @@ const routes = [
     }
   },
   {
-    path: '/hybrid-songs',
+    path: '/admin/hybrid-songs',
     name: 'hybrid-songs',
     component: () => import('../components/HybridSongList.vue'),
     meta: {
@@ -47,7 +41,7 @@ const routes = [
     }
   },
   {
-    path: '/edition-browser',
+    path: '/admin/edition-browser',
     name: 'edition-browser',
     component: () => import('../components/EditionBrowser.vue'),
     meta: {
@@ -55,7 +49,7 @@ const routes = [
     }
   },
   {
-    path: '/simple-db',
+    path: '/admin/simple-db',
     name: 'simple-db',
     component: () => import('../components/SimpleDatabaseView.vue'),
     meta: {
@@ -63,7 +57,7 @@ const routes = [
     }
   },
   {
-    path: '/database-diagnostic',
+    path: '/admin/database-diagnostic',
     name: 'database-diagnostic',
     component: () => import('../components/DatabaseDiagnostic.vue'),
     meta: {
@@ -71,55 +65,66 @@ const routes = [
     }
   },
   {
-    path: '/env-checker',
+    path: '/admin/env-checker',
     name: 'env-checker',
     component: () => import('../components/EnvChecker.vue'),
     meta: {
       title: 'Environment Variables Checker'
     }
   },
-  {
-    path: '/visualizations/sunburst',
-    name: 'sunburst-demo',
-    component: () => import('../views/SunburstDemo.vue')
-  },
-  {
-    path: '/visualizations/taylor-swift',
-    name: 'taylor-swift-sunburst',
-    component: () => import('../views/TaylorSwiftSunburst.vue')
-  },
   // New routes for the updated application structure
   {
-    path: '/music',
+    path: '/dashboard',
     name: 'dashboard',
     component: () => import('../views/DashboardView.vue')
   },
-  // Updated routes for era ranking
+  // Music section routes
   {
-    path: '/rank/eras',
+    path: '/music',
+    name: 'music',
+    component: () => import('../views/MusicView.vue'),
+    meta: {
+      title: 'Music Library'
+    }
+  },
+  {
+    path: '/music/eras',
     name: 'era-ranking',
     component: () => import('../views/AlbumRankingCarouselView.vue')
   },
-  // Legacy routes that redirect to the new structure
   {
-    path: '/rank/albums/carousel',
-    redirect: '/rank/eras'
-  },
-  // Updated routes for song ranking
-  {
-    path: '/rank/songs',
+    path: '/music/songs',
     name: 'song-ranking',
     component: () => import('../views/SongRankingCarouselView.vue')
   },
+  {
+    path: '/music/artists',
+    name: 'artists',
+    component: () => import('../views/ArtistsView.vue'),
+    meta: {
+      title: 'Artists'
+    }
+  },
   // Legacy routes that redirect to the new structure
   {
-    path: '/rank/songs/carousel',
-    redirect: '/rank/songs'
+    path: '/rank/albums',
+    redirect: '/music/eras'
   },
   {
-    path: '/rank/songs/tier',
-    name: 'song-ranking-tier',
-    component: () => import('../views/SongRankingView.vue')
+    path: '/rank/albums/coverflow',
+    redirect: '/music/eras'
+  },
+  {
+    path: '/old-music',
+    redirect: '/dashboard'
+  },
+  {
+    path: '/rank/eras',
+    redirect: '/music/eras'
+  },
+  {
+    path: '/rank/songs',
+    redirect: '/music/songs'
   },
   {
     path: '/profile',
@@ -132,15 +137,20 @@ const routes = [
     component: () => import('../views/SettingsView.vue')
   },
   {
-    path: '/compliance',
-    name: 'compliance',
+    path: '/terms-privacy-etc',
+    name: 'terms-privacy',
     component: () => import('../views/ComplianceView.vue'),
     meta: {
       title: 'Legal & Compliance'
     }
   },
+  // Legacy route that redirects to the new structure
   {
-    path: '/eras',
+    path: '/compliance',
+    redirect: '/terms-privacy-etc'
+  },
+  {
+    path: '/admin/eras',
     name: 'eras',
     component: () => import('../components/ErasView.vue'),
     meta: {
@@ -148,11 +158,21 @@ const routes = [
     }
   },
   {
-    path: '/image-diagnostic',
+    path: '/admin/image-diagnostic',
     name: 'image-diagnostic',
     component: () => import('../components/ImageLoadingDiagnostic.vue'),
     meta: {
       title: 'Image Loading Diagnostic'
+    }
+  },
+  // New admin dashboard route
+  {
+    path: '/admin',
+    name: 'admin-dashboard',
+    component: () => import('../views/AdminDashboardView.vue'),
+    meta: {
+      requiresAuth: true,
+      title: 'Admin Dashboard'
     }
   }
 ]

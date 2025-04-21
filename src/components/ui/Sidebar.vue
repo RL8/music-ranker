@@ -24,7 +24,27 @@
       </div>
       
       <!-- Navigation Links -->
-      <nav class="mt-6">
+      <nav class="flex-1 pt-4 pb-4 overflow-y-auto">
+        <router-link 
+          to="/" 
+          class="flex items-center px-6 py-3 text-gray-700 hover:bg-green-50 hover:text-green-600 transition-colors"
+          :class="{ 'bg-green-50 text-green-600': $route.path === '/' }"
+          @click="mobileClose"
+        >
+          <i class="home-icon w-6 h-6 bg-center bg-no-repeat bg-contain"></i>
+          <span class="ml-3 font-medium">Home</span>
+        </router-link>
+        
+        <router-link 
+          to="/dashboard" 
+          class="flex items-center px-6 py-3 text-gray-700 hover:bg-green-50 hover:text-green-600 transition-colors"
+          :class="{ 'bg-green-50 text-green-600': $route.path === '/dashboard' }"
+          @click="mobileClose"
+        >
+          <i class="dashboard-icon w-6 h-6 bg-center bg-no-repeat bg-contain"></i>
+          <span class="ml-3 font-medium">Dashboard</span>
+        </router-link>
+        
         <router-link 
           to="/music" 
           class="flex items-center px-6 py-3 text-gray-700 hover:bg-green-50 hover:text-green-600 transition-colors"
@@ -32,28 +52,11 @@
           @click="mobileClose"
         >
           <i class="music-icon w-6 h-6 bg-center bg-no-repeat bg-contain"></i>
-          <span class="ml-3 font-medium">Music</span>
+          <span class="ml-3 font-medium">Music Library</span>
         </router-link>
         
-        <router-link 
-          to="/rank/eras" 
-          class="flex items-center px-6 py-3 text-gray-700 hover:bg-green-50 hover:text-green-600 transition-colors"
-          :class="{ 'bg-green-50 text-green-600': $route.path.startsWith('/rank/eras') || $route.path.startsWith('/rank/albums') }"
-          @click="mobileClose"
-        >
-          <i class="album-icon w-6 h-6 bg-center bg-no-repeat bg-contain"></i>
-          <span class="ml-3 font-medium">Rank Eras</span>
-        </router-link>
-        
-        <router-link 
-          to="/rank/songs" 
-          class="flex items-center px-6 py-3 text-gray-700 hover:bg-green-50 hover:text-green-600 transition-colors"
-          :class="{ 'bg-green-50 text-green-600': $route.path.startsWith('/rank/songs') }"
-          @click="mobileClose"
-        >
-          <i class="song-icon w-6 h-6 bg-center bg-no-repeat bg-contain"></i>
-          <span class="ml-3 font-medium">Rank Songs</span>
-        </router-link>
+        <!-- Divider -->
+        <div class="mx-6 my-4 border-t border-gray-200"></div>
         
         <router-link 
           to="/profile" 
@@ -65,67 +68,6 @@
           <span class="ml-3 font-medium">Profile</span>
         </router-link>
         
-        <!-- Database Integration Section (Admin Only) -->
-        <template v-if="userStore.profile && userStore.profile.role === 'admin'">
-          <div class="mt-6 px-6 py-2">
-            <h3 class="text-xs uppercase font-bold text-gray-500">Database Integration</h3>
-          </div>
-          <router-link 
-            to="/database-test" 
-            class="flex items-center px-6 py-3 text-gray-700 hover:bg-green-50 hover:text-green-600 transition-colors"
-            :class="{ 'bg-green-50 text-green-600': $route.path === '/database-test' }"
-            @click="mobileClose"
-          >
-            <i class="database-icon w-6 h-6 bg-center bg-no-repeat bg-contain"></i>
-            <span class="ml-3 font-medium">Database Test</span>
-          </router-link>
-          <router-link 
-            to="/hybrid-songs" 
-            class="flex items-center px-6 py-3 text-gray-700 hover:bg-green-50 hover:text-green-600 transition-colors"
-            :class="{ 'bg-green-50 text-green-600': $route.path === '/hybrid-songs' }"
-            @click="mobileClose"
-          >
-            <i class="song-icon w-6 h-6 bg-center bg-no-repeat bg-contain"></i>
-            <span class="ml-3 font-medium">Hybrid Song List</span>
-          </router-link>
-          <router-link 
-            to="/edition-browser" 
-            class="flex items-center px-6 py-3 text-gray-700 hover:bg-green-50 hover:text-green-600 transition-colors"
-            :class="{ 'bg-green-50 text-green-600': $route.path === '/edition-browser' }"
-            @click="mobileClose"
-          >
-            <i class="album-icon w-6 h-6 bg-center bg-no-repeat bg-contain"></i>
-            <span class="ml-3 font-medium">Edition Browser</span>
-          </router-link>
-          <router-link 
-            to="/simple-db" 
-            class="flex items-center px-6 py-3 text-gray-700 hover:bg-green-50 hover:text-green-600 transition-colors"
-            :class="{ 'bg-green-50 text-green-600': $route.path === '/simple-db' }"
-            @click="mobileClose"
-          >
-            <i class="database-icon w-6 h-6 bg-center bg-no-repeat bg-contain"></i>
-            <span class="ml-3 font-medium">Simple DB View</span>
-          </router-link>
-          <router-link 
-            to="/database-diagnostic" 
-            class="flex items-center px-6 py-3 text-gray-700 hover:bg-green-50 hover:text-green-600 transition-colors"
-            :class="{ 'bg-green-50 text-green-600': $route.path === '/database-diagnostic' }"
-            @click="mobileClose"
-          >
-            <i class="settings-icon w-6 h-6 bg-center bg-no-repeat bg-contain"></i>
-            <span class="ml-3 font-medium text-amber-700 font-semibold">Connection Diagnostic</span>
-          </router-link>
-          <router-link 
-            to="/env-checker" 
-            class="flex items-center px-6 py-3 text-gray-700 hover:bg-green-50 hover:text-green-600 transition-colors"
-            :class="{ 'bg-green-50 text-green-600': $route.path === '/env-checker' }"
-            @click="mobileClose"
-          >
-            <i class="settings-icon w-6 h-6 bg-center bg-no-repeat bg-contain"></i>
-            <span class="ml-3 font-medium text-amber-700 font-semibold">Env Variables Checker</span>
-          </router-link>
-        </template>
-        <!-- Settings and About (Always Visible) -->
         <router-link 
           to="/settings" 
           class="flex items-center px-6 py-3 text-gray-700 hover:bg-green-50 hover:text-green-600 transition-colors"
@@ -135,54 +77,73 @@
           <i class="settings-icon w-6 h-6 bg-center bg-no-repeat bg-contain"></i>
           <span class="ml-3 font-medium">Settings</span>
         </router-link>
-        <router-link 
-          to="/compliance" 
-          class="flex items-center px-6 py-3 text-gray-700 hover:bg-green-50 hover:text-green-600 transition-colors"
-          :class="{ 'bg-green-50 text-green-600': $route.path.startsWith('/compliance') }"
-          @click="mobileClose"
-        >
-          <i class="about-icon w-6 h-6 bg-center bg-no-repeat bg-contain"></i>
-          <span class="ml-3 font-medium">Legal & Compliance</span>
-        </router-link>
+        
         <router-link 
           to="/about" 
           class="flex items-center px-6 py-3 text-gray-700 hover:bg-green-50 hover:text-green-600 transition-colors"
-          :class="{ 'bg-green-50 text-green-600': $route.path === '/about' }"
+          :class="{ 'bg-green-50 text-green-600': $route.path.startsWith('/about') }"
           @click="mobileClose"
         >
           <i class="about-icon w-6 h-6 bg-center bg-no-repeat bg-contain"></i>
-          <span class="ml-3 font-medium">About</span>
+          <span class="ml-3 font-medium">About Us</span>
         </router-link>
-        <router-link 
-          to="/eras" 
-          class="flex items-center px-6 py-3 text-gray-700 hover:bg-green-50 hover:text-green-600 transition-colors"
-          :class="{ 'bg-green-50 text-green-600': $route.path === '/eras' }"
-          @click="mobileClose"
-        >
-          <i class="music-icon w-6 h-6 bg-center bg-no-repeat bg-contain"></i>
-          <span class="ml-3 font-medium">Musical Eras</span>
-        </router-link>
-        <router-link 
-          to="/image-diagnostic" 
-          class="flex items-center px-6 py-3 pl-12 text-gray-700 hover:bg-green-50 hover:text-green-600 transition-colors"
-          :class="{ 'bg-green-50 text-green-600': $route.path === '/image-diagnostic' }"
-          @click="mobileClose"
-        >
-          <i class="settings-icon w-5 h-5 bg-center bg-no-repeat bg-contain"></i>
-          <span class="ml-2 font-medium text-amber-700">Image Diagnostic</span>
-        </router-link>
+        
+        <!-- Admin Dashboard (Admin Only) -->
+        <template v-if="adminViewEnabled">
+          <!-- Divider before Admin section if it's visible -->
+          <div class="mx-6 my-4 border-t border-gray-200"></div>
+          
+          <router-link 
+            to="/admin" 
+            class="flex items-center px-6 py-3 text-gray-700 hover:bg-green-50 hover:text-green-600 transition-colors"
+            :class="{ 'bg-green-50 text-green-600': $route.path.startsWith('/admin') }"
+            @click="mobileClose"
+          >
+            <i class="admin-icon w-6 h-6 bg-center bg-no-repeat bg-contain"></i>
+            <span class="ml-3 font-medium">Admin Dashboard</span>
+          </router-link>
+        </template>
       </nav>
       
       <!-- User Info (bottom of sidebar) -->
       <div class="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200">
-        <div class="flex items-center">
-          <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
-            <i class="profile-icon w-6 h-6 bg-center bg-no-repeat bg-contain text-gray-600"></i>
+        <div class="flex items-center justify-between">
+          <div class="flex items-center">
+            <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
+              <i class="profile-icon w-6 h-6 bg-center bg-no-repeat bg-contain text-gray-600"></i>
+            </div>
+            <div class="ml-3">
+              <p class="font-medium text-gray-800">{{ userStore.isLoggedInSimulation ? 'Taylor Fan' : 'Guest User' }}</p>
+              <p class="text-sm text-gray-500">{{ userStore.isLoggedInSimulation ? 'Logged In' : 'Not Logged In' }}</p>
+            </div>
           </div>
-          <div class="ml-3">
-            <p class="font-medium text-gray-800">{{ userStore.isLoggedInSimulation ? 'Taylor Fan' : 'Guest User' }}</p>
-            <p class="text-sm text-gray-500">{{ userStore.isLoggedInSimulation ? 'Logged In' : 'Not Logged In' }}</p>
-          </div>
+          
+          <!-- Login/Profile Button -->
+          <button 
+            v-if="!userStore.isLoggedInSimulation" 
+            @click="navigateToLogin"
+            class="ml-2 px-3 py-1 text-xs font-medium text-white bg-green-600 rounded hover:bg-green-700 transition-colors"
+          >
+            Login
+          </button>
+          <button 
+            v-else 
+            @click="navigateToProfile"
+            class="ml-2 px-3 py-1 text-xs font-medium text-white bg-blue-600 rounded hover:bg-blue-700 transition-colors"
+          >
+            Profile
+          </button>
+        </div>
+        
+        <!-- Admin Toggle -->
+        <div class="mt-3 flex items-center justify-between">
+          <label class="inline-flex items-center cursor-pointer">
+            <span class="mr-2 text-sm text-gray-600">Admin View</span>
+            <div class="relative">
+              <input type="checkbox" v-model="adminViewEnabled" class="sr-only peer" @change="toggleAdminView">
+              <div class="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-green-600"></div>
+            </div>
+          </label>
         </div>
       </div>
     </aside>
@@ -220,55 +181,90 @@
 <script>
 import { ref, onMounted, onUnmounted } from 'vue';
 import { useUserStore } from '@/store/userStore';
+import { useRouter } from 'vue-router';
 
 export default {
   name: 'Sidebar',
   props: {
-    initiallyOpen: {
+    isOpen: {
       type: Boolean,
-      default: false
+      required: true
+    },
+    toggleSidebar: {
+      type: Function,
+      required: true
     }
   },
   setup(props) {
-    const isOpen = ref(props.initiallyOpen);
-    const sidebarWidth = ref(250);
     const userStore = useUserStore();
-    
-    const toggleSidebar = () => {
-      isOpen.value = !isOpen.value;
-    };
-    
+    const router = useRouter();
+    const sidebarWidth = ref(250); // Default sidebar width
+    const adminViewEnabled = ref(false);
+
+    // Close sidebar on mobile when navigating
     const mobileClose = () => {
-      // Close sidebar on mobile after navigation
-      if (window.innerWidth < 768) {
-        isOpen.value = false;
+      if (window.innerWidth < 768) { // Only on mobile
+        props.toggleSidebar();
       }
     };
-    
-    // Close sidebar when clicking outside on mobile
+
+    // Handle window resize
     const handleResize = () => {
-      // Don't auto-close on desktop anymore
-      if (window.innerWidth >= 1024) {
-        // Only open automatically on large screens
-        isOpen.value = true;
+      if (window.innerWidth >= 768) {
+        // On desktop, sidebar can stay open
+      } else {
+        // On mobile, close sidebar if window resizes
+        if (props.isOpen) {
+          props.toggleSidebar();
+        }
       }
     };
-    
+
+    // Toggle admin view
+    const toggleAdminView = () => {
+      // Save admin view state to localStorage
+      localStorage.setItem('adminViewEnabled', adminViewEnabled.value);
+    };
+
+    // Navigate to login page
+    const navigateToLogin = () => {
+      // Close the sidebar on mobile
+      mobileClose();
+      // Use router to navigate to login page
+      router.push('/login');
+    };
+
+    // Navigate to profile page
+    const navigateToProfile = () => {
+      // Close the sidebar on mobile
+      mobileClose();
+      // Use router to navigate to profile page
+      router.push('/profile');
+    };
+
+    // Lifecycle hooks
     onMounted(() => {
-      handleResize();
       window.addEventListener('resize', handleResize);
+      
+      // Initialize admin view state from localStorage
+      const savedAdminView = localStorage.getItem('adminViewEnabled');
+      if (savedAdminView !== null) {
+        adminViewEnabled.value = savedAdminView === 'true';
+      }
     });
-    
+
     onUnmounted(() => {
       window.removeEventListener('resize', handleResize);
     });
-    
+
     return {
-      isOpen,
-      sidebarWidth,
       userStore,
-      toggleSidebar,
-      mobileClose
+      sidebarWidth,
+      mobileClose,
+      adminViewEnabled,
+      toggleAdminView,
+      navigateToLogin,
+      navigateToProfile
     };
   }
 };
@@ -277,30 +273,46 @@ export default {
 <style scoped>
 /* SVG icons as background images */
 .music-icon {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'%3E%3Cpath d='M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3' /%3E%3C/svg%3E");
 }
 
 .album-icon {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 14.5c-2.49 0-4.5-2.01-4.5-4.5S9.51 7.5 12 7.5s4.5 2.01 4.5 4.5-2.01 4.5-4.5 4.5zm0-5.5c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1z'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3' /%3E%3C/svg%3E");
 }
 
 .song-icon {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'%3E%3Cpath d='M12 3l.01 10.55c-.59-.34-1.27-.55-2-.55-2.22 0-4.01 1.79-4.01 4s1.79 4 4.01 4 3.99-1.79 3.99-4V7h4V3h-6zm-1.99 16c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3' /%3E%3C/svg%3E");
 }
 
 .profile-icon {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z' /%3E%3C/svg%3E");
 }
 
 .settings-icon {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'%3E%3Cpath d='M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z' /%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M15 12a3 3 0 11-6 0 3 3 0 016 0z' /%3E%3C/svg%3E");
 }
 
 .about-icon {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z' /%3E%3C/svg%3E");
+}
+
+.admin-icon {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4' /%3E%3C/svg%3E");
 }
 
 .database-icon {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 14.5c-2.49 0-4.5-2.01-4.5-4.5S9.51 7.5 12 7.5s4.5 2.01 4.5 4.5-2.01 4.5-4.5 4.5zm0-5.5c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1z'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4' /%3E%3C/svg%3E");
+}
+
+.artist-icon {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M5.121 17.804A13.937 13.937 0 0112 16c3.105 0 5.939.942 8.151 2.746a2.694 2.694 0 000 4.308c-3.046 1.705-6.148 2.746-9.296 2.746a13.987 13.987 0 01-4.872 0c-2.21 0-4.165-.481-5.875-1.381z' /%3E%3C/svg%3E");
+}
+
+.dashboard-icon {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6' /%3E%3C/svg%3E");
+}
+
+.home-icon {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6' /%3E%3C/svg%3E");
 }
 </style>
