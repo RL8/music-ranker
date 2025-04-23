@@ -12,6 +12,12 @@
         <router-view/>
       </main>
     </div>
+    
+    <!-- Global Alerts -->
+    <GlobalAlerts />
+    
+    <!-- Global Modals -->
+    <GlobalModals />
   </div>
 </template>
 
@@ -23,10 +29,14 @@ import { useDatabase } from '@/utils/useDatabase'
 import { checkVersionAndRefresh } from '@/utils/storageUtils'
 import { onMounted, ref } from 'vue'
 import Sidebar from './components/ui/Sidebar.vue'
+import GlobalAlerts from './components/ui/GlobalAlerts.vue'
+import GlobalModals from './components/ui/GlobalModals.vue'
 
 export default {
   components: {
-    Sidebar
+    Sidebar,
+    GlobalAlerts,
+    GlobalModals
   },
   setup() {
     const userStore = useUserStore()

@@ -11,59 +11,30 @@
       </div>
       <p class="text-lg font-medium mb-2 text-center">Please log in to view your profile</p>
       <p class="text-sm text-gray-600 mb-6 text-center">Create an account to rank albums, save your preferences, and share with friends</p>
-      <button 
+      <MobileButton 
         @click="login" 
-        class="w-full max-w-xs p-3 bg-green-600 text-white rounded-full font-bold hover:bg-green-700 transition-colors shadow-md mb-3"
+        variant="primary"
+        :fullWidth="true"
+        class="max-w-xs mb-3"
       >
         Log In
-      </button>
-      <button 
+      </MobileButton>
+      <MobileButton 
         @click="showToast('Sign Up', 'This would open the sign up form for new users.')"
-        class="text-green-600 font-medium hover:underline">
+        variant="text"
+      >
         Don't have an account? Sign up
-      </button>
+      </MobileButton>
     </div>
     
     <!-- Logged In View -->
     <div v-else>
       <!-- Profile Tabs -->
-      <div class="flex border-b border-gray-200 mb-6 overflow-x-auto">
-        <button 
-          @click="activeTab = 'info'" 
-          class="px-4 py-2 border-b-2 font-medium whitespace-nowrap"
-          :class="activeTab === 'info' ? 'border-green-500 text-green-600' : 'border-transparent text-gray-500 hover:text-gray-700'"
-        >
-          Profile Information
-        </button>
-        <button 
-          @click="activeTab = 'link'" 
-          class="px-4 py-2 border-b-2 font-medium whitespace-nowrap"
-          :class="activeTab === 'link' ? 'border-green-500 text-green-600' : 'border-transparent text-gray-500 hover:text-gray-700'"
-        >
-          Link Preview
-        </button>
-        <button 
-          @click="activeTab = 'game'" 
-          class="px-4 py-2 border-b-2 font-medium whitespace-nowrap"
-          :class="activeTab === 'game' ? 'border-green-500 text-green-600' : 'border-transparent text-gray-500 hover:text-gray-700'"
-        >
-          Game
-        </button>
-        <button 
-          @click="activeTab = 'history'" 
-          class="px-4 py-2 border-b-2 font-medium whitespace-nowrap"
-          :class="activeTab === 'history' ? 'border-green-500 text-green-600' : 'border-transparent text-gray-500 hover:text-gray-700'"
-        >
-          History
-        </button>
-        <button 
-          @click="activeTab = 'premium'" 
-          class="px-4 py-2 border-b-2 font-medium whitespace-nowrap"
-          :class="activeTab === 'premium' ? 'border-green-500 text-green-600' : 'border-transparent text-gray-500 hover:text-gray-700'"
-        >
-          Premium
-        </button>
-      </div>
+      <MobileTabs 
+        v-model="activeTab" 
+        :tabs="profileTabs" 
+        class="mb-6 overflow-x-auto"
+      />
       
       <!-- Profile Content - Info Tab -->
       <div v-if="activeTab === 'info'" class="border border-gray-300 rounded-lg p-4 bg-gray-50 mb-6">
@@ -87,56 +58,72 @@
           </div>
         </div>
         
+        <MobileAlert
+          v-if="showSuccessAlert"
+          type="success"
+          title="Profile Updated"
+          message="Your profile information has been saved successfully."
+          :dismissible="true"
+          :auto-close="true"
+          :duration="3000"
+          v-model:show="showSuccessAlert"
+        />
+        
         <div class="border-t border-gray-200 pt-4 mt-4 space-y-4">
           <div class="bg-white p-3 rounded-lg shadow-sm">
-            <label class="block text-gray-700 text-sm font-bold mb-2">Username</label>
-            <div class="flex items-center">
-              <input 
-                type="text" 
-                placeholder="Username" 
-                value="SwiftieUser13"
-                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-              <div class="ml-2 text-xs text-green-600 bg-green-100 px-2 py-1 rounded">
-                Available
-              </div>
-            </div>
-            <p class="text-xs text-gray-500 mt-1">Your unique username for your profile link</p>
+            <MobileInput 
+              label="Username"
+              type="text" 
+              placeholder="Username" 
+              v-model="username"
+              help-text="Your unique username for your profile link"
+            >
+              <template #addon>
+                <div class="text-xs text-green-600 bg-green-100 px-2 py-1">
+                  Available
+                </div>
+              </template>
+            </MobileInput>
           </div>
           
           <div class="bg-white p-3 rounded-lg shadow-sm">
-            <label class="block text-gray-700 text-sm font-bold mb-2">Email</label>
-            <input 
+            <MobileInput 
+              label="Email"
               type="email" 
               placeholder="email@example.com" 
-              value="swiftie@example.com"
-              class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-            <p class="text-xs text-gray-500 mt-1">We'll never share your email with anyone else</p>
+              v-model="email"
+              help-text="We'll never share your email with anyone else"
+            />
           </div>
           
           <div class="bg-white p-3 rounded-lg shadow-sm">
-            <label class="block text-gray-700 text-sm font-bold mb-2">Display Name</label>
-            <input 
+            <MobileInput 
+              label="Display Name"
               type="text" 
               placeholder="Display Name" 
-              value="Taylor's #1 Fan"
-              class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-            <p class="text-xs text-gray-500 mt-1">This is how other users will see you</p>
+              v-model="displayName"
+              help-text="This is how other users will see you"
+            />
           </div>
           
           <div class="bg-white p-3 rounded-lg shadow-sm">
-            <label class="block text-gray-700 text-sm font-bold mb-2">Bio</label>
-            <textarea
+            <MobileTextarea
+              label="Bio"
               placeholder="Tell us about yourself and your Taylor Swift journey"
-              class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline h-24"
-            >Swiftie since 2008. Folklore is my therapy. Red (Taylor's Version) changed my life.</textarea>
-            <p class="text-xs text-gray-500 mt-1">Share your Swiftie journey (150 characters max)</p>
+              v-model="bio"
+              :maxlength="150"
+              help-text="Share your Swiftie journey (150 characters max)"
+              :rows="3"
+            />
           </div>
           
-          <button 
+          <MobileButton 
             @click="saveProfileChanges"
-            class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full">
+            variant="primary"
+            :fullWidth="true"
+          >
             Save Changes
-          </button>
+          </MobileButton>
         </div>
       </div>
       
@@ -144,6 +131,15 @@
       <div v-if="activeTab === 'link'" class="border border-gray-300 rounded-lg p-4 bg-gray-50 mb-6">
         <h2 class="text-xl font-semibold mb-4">Link Preview</h2>
         <p class="text-sm text-gray-600 mb-4">This is how others will see your profile when you share your link</p>
+        
+        <MobileAlert
+          v-if="showCopyAlert"
+          type="success"
+          message="Profile link copied to clipboard!"
+          :auto-close="true"
+          :duration="2000"
+          v-model:show="showCopyAlert"
+        />
         
         <div class="bg-white rounded-lg p-4 border border-gray-200 mb-4">
           <h3 class="font-medium mb-2">Your Shareable Profile Link</h3>
@@ -153,14 +149,18 @@
               value="swifties.io/profile/SwiftieUser13" 
               disabled 
               class="shadow appearance-none border rounded-l w-full py-2 px-3 text-gray-700 bg-gray-100 leading-tight focus:outline-none focus:shadow-outline">
-            <button 
+            <MobileButton 
               @click="copyProfileLink"
-              class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-r focus:outline-none focus:shadow-outline flex items-center">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
-              </svg>
+              variant="primary"
+              class="rounded-l-none"
+            >
+              <template #icon>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+                </svg>
+              </template>
               Copy
-            </button>
+            </MobileButton>
           </div>
           <p class="text-xs text-gray-500 mt-1">Share this link with friends to show off your rankings</p>
         </div>
@@ -182,13 +182,13 @@
             <div class="mt-3 border-t border-gray-200 pt-3">
               <h4 class="text-sm font-medium mb-2">Top Albums</h4>
               <div class="flex space-x-2 overflow-x-auto pb-2">
-                <div class="flex-shrink-0 w-12 h-12 bg-red-100 rounded flex items-center justify-center text-xs">
+                <div class="flex-shrink-0 w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center text-xs">
                   Red (TV)
                 </div>
-                <div class="flex-shrink-0 w-12 h-12 bg-gray-100 rounded flex items-center justify-center text-xs">
+                <div class="flex-shrink-0 w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center text-xs">
                   Folklore
                 </div>
-                <div class="flex-shrink-0 w-12 h-12 bg-purple-100 rounded flex items-center justify-center text-xs">
+                <div class="flex-shrink-0 w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center text-xs">
                   1989
                 </div>
               </div>
@@ -221,6 +221,14 @@
       <!-- Profile Content - Game Tab -->
       <div v-if="activeTab === 'game'" class="border border-gray-300 rounded-lg p-4 bg-gray-50 mb-6">
         <h2 class="text-xl font-semibold mb-4">Swifties Game</h2>
+        
+        <MobileAlert
+          type="warning"
+          title="Beta Feature"
+          message="The Swifties Game is currently in beta testing. Some features may not work as expected."
+          :dismissible="true"
+        />
+        
         <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-4 flex items-center">
           <div class="text-yellow-500 mr-2">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
@@ -330,7 +338,11 @@
             <div class="relative z-10">
               <p class="font-medium text-gray-700">View More History</p>
               <p class="text-sm text-gray-600 mb-2">Access your complete ranking history</p>
-              <div class="inline-block bg-green-600 text-white text-xs px-2 py-1 rounded">
+              <div class="mt-2 bg-yellow-100 rounded-full h-2 overflow-hidden">
+                <div class="bg-yellow-400 h-full" style="width: 78%"></div>
+              </div>
+              <p class="text-xs text-right mt-1 text-yellow-700">1,550/1,989 spots filled</p>
+              <div class="inline-block bg-yellow-100 text-xs px-2 py-1 rounded">
                 Premium Feature
               </div>
             </div>
@@ -341,6 +353,21 @@
       <!-- Profile Content - Premium Tab -->
       <div v-if="activeTab === 'premium'" class="border border-gray-300 rounded-lg p-4 bg-gray-50 mb-6">
         <h2 class="text-xl font-semibold mb-4">Premium Features</h2>
+        
+        <MobileAlert
+          type="info"
+          title="Premium Benefits"
+          message="Upgrade to Premium to unlock exclusive features like unlimited rankings, advanced analytics, and ad-free experience."
+        />
+        
+        <MobileSpacing size="small" />
+        
+        <MobileAlert
+          type="error"
+          title="Payment Processing Unavailable"
+          message="Our payment system is currently undergoing maintenance. Please try again later."
+          :dismissible="true"
+        />
         
         <div class="bg-white rounded-lg p-6 border border-gray-200 text-center mb-4 relative overflow-hidden">
           <div class="absolute top-0 right-0">
@@ -413,12 +440,37 @@
 <script setup>
 import { ref } from 'vue';
 import { useUserStore } from '@/store/userStore';
-import toastService from '@/services/toastService';
 import MobileHeader from '@/components/ui/MobileHeader.vue';
+import MobileButton from '@/components/ui/MobileButton.vue';
+import MobileInput from '@/components/ui/MobileInput.vue';
+import MobileTextarea from '@/components/ui/MobileTextarea.vue';
+import MobileTabs from '@/components/ui/MobileTabs.vue';
+import MobileAlert from '@/components/ui/MobileAlert.vue';
+import MobileSpacing from '@/components/ui/MobileSpacing.vue';
+import toastService from '@/services/toastService';
 
 // Active tab state
 const activeTab = ref('info');
 const userStore = useUserStore();
+
+// Alert state
+const showSuccessAlert = ref(false);
+const showCopyAlert = ref(false);
+
+// Tab configuration
+const profileTabs = [
+  { id: 'info', label: 'Profile Information' },
+  { id: 'link', label: 'Link Preview' },
+  { id: 'game', label: 'Game' },
+  { id: 'history', label: 'History' },
+  { id: 'premium', label: 'Premium' }
+];
+
+// Form data
+const username = ref('SwiftieUser13');
+const email = ref('swiftie@example.com');
+const displayName = ref('Taylor\'s #1 Fan');
+const bio = ref('Swiftie since 2008. Folklore is my therapy. Red (Taylor\'s Version) changed my life.');
 
 // Show toast notification (used sparingly for confirmations only)
 const showToast = (title, message, type = 'info') => {
@@ -446,11 +498,13 @@ const login = () => {
 // Save profile changes
 const saveProfileChanges = () => {
   showToast('Profile Updated', 'Your profile information has been successfully updated.', 'success');
+  showSuccessAlert.value = true;
 };
 
 // Copy profile link
 const copyProfileLink = () => {
   showToast('Link Copied', 'Your profile link has been copied to clipboard.', 'success');
+  showCopyAlert.value = true;
 };
 
 // Start game

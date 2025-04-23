@@ -1,5 +1,5 @@
 <template>
-  <div class="p-4">
+  <MobilePageContainer>
     <MobileHeader>
       <template #title>
         Welcome to your Swiftie Universe, <span class="text-green-600">{{ userStore.user?.username || 'Swiftie' }}</span>!
@@ -7,256 +7,102 @@
     </MobileHeader>
     
     <!-- View Toggle Buttons -->
-    <div class="flex mb-6 border border-gray-200 rounded-lg overflow-hidden shadow-sm">
-      <button 
+    <div class="flex border border-gray-200 rounded-lg overflow-hidden shadow-sm">
+      <MobileButton 
         @click="activeView = 'visualizations'"
-        class="flex-1 py-2 px-4 font-medium transition-colors"
-        :class="activeView === 'visualizations' ? 'bg-green-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-100'">
+        :variant="activeView === 'visualizations' ? 'primary' : 'outline'"
+        :fullWidth="true"
+        size="medium"
+      >
         Visualizations
-      </button>
-      <button 
+      </MobileButton>
+      <MobileButton 
         @click="activeView = 'rankings'"
-        class="flex-1 py-2 px-4 font-medium transition-colors"
-        :class="activeView === 'rankings' ? 'bg-green-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-100'">
+        :variant="activeView === 'rankings' ? 'primary' : 'outline'"
+        :fullWidth="true"
+        size="medium"
+      >
         Rankings
-      </button>
+      </MobileButton>
     </div>
+    
+    <MobileSpacing size="medium" />
     
     <!-- Visualizations View -->
     <div v-if="activeView === 'visualizations'">
       <!-- Sunburst Type Toggle -->
-      <div class="flex mb-6 space-x-2">
-        <button 
+      <div class="flex space-x-2">
+        <MobileButton 
           @click="activeSunburst = 'era'"
-          class="py-1 px-3 text-sm rounded-full shadow-sm transition-colors"
-          :class="activeSunburst === 'era' ? 'bg-green-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'">
+          :variant="activeSunburst === 'era' ? 'primary' : 'secondary'"
+          size="small"
+        >
           Era
-        </button>
-        <button 
+        </MobileButton>
+        <MobileButton 
           @click="activeSunburst = 'time'"
-          class="py-1 px-3 text-sm rounded-full shadow-sm transition-colors"
-          :class="activeSunburst === 'time' ? 'bg-green-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'">
+          :variant="activeSunburst === 'time' ? 'primary' : 'secondary'"
+          size="small"
+        >
           Time Period
-        </button>
-        <button 
+        </MobileButton>
+        <MobileButton 
           @click="activeSunburst = 'overview'"
-          class="py-1 px-3 text-sm rounded-full shadow-sm transition-colors"
-          :class="activeSunburst === 'overview' ? 'bg-green-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'">
+          :variant="activeSunburst === 'overview' ? 'primary' : 'secondary'"
+          size="small"
+        >
           Overview
-        </button>
-      </div>
-      
-      <!-- No Rankings Message -->
-      <div v-if="!hasRankings" class="border p-4 my-6 min-h-[350px] flex items-center justify-center bg-gray-100 rounded-lg shadow-sm">
-        <div class="text-center max-w-md">
-          <div class="w-20 h-20 mx-auto mb-4 bg-yellow-100 rounded-full flex items-center justify-center">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-yellow-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-          </div>
-          <h3 class="text-lg font-medium text-gray-800 mb-2">No Rankings Yet</h3>
-          <p class="text-gray-600 mb-4">You haven't ranked any albums yet. Create your rankings to see your personalized visualizations.</p>
-          <router-link 
-            to="/rank/albums"
-            class="inline-block py-2 px-4 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition-colors">
-            Rank Albums Now
-          </router-link>
-        </div>
-      </div>
-      
-      <!-- Era Sunburst Chart -->
-      <div v-else-if="activeSunburst === 'era'" class="border p-4 my-6 min-h-[350px] flex items-center justify-center bg-gray-100 rounded-lg shadow-sm">
-        <SunburstChart 
-          :data="eraSunburstData" 
-          :key="JSON.stringify(eraSunburstData)"
-          color-scheme="schemeSet3"
-          node-info-description="of your ranked albums"
-          :central-circle-size="0.15"
-        />
-      </div>
-      
-      <!-- Time Period Sunburst Chart -->
-      <div v-else-if="activeSunburst === 'time'" class="border p-4 my-6 min-h-[350px] flex items-center justify-center bg-gray-100 rounded-lg shadow-sm">
-        <SunburstChart 
-          :data="timeSunburstData" 
-          :key="JSON.stringify(timeSunburstData)"
-          color-scheme="schemeBlues"
-          node-info-description="of your ranked albums"
-          :central-circle-size="0.15"
-        />
-      </div>
-      
-      <!-- Overview Sunburst Chart -->
-      <div v-else-if="activeSunburst === 'overview'" class="border p-4 my-6 min-h-[350px] flex items-center justify-center bg-gray-100 rounded-lg shadow-sm">
-        <SunburstChart 
-          :data="overviewSunburstData" 
-          :key="JSON.stringify(overviewSunburstData)"
-          color-scheme="schemeCategory10"
-          node-info-description="of your ranked albums"
-          :central-circle-size="0.15"
-        />
-      </div>
-    </div>
-    
-    <!-- Rankings View -->
-    <div v-if="activeView === 'rankings'">
-      <div class="mb-6 space-y-4">
-        <!-- Album Rankings Section -->
-        <div class="border border-gray-200 rounded-lg p-4 bg-white">
-          <h3 class="font-medium mb-3">Album Rankings</h3>
-          <div v-if="hasRankings" class="space-y-2">
-            <div v-for="(tier, tierName) in rankingStore.rankedTiers" :key="tierName" v-if="tier.length > 0">
-              <div v-for="album in tier" :key="album.id" class="flex items-center mb-2">
-                <div class="w-8 h-8 rounded-full flex items-center justify-center text-xs mr-2" 
-                     :style="{ backgroundColor: getTierColor(tierName) + '30' }">
-                  {{ getTierLabel(tierName) }}
-                </div>
-                <div class="flex-1">
-                  <p class="font-medium">{{ album.title }}</p>
-                  <p class="text-xs text-gray-500">{{ getTierName(tierName) }}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div v-else class="text-center py-4 text-gray-500">
-            No album rankings yet
-          </div>
-          <router-link to="/rank/albums" class="mt-3 text-sm text-green-600 hover:underline inline-block">
-            {{ hasRankings ? 'Edit album rankings →' : 'Create album rankings →' }}
-          </router-link>
-          <router-link to="/rank/albums/coverflow" class="mt-3 ml-4 text-sm text-purple-600 hover:underline inline-flex items-center">
-            Try Coverflow Ranking
-            <span class="ml-1 px-1.5 py-0.5 bg-purple-100 text-purple-700 text-xs rounded-full">New</span>
-          </router-link>
-        </div>
-        
-        <!-- Song Rankings Section -->
-        <div class="border border-gray-200 rounded-lg p-4 bg-white">
-          <h3 class="font-medium mb-3">Song Rankings</h3>
-          <div class="text-center py-4 text-gray-500">
-            No song rankings yet
-          </div>
-          <router-link to="/rank/songs" class="mt-3 text-sm text-green-600 hover:underline inline-block">
-            Create song rankings →
-          </router-link>
-        </div>
+        </MobileButton>
       </div>
     </div>
     
     <!-- Action Buttons -->
-    <div class="flex justify-between mt-6">
+    <div class="flex justify-between">
       <router-link 
         to="/rank/albums"
-        class="py-2 px-4 bg-gray-200 text-gray-700 rounded-lg font-medium hover:bg-gray-300 transition-colors flex items-center">
-        <i class="edit-icon w-4 h-4 mr-1 bg-center bg-no-repeat bg-contain"></i>
-        Edit Rankings
+        class="router-link"
+      >
+        <MobileButton variant="secondary">
+          <template #icon>
+            <i class="edit-icon w-4 h-4 bg-center bg-no-repeat bg-contain"></i>
+          </template>
+          Edit Rankings
+        </MobileButton>
       </router-link>
       <div class="relative">
-        <button 
-          @click="toggleShareMenu"
-          class="py-2 px-4 bg-gray-200 text-gray-700 rounded-lg font-medium hover:bg-gray-300 transition-colors flex items-center">
-          <i class="share-icon w-4 h-4 mr-1 bg-center bg-no-repeat bg-contain"></i>
+        <MobileButton 
+          @click="showShareModal = true"
+          variant="secondary"
+        >
+          <template #icon>
+            <i class="share-icon w-4 h-4 bg-center bg-no-repeat bg-contain"></i>
+          </template>
           Share
-        </button>
-        <!-- Share Menu Dropdown -->
-        <div v-if="showShareMenu" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10 border border-gray-200">
-          <div class="py-1">
-            <button @click="downloadAsPNG" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-              Download as PNG
-            </button>
-            <button @click="shareAsAnimation" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-              Share as Animation
-            </button>
-            <button @click="shareProfileLink" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-              Share Profile Link
-            </button>
-            <div class="block px-4 py-2 text-sm text-gray-500 hover:bg-gray-100">
-              <div class="flex items-center">
-                <span>Share as Game</span>
-                <span class="ml-2 px-1 bg-yellow-100 text-yellow-800 text-xs rounded">Soon</span>
-              </div>
-            </div>
-          </div>
-        </div>
+        </MobileButton>
+        
+        <!-- Share Modal -->
+        <ShareModal v-model="showShareModal" />
       </div>
     </div>
-    
-    <!-- Login/Logout Button -->
-    <div class="mt-10 text-center">
-      <button 
-        @click="toggleLogin(!userStore.isLoggedInSimulation)" 
-        class="px-3 py-1 bg-gray-200 text-gray-700 text-sm rounded hover:bg-gray-300 transition-colors">
-        {{ userStore.isLoggedInSimulation ? 'Simulate Logout' : 'Simulate Login' }}
-      </button>
-    </div>
-    
-    <div class="border border-gray-300 rounded-lg p-4 bg-gray-50 mt-6 mb-6">
-      <h2 class="text-xl font-semibold mb-2">Music Collection Overview</h2>
-      <div class="space-y-2">
-        <router-link 
-          to="/rank/albums"
-          class="flex items-center p-3 bg-white rounded-lg shadow-sm hover:shadow-md transition-all">
-          <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mr-3">
-            <i class="album-icon w-6 h-6 bg-center bg-no-repeat bg-contain"></i>
-          </div>
-          <div class="flex-1">
-            <h3 class="font-medium">Album Rankings</h3>
-            <p class="text-sm text-gray-500">Rank your favorite Taylor Swift albums</p>
-          </div>
-          <div class="text-green-600">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
-            </svg>
-          </div>
-        </router-link>
-        
-        <router-link 
-          to="/rank/albums/coverflow"
-          class="flex items-center p-3 bg-white rounded-lg shadow-sm hover:shadow-md transition-all">
-          <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mr-3">
-            <i class="coverflow-icon w-6 h-6 bg-center bg-no-repeat bg-contain"></i>
-          </div>
-          <div class="flex-1">
-            <h3 class="font-medium">Coverflow Rankings</h3>
-            <p class="text-sm text-gray-500">Try our new coverflow ranking experience</p>
-            <span class="inline-block mt-1 px-1.5 py-0.5 bg-purple-100 text-purple-700 text-xs rounded-full">New</span>
-          </div>
-          <div class="text-purple-600">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
-            </svg>
-          </div>
-        </router-link>
-        
-        <router-link 
-          to="/rank/songs"
-          class="flex items-center p-3 bg-white rounded-lg shadow-sm hover:shadow-md transition-all">
-          <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mr-3">
-            <i class="song-icon w-6 h-6 bg-center bg-no-repeat bg-contain"></i>
-          </div>
-          <div class="flex-1">
-            <h3 class="font-medium">Song Rankings</h3>
-            <p class="text-sm text-gray-500">Rank songs from your favorite albums</p>
-          </div>
-          <div class="text-green-600">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
-            </svg>
-          </div>
-        </router-link>
-      </div>
-    </div>
-  </div>
+  </MobilePageContainer>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted, markRaw } from 'vue';
 import { useUserStore } from '@/store/userStore';
 import { useRankingStore } from '@/store/rankingStore';
 import toastService from '@/services/toastService';
+import alertService from '@/services/alertService';
+import modalService from '@/services/modalService';
+import MobileHeader from '@/components/ui/MobileHeader.vue';
+import MobileButton from '@/components/ui/MobileButton.vue';
+import MobileSection from '@/components/ui/MobileSection.vue';
+import MobilePageContainer from '@/components/ui/MobilePageContainer.vue';
+import MobileSpacing from '@/components/ui/MobileSpacing.vue';
 import SunburstChart from '@/components/visualizations/SunburstChart.vue';
 import staticAlbumsData from '@/data/static-albums.json';
-import MobileHeader from '@/components/ui/MobileHeader.vue';
+import ShareModal from '@/components/modals/ShareModal.vue';
+import ConfirmationModal from '@/components/modals/ConfirmationModal.vue';
 
 // Store setup
 const userStore = useUserStore();
@@ -267,6 +113,7 @@ const toast = toastService;
 const activeView = ref('visualizations');
 const activeSunburst = ref('overview');
 const showShareMenu = ref(false);
+const showShareModal = ref(false);
 
 // Check if user has any rankings
 const hasRankings = computed(() => {
@@ -315,12 +162,35 @@ function shareProfileLink() {
 
 // Toggle login/logout
 function toggleLogin(status) {
-  userStore.setIsLoggedInSimulation(status);
-  showToast(
-    status ? 'Logged In' : 'Logged Out', 
-    status ? 'You are now logged in.' : 'You have been logged out.',
-    status ? 'success' : 'error'
-  );
+  if (!status) {
+    // If logging out, show confirmation modal
+    showLogoutConfirmation();
+  } else {
+    // If logging in, just do it
+    userStore.setIsLoggedInSimulation(status);
+    showToast(
+      'Logged In', 
+      'You are now logged in.',
+      'success'
+    );
+  }
+}
+
+// Show logout confirmation
+function showLogoutConfirmation() {
+  modalService.show({
+    component: markRaw(ConfirmationModal),
+    props: {
+      title: 'Confirm Logout',
+      message: 'Are you sure you want to log out? Any unsaved rankings will be lost.',
+      confirmText: 'Logout',
+      confirmVariant: 'danger',
+      onConfirm: () => {
+        userStore.setIsLoggedInSimulation(false);
+        showToast('Logged Out', 'You have been logged out.', 'info');
+      }
+    }
+  });
 }
 
 // Helper functions for tier display
@@ -489,6 +359,35 @@ const timeSunburstData = computed(() => {
     children
   };
 });
+
+// Mock method to simulate getting incomplete rankings
+function getIncompleteRankings() {
+  return ['Midnights', 'Folklore'];
+}
+
+onMounted(() => {
+  // Show welcome alert for new users
+  if (!userStore.user) {
+    alertService.info('Welcome to Swiftie Universe! Create an account to save your rankings and access all features.', 'Welcome');
+  }
+  
+  // Show incomplete rankings alert if user has started but not completed rankings
+  const incompleteRankings = getIncompleteRankings();
+  if (incompleteRankings.length > 0) {
+    alertService.warning(
+      `You have incomplete rankings for: ${incompleteRankings.join(', ')}. Continue ranking to see them in your visualizations.`,
+      'Incomplete Rankings',
+      { dismissible: true }
+    );
+  }
+  
+  // Show new feature alert
+  alertService.info(
+    'Try our new song ranking feature! Rank your favorite songs from each album.',
+    'New Feature',
+    { dismissible: true, id: 'new-feature-alert' }
+  );
+});
 </script>
 
 <style scoped>
@@ -511,5 +410,10 @@ const timeSunburstData = computed(() => {
 
 .coverflow-icon {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3' /%3E%3C/svg%3E");
+}
+
+.router-link {
+  display: inline-block;
+  text-decoration: none;
 }
 </style>
