@@ -48,23 +48,21 @@
       <div class="prose max-w-none">
         <h3 class="text-lg font-medium mb-3">1. Acceptance of Terms</h3>
         <p class="mb-4">
-          By accessing or using the Swifties.io service ("Service"), you agree to be bound by these Terms of Service ("Terms"). 
+          By accessing or using the Music Besties service ("Service"), you agree to be bound by these Terms of Service ("Terms"). 
           If you do not agree to these Terms, please do not use the Service.
         </p>
         
         <h3 class="text-lg font-medium mb-3">2. Description of Service</h3>
         <p class="mb-4">
-          Swifties.io provides a platform for users to rank music albums, songs, and eras. The Service may include premium features 
+          Music Besties provides a platform for users to rank music albums, songs, and eras. The Service may include premium features 
           that require payment through our secure payment processing system.
         </p>
         
         <div class="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-4">
           <h4 class="font-medium text-blue-800">Intellectual Property Notice:</h4>
           <p class="text-blue-800">
-            Swifties.io is an unofficial fan application not affiliated with, endorsed by, or connected to Taylor Swift, 
-            her management, record labels, or any official representatives. All artist names, album titles, song titles, 
-            and related imagery are used for descriptive purposes only under fair use principles for commentary, criticism, 
-            and fan discussion.
+            Music Besties is an unofficial fan application not affiliated with, endorsed by, or connected to any artists or record labels, 
+            their management teams, or related entities. All artist names, album titles, song titles, and related imagery are used for descriptive purposes only under fair use principles for commentary, criticism, and fan discussion.
           </p>
         </div>
         
@@ -116,14 +114,14 @@
           <p class="mb-2">6A.3 <strong>Acceptable Content:</strong> User content must not contain:</p>
           <ul class="list-disc pl-5 mb-2">
             <li>Illegal, harmful, threatening, abusive, harassing, defamatory, or otherwise objectionable material</li>
-            <li>Content that impersonates Taylor Swift or her representatives</li>
+            <li>Content that impersonates any artists or their representatives</li>
             <li>Unauthorized commercial solicitations or spam</li>
             <li>Content that violates any applicable laws or regulations</li>
           </ul>
           
           <p class="mb-2">6A.4 <strong>Content Removal:</strong> We reserve the right to remove any user-generated content that violates these guidelines without prior notice.</p>
           
-          <p class="mb-2">6A.5 <strong>Copyright Claims:</strong> If you believe your copyrighted work has been used inappropriately on our Service, please contact us at copyright@swifties.io with details of the alleged infringement.</p>
+          <p class="mb-2">6A.5 <strong>Copyright Claims:</strong> If you believe your copyrighted work has been used inappropriately on our Service, please contact us at copyright@musicbesties.app with details of the alleged infringement.</p>
         </div>
         
         <h3 class="text-lg font-medium mb-3">7. Prohibited Conduct</h3>
@@ -159,7 +157,7 @@
         
         <h3 class="text-lg font-medium mb-3">12. Contact Information</h3>
         <p class="mb-4">
-          For questions about these Terms, please contact us at support@swifties.io.
+          For questions about these Terms, please contact us at support@musicbesties.app.
         </p>
         
         <p class="text-sm text-gray-500 mt-6">Last updated: April 18, 2025</p>
@@ -173,7 +171,7 @@
       <div class="prose max-w-none">
         <h3 class="text-lg font-medium mb-3">1. Introduction</h3>
         <p class="mb-4">
-          This Privacy Notice explains how Swifties.io ("we", "us", "our") collects, uses, and shares your personal information 
+          This Privacy Notice explains how Music Besties ("we", "us", "our") collects, uses, and shares your personal information 
           when you use our service. We respect your privacy and are committed to protecting your personal data.
         </p>
         
@@ -246,7 +244,7 @@
         
         <h3 class="text-lg font-medium mb-3">11. Contact Us</h3>
         <p class="mb-4">
-          If you have any questions about this Privacy Notice, please contact us at privacy@swifties.io.
+          If you have any questions about this Privacy Notice, please contact us at privacy@musicbesties.app.
         </p>
         
         <p class="text-sm text-gray-500 mt-6">Last updated: April 18, 2025</p>
@@ -276,7 +274,7 @@
           To request a refund:<br>
           3.1 Log in to your account and navigate to the billing section.<br>
           3.2 Click on "Request Refund" and follow the instructions.<br>
-          3.3 Alternatively, contact our customer support at support@swifties.io with your order details.
+          3.3 Alternatively, contact our customer support at support@musicbesties.app with your order details.
         </p>
         
         <h3 class="text-lg font-medium mb-3">4. Processing of Refunds</h3>
@@ -314,7 +312,7 @@
         
         <h3 class="text-lg font-medium mb-3">9. Contact Information</h3>
         <p class="mb-4">
-          If you have any questions about our refund policy, please contact us at support@swifties.io.
+          If you have any questions about our refund policy, please contact us at support@musicbesties.app.
         </p>
         
         <p class="text-sm text-gray-500 mt-6">Last updated: April 18, 2025</p>
@@ -326,34 +324,30 @@
       <h2 class="text-xl font-semibold mb-4">Product Information</h2>
       
       <div class="prose max-w-none">
-        <h3 class="text-lg font-medium mb-3">About Swifties.io</h3>
+        <h3 class="text-lg font-medium mb-3">About Music Besties</h3>
         <p class="mb-4">
-          Swifties.io is the ultimate platform for Taylor Swift fans to rank, share, and discover music from their favorite artist.
-          Our application allows fans (Swifties) to create personalized rankings of albums, songs, and eras, share their preferences
-          with the community, and discover new perspectives on Taylor's extensive discography.
+          Music Besties is the ultimate platform for music fans to rank, share, and discover music from their favorite artists.
+          Our application allows fans to create personalized rankings of albums, songs, and eras, share their preferences
+          with the community, and discover new perspectives on their favorite artists' discographies.
         </p>
         
         <div class="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-4">
           <h4 class="font-medium text-blue-800">Important Disclaimer:</h4>
           <p class="text-blue-800">
-            Swifties.io is an <strong>unofficial fan application</strong> created by and for Taylor Swift fans. 
-            This application is not affiliated with, endorsed by, or connected to Taylor Swift, 
-            TAS Rights Management, Republic Records, Universal Music Group, or any of Taylor Swift's official representatives.
-          </p>
-          <p class="text-blue-800 mt-2">
-            All artist names, album titles, song titles, and related imagery are used for descriptive purposes only. 
-            Our use of these terms and images falls under fair use for the purpose of commentary, criticism, and fan discussion.
+            Music Besties is an <strong>unofficial fan application</strong> created by and for music fans. 
+            This application is not affiliated with, endorsed by, or connected to any artists or record labels, 
+            their management teams, or related entities. All artist names, album titles, song titles, and related imagery are used for descriptive purposes only under fair use principles for commentary, criticism, and fan discussion.
           </p>
         </div>
         
         <h3 class="text-lg font-medium mb-3">Target Audience</h3>
         <p class="mb-4">
-          Our platform is designed specifically for Taylor Swift fans of all ages who want to:
+          Our platform is designed specifically for music fans of all ages who want to:
           <ul class="list-disc pl-5 mb-4">
-            <li>Create and save personalized rankings of Taylor Swift's music</li>
+            <li>Create and save personalized rankings of their favorite artists' music</li>
             <li>Compare their rankings with other fans</li>
             <li>Discover new perspectives on familiar songs and albums</li>
-            <li>Connect with the global Swiftie community</li>
+            <li>Connect with the global music community</li>
             <li>Track how their music preferences evolve over time</li>
           </ul>
         </p>
@@ -384,10 +378,10 @@
         
         <h3 class="text-lg font-medium mb-3">Value Proposition</h3>
         <p class="mb-4">
-          Swifties.io offers a unique platform for fans to express their musical preferences in a structured, engaging way. 
-          Unlike general music platforms, we focus exclusively on the Taylor Swift discography, providing depth and specificity 
+          Music Besties offers a unique platform for fans to express their musical preferences in a structured, engaging way. 
+          Unlike general music platforms, we focus exclusively on the music discographies of various artists, providing depth and specificity 
           that general music apps cannot match. Our premium subscription offers enhanced tools and features that allow dedicated 
-          fans to dive deeper into their musical journey with Taylor's work.
+          fans to dive deeper into their musical journey with their favorite artists.
         </p>
         
         <h3 class="text-lg font-medium mb-3">Pricing</h3>
@@ -415,7 +409,7 @@
         <div class="bg-white p-5 rounded-lg border border-gray-300 mb-6">
           <h4 class="font-medium mb-2">Email Support:</h4>
           <p class="mb-4">
-            <a href="mailto:support@swifties.io" class="text-green-600 hover:text-green-800">support@swifties.io</a>
+            <a href="mailto:support@musicbesties.app" class="text-green-600 hover:text-green-800">support@musicbesties.app</a>
           </p>
           
           <h4 class="font-medium mb-2">Response Time:</h4>
@@ -434,35 +428,35 @@
           <div class="bg-white p-4 rounded-lg border border-gray-300">
             <h4 class="font-medium mb-2">Billing & Subscription:</h4>
             <p>
-              <a href="mailto:billing@swifties.io" class="text-green-600 hover:text-green-800">billing@swifties.io</a>
+              <a href="mailto:billing@musicbesties.app" class="text-green-600 hover:text-green-800">billing@musicbesties.app</a>
             </p>
           </div>
           
           <div class="bg-white p-4 rounded-lg border border-gray-300">
             <h4 class="font-medium mb-2">Technical Support:</h4>
             <p>
-              <a href="mailto:tech@swifties.io" class="text-green-600 hover:text-green-800">tech@swifties.io</a>
+              <a href="mailto:tech@musicbesties.app" class="text-green-600 hover:text-green-800">tech@musicbesties.app</a>
             </p>
           </div>
           
           <div class="bg-white p-4 rounded-lg border border-gray-300">
             <h4 class="font-medium mb-2">Privacy Concerns:</h4>
             <p>
-              <a href="mailto:privacy@swifties.io" class="text-green-600 hover:text-green-800">privacy@swifties.io</a>
+              <a href="mailto:privacy@musicbesties.app" class="text-green-600 hover:text-green-800">privacy@musicbesties.app</a>
             </p>
           </div>
           
           <div class="bg-white p-4 rounded-lg border border-gray-300">
             <h4 class="font-medium mb-2">Business Inquiries:</h4>
             <p>
-              <a href="mailto:business@swifties.io" class="text-green-600 hover:text-green-800">business@swifties.io</a>
+              <a href="mailto:business@musicbesties.app" class="text-green-600 hover:text-green-800">business@musicbesties.app</a>
             </p>
           </div>
         </div>
         
         <h3 class="text-lg font-medium mb-3">Company Information</h3>
         <div class="bg-white p-5 rounded-lg border border-gray-300 mb-6">
-          <h4 class="font-medium mb-2">Swifties.io Ltd</h4>
+          <h4 class="font-medium mb-2">Music Besties Ltd</h4>
           <p class="mb-1">123 Music Lane</p>
           <p class="mb-1">London, EC1A 1BB</p>
           <p class="mb-1">United Kingdom</p>

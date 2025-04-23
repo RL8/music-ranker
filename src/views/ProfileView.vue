@@ -142,7 +142,7 @@
           <div class="flex">
             <input 
               type="text" 
-              value="swifties.io/profile/SwiftieUser13" 
+              value="musicbesties.app/profile/SwiftieUser13" 
               disabled 
               class="shadow appearance-none border rounded-l w-full py-2 px-3 text-gray-700 bg-gray-100 leading-tight focus:outline-none focus:shadow-outline">
             <MobileButton 

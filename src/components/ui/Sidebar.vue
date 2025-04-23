@@ -17,9 +17,9 @@
       <div class="p-4 border-b border-gray-200">
         <div class="flex items-center">
           <div class="w-10 h-10 mr-3 bg-green-600 rounded-full flex items-center justify-center text-white">
-            <span class="text-lg font-bold">S</span>
+            <span class="text-lg font-bold">M</span>
           </div>
-          <h1 class="text-xl font-bold m-0">Swifties.io</h1>
+          <h1 class="text-xl font-bold m-0">Music Besties</h1>
         </div>
       </div>
       

@@ -21,10 +21,10 @@
       <!-- Version Footer -->
       <footer class="version-footer">
         <div class="version-info">
-          <span>Swifties.io</span>
+          <span>Music Besties</span>
           <span class="version-number">v0.9.0-alpha</span>
           <span class="version-date">Updated: {{ formattedDate }}</span>
-          <a href="mailto:feedback@swifties.io" class="feedback-link">Send Feedback</a>
+          <a href="mailto:feedback@musicbesties.app" class="feedback-link">Send Feedback</a>
         </div>
       </footer>
     </div>

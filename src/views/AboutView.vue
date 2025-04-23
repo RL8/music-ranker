@@ -16,8 +16,8 @@
 
       <!-- About Us Tab -->
       <div v-if="activeTab === 'about'" class="rounded-lg p-4 bg-gray-50 mb-4 shadow-sm">
-        <h2 class="text-xl font-semibold mb-2 text-green-700">Welcome to Swifties.io!</h2>
-        <p class="mb-4 text-gray-700">Swifties.io is a fan-powered music ranking app that helps you discover, rank, and share your favorite Taylor Swift songs and albums. Our mission is to create a fun and interactive platform for Swifties everywhere to connect and celebrate their love for Taylor's music!</p>
+        <h2 class="text-xl font-semibold mb-2 text-green-700">Welcome to Music Besties!</h2>
+        <p class="mb-4 text-gray-700">Music Besties is a fan-powered music ranking app that helps you discover, rank, and share your favorite music. Our mission is to create a fun and interactive platform for music lovers everywhere to connect and celebrate their love for music!</p>
         <ul class="list-disc ml-5 mb-4 text-gray-600">
           <li>Discover new music and rare editions</li>
           <li>Rank and comment on your favorite tracks</li>
@@ -30,13 +30,13 @@
       <!-- Roadmap Tab -->
       <div v-if="activeTab === 'roadmap'" class="rounded-lg p-4 bg-gray-50 mb-4 shadow-sm">
         <h2 class="text-xl font-semibold mb-2 text-green-700">Our Roadmap 🚀</h2>
-        <p class="mb-3 text-gray-700">We're building Swifties.io together! Here’s what’s coming soon. Your feedback shapes our journey—suggest a feature anytime!</p>
+        <p class="mb-3 text-gray-700">We're building Music Besties together! Here's what's coming soon. Your feedback shapes our journey—suggest a feature anytime!</p>
         <ul class="divide-y divide-gray-200">
           <li class="py-3 flex items-center">
             <span class="flex-shrink-0 w-8 h-8 rounded-full bg-green-100 flex items-center justify-center mr-3"><span class="text-green-600">🎤</span></span>
             <div>
               <div class="font-medium text-gray-800">Support for More Artists</div>
-              <div class="text-xs text-gray-500">Soon you’ll be able to rank songs from artists beyond Taylor Swift!</div>
+              <div class="text-xs text-gray-500">Soon you'll be able to rank songs from artists beyond Taylor Swift!</div>
               <span class="inline-block text-xs bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded mt-1">Planned</span>
             </div>
           </li>
@@ -176,7 +176,7 @@
             <div class="mb-4 bg-gray-50 p-3 rounded-md">
               <p class="font-medium text-gray-700 mb-2">Key Points:</p>
               <ul class="list-disc pl-5 mb-3 text-gray-600">
-                <li>Our platform is designed for Taylor Swift fans to rank and share music preferences</li>
+                <li>Our platform is designed for music fans to rank and share music preferences</li>
                 <li>We offer both free and premium subscription options</li>
                 <li>Premium features include enhanced visualization tools and exclusive content</li>
                 <li>The service is optimized for both mobile and desktop use</li>
@@ -191,9 +191,9 @@
             <div class="mb-4 bg-gray-50 p-3 rounded-md">
               <p class="font-medium text-gray-700 mb-2">Ways to Reach Us:</p>
               <ul class="list-disc pl-5 mb-3 text-gray-600">
-                <li><strong>Customer Support:</strong> support@swifties.io</li>
-                <li><strong>Privacy Questions:</strong> privacy@swifties.io</li>
-                <li><strong>Business Inquiries:</strong> business@swifties.io</li>
+                <li><strong>Customer Support:</strong> support@musicbesties.app</li>
+                <li><strong>Privacy Questions:</strong> privacy@musicbesties.app</li>
+                <li><strong>Business Inquiries:</strong> business@musicbesties.app</li>
                 <li><strong>Response Time:</strong> We aim to respond within 24-48 hours</li>
                 <li><strong>Office Hours:</strong> Monday-Friday, 9am-5pm EST</li>
               </ul>
