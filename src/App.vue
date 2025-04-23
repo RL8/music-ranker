@@ -1,21 +1,20 @@
 <template>
   <div class="flex h-screen w-full overflow-hidden">
-    <!-- Alpha Version Banner -->
-    <div class="alpha-banner">
-      <span class="alpha-badge">ALPHA</span>
-      <span class="alpha-text">This app is in active development. Features may change.</span>
-      <a href="mailto:feedback@swifties.io" class="alpha-feedback">Send Feedback</a>
-    </div>
-    
     <!-- Sidebar Navigation -->
     <Sidebar :is-open="sidebarOpen" :toggle-sidebar="toggleSidebar" />
     
     <!-- Main Content Area -->
     <div class="flex flex-col flex-1 h-full overflow-hidden transition-all duration-300" :class="{ 'lg:ml-[250px]': sidebarOpen }">
-      <!-- Page-specific header can be added by individual views -->
-      
       <!-- Main Content (Scrollable) -->
       <main class="flex-1 overflow-y-auto -webkit-overflow-scrolling-touch">
+        <!-- Alpha Indicator (non-obstructive) -->
+        <div class="alpha-indicator">
+          <div class="alpha-pill">
+            <span class="alpha-badge">ALPHA</span>
+            <span class="alpha-version">v0.9.0</span>
+          </div>
+        </div>
+        
         <router-view/>
       </main>
       
@@ -25,6 +24,7 @@
           <span>Swifties.io</span>
           <span class="version-number">v0.9.0-alpha</span>
           <span class="version-date">Updated: {{ formattedDate }}</span>
+          <a href="mailto:feedback@swifties.io" class="feedback-link">Send Feedback</a>
         </div>
       </footer>
     </div>
@@ -183,6 +183,94 @@ export default {
 /* Any global styles can go here */
 body {
   margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+    Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #f9f9f9;
+  color: #333;
+}
+
+/* Alpha Indicator Styles - Non-obstructive */
+.alpha-indicator {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  padding: 8px 16px 0 0;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.alpha-pill {
+  display: inline-flex;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(76, 175, 80, 0.3);
+  border-radius: 20px;
+  padding: 3px 10px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  pointer-events: auto;
+}
+
+.alpha-badge {
+  background-color: #ff6b6b;
+  color: white;
+  font-weight: bold;
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-right: 6px;
+  font-size: 9px;
+}
+
+.alpha-version {
+  color: #555;
+  font-size: 10px;
+  font-weight: 500;
+}
+
+/* Version Footer Styles - Enhanced */
+.version-footer {
+  background-color: #f5f5f5;
+  border-top: 1px solid #e0e0e0;
+  padding: 8px 16px;
+  font-size: 11px;
+  color: #777;
+  text-align: center;
+}
+
+.version-info {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.version-number {
+  color: #4caf50;
+  font-weight: 500;
+}
+
+.version-date {
+  color: #999;
+}
+
+.feedback-link {
+  color: #4caf50;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.feedback-link:hover {
+  color: #2e7d32;
+  text-decoration: underline;
+}
+
+/* Icon styles */
+body {
+  margin: 0;
   padding: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   -webkit-tap-highlight-color: transparent;
@@ -197,77 +285,5 @@ html, body {
 /* Info icon */
 .info-icon {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z'/%3E%3C/svg%3E");
-}
-
-/* Alpha Banner Styles */
-.alpha-banner {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  background-color: rgba(255, 249, 219, 0.95);
-  border-bottom: 1px solid #f0e68c;
-  padding: 6px 16px;
-  font-size: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-}
-
-.alpha-badge {
-  background-color: #ff6b6b;
-  color: white;
-  font-weight: bold;
-  padding: 2px 6px;
-  border-radius: 4px;
-  margin-right: 8px;
-  font-size: 10px;
-}
-
-.alpha-text {
-  color: #555;
-}
-
-.alpha-feedback {
-  margin-left: 12px;
-  color: #4caf50;
-  text-decoration: none;
-  font-weight: 500;
-}
-
-.alpha-feedback:hover {
-  text-decoration: underline;
-}
-
-/* Adjust main content to account for banner */
-main {
-  padding-top: 30px;
-}
-
-/* Version Footer Styles */
-.version-footer {
-  background-color: #f5f5f5;
-  border-top: 1px solid #e0e0e0;
-  padding: 8px 16px;
-  font-size: 11px;
-  color: #777;
-  text-align: center;
-}
-
-.version-info {
-  display: flex;
-  justify-content: center;
-  gap: 12px;
-}
-
-.version-number {
-  color: #4caf50;
-  font-weight: 500;
-}
-
-.version-date {
-  color: #999;
 }
 </style>
