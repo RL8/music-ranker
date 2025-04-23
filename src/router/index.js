@@ -90,41 +90,20 @@ const routes = [
   {
     path: '/music/eras',
     name: 'era-ranking',
-    component: () => import('../views/AlbumRankingCarouselView.vue')
+    component: () => import('../views/ErasRankingView.vue')
   },
   {
     path: '/music/songs',
     name: 'song-ranking',
-    component: () => import('../views/SongRankingCarouselView.vue')
+    component: () => import('../views/SongsRankingView.vue')
   },
   {
     path: '/music/artists',
     name: 'artists',
-    component: () => import('../views/ArtistsView.vue'),
+    component: () => import('../views/ArtistsRankingView.vue'),
     meta: {
       title: 'Artists'
     }
-  },
-  // Legacy routes that redirect to the new structure
-  {
-    path: '/rank/albums',
-    redirect: '/music/eras'
-  },
-  {
-    path: '/rank/albums/coverflow',
-    redirect: '/music/eras'
-  },
-  {
-    path: '/old-music',
-    redirect: '/dashboard'
-  },
-  {
-    path: '/rank/eras',
-    redirect: '/music/eras'
-  },
-  {
-    path: '/rank/songs',
-    redirect: '/music/songs'
   },
   {
     path: '/profile',
@@ -139,15 +118,10 @@ const routes = [
   {
     path: '/terms-privacy-etc',
     name: 'terms-privacy',
-    component: () => import('../views/ComplianceView.vue'),
+    component: () => import('../views/TermsPrivacyEtcView.vue'),
     meta: {
       title: 'Legal & Compliance'
     }
-  },
-  // Legacy route that redirects to the new structure
-  {
-    path: '/compliance',
-    redirect: '/terms-privacy-etc'
   },
   {
     path: '/admin/eras',

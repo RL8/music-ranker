@@ -1,6 +1,5 @@
 <template>
-  <div class="p-4">
-    <h1 class="text-2xl font-bold mb-4">Settings</h1>
+  <BaseViewLayout title="Settings">
     <p class="mb-6">Spec: Settings page with tabs for different configuration sections</p>
     
     <!-- Settings Tabs - Different tabs for logged in vs logged out -->
@@ -194,12 +193,13 @@
         </button>
       </div>
     </div>
-  </div>
+  </BaseViewLayout>
 </template>
 
 <script setup>
 import { ref } from 'vue';
 import { useUserStore } from '@/store/userStore';
+import BaseViewLayout from '@/components/ui/BaseViewLayout.vue';
 
 // Active tab state
 const activeTab = ref('standard');

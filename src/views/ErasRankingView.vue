@@ -1,218 +1,220 @@
 <template>
-  <div class="era-ranking-carousel" :style="dynamicBackgroundStyle">
-    <!-- Top Section: Instructions and Status -->
-    <div class="top-section">
-      <div class="header-bar">
-        <h1 class="title">Era Ranker</h1>
-        <div class="navigation-actions">
-          <button 
-            @click="showToast('Era Ranking Help', 'Swipe through eras and rank them in your preferred order.')"
-            class="nav-button help-button"
-            aria-label="Help">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
-            </svg>
-          </button>
-          <button 
-            @click="toggleRankedList"
-            class="nav-button"
-            aria-label="Toggle ranked list">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-              <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
-              <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd" />
-            </svg>
-          </button>
-        </div>
-      </div>
-      
-      <div class="status-bar">
-        <div class="progress-indicator">
-          <div class="progress-text">{{ rankedEras.length }} of {{ totalEras }} ranked</div>
-          <div class="progress-bar-container">
-            <div class="progress-bar" :style="{ width: progressPercentage + '%' }"></div>
+  <BaseViewLayout hideHeader>
+    <div class="era-ranking-carousel" :style="dynamicBackgroundStyle">
+      <!-- Top Section: Instructions and Status -->
+      <div class="top-section">
+        <div class="header-bar">
+          <h1 class="title">Era Ranker</h1>
+          <div class="navigation-actions">
+            <button 
+              @click="showToast('Era Ranking Help', 'Swipe through eras and rank them in your preferred order.')"
+              class="nav-button help-button"
+              aria-label="Help">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+              </svg>
+            </button>
+            <button 
+              @click="toggleRankedList"
+              class="nav-button"
+              aria-label="Toggle ranked list">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
+                <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd" />
+              </svg>
+            </button>
           </div>
         </div>
-        <div class="era-emoji" v-if="currentEra">
-          {{ getEraEmoji(currentEra) }}
-        </div>
-      </div>
-    </div>
-
-    <!-- Middle Section: Ranked Eras List -->
-    <div class="middle-section" :class="{ 'expanded': showRankedList }">
-      <div class="section-header" @click="toggleRankedList">
-        <h2>Your Ranked Eras</h2>
-        <button class="toggle-button">
-          {{ showRankedList ? '▲ Hide' : '▼ Show' }}
-        </button>
-      </div>
-      
-      <transition name="slide">
-        <div class="ranked-eras-container" v-if="showRankedList">
-          <div class="empty-state" v-if="rankedEras.length === 0">
-            <p>You haven't ranked any eras yet. Use the carousel below to start ranking!</p>
-          </div>
-          <draggable 
-            v-else
-            v-model="rankedEras" 
-            item-key="id"
-            class="ranked-eras-list"
-            handle=".drag-handle"
-            @end="saveRankings"
-          >
-            <template #item="{ element, index }">
-              <div 
-                class="ranked-era-card" 
-                :style="{ 
-                  '--era-color': element.color || '#333',
-                  '--era-gradient': `linear-gradient(135deg, ${element.color || '#333'}, transparent)`
-                }"
-              >
-                <div class="rank-number">{{ index + 1 }}</div>
-                <div class="era-thumbnail">
-                  <img :src="element.coverImageUrl" :alt="element.title">
-                </div>
-                <div class="era-info">
-                  <div class="era-title">{{ element.title }}</div>
-                  <div class="era-year">{{ element.year }}</div>
-                </div>
-                <div class="era-actions">
-                  <button class="drag-handle" aria-label="Drag to reorder">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16" />
-                    </svg>
-                  </button>
-                  <button @click="removeFromRanking(element)" class="remove-button" aria-label="Remove from ranking">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                  </button>
-                </div>
-              </div>
-            </template>
-          </draggable>
-        </div>
-      </transition>
-    </div>
-
-    <!-- Bottom Section: Era Carousel -->
-    <div class="bottom-section">
-      <div class="carousel-container">
-        <!-- Only render Swiper when we have enough eras -->
-        <template v-if="rankingStore.availableEras.length >= 3">
-          <swiper
-            class="era-carousel"
-            :modules="swiperModules"
-            :effect="'coverflow'"
-            :grab-cursor="true"
-            :centered-slides="true"
-            :slides-per-view="'auto'"
-            :loop="true"
-            :coverflow-effect="{
-              rotate: 30,
-              stretch: 0,
-              depth: 100,
-              modifier: 1,
-              slideShadows: true
-            }"
-            @swiper="onSwiper"
-            @slideChange="onSlideChange"
-          >
-            <swiper-slide 
-              v-for="era in rankingStore.availableEras" 
-              :key="era.id"
-              class="era-slide"
-              :class="{ 'ranked': isEraRanked(era) }"
-            >
-              <div 
-                class="era-card"
-                :style="{ 
-                  '--era-color': era.color || '#333',
-                  '--era-shadow-color': era.color || 'rgba(0,0,0,0.3)'
-                }"
-              >
-                <img 
-                  :src="getEraImageUrl(era)" 
-                  :alt="era.title" 
-                  class="era-cover"
-                  loading="lazy"
-                />
-                <div class="era-title-overlay">{{ era.title }}</div>
-                <div v-if="isEraRanked(era)" class="ranked-badge">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" />
-                  </svg>
-                </div>
+        
+        <div class="status-bar">
+          <div class="progress-indicator">
+            <div class="progress-text">{{ rankedEras.length }} of {{ totalEras }} ranked</div>
+            <div class="progress-bar-container">
+              <div class="progress-bar" :style="{ width: progressPercentage + '%' }"></div>
             </div>
-          </swiper-slide>
-        </swiper>
-      </template>
-        
-        <!-- Placeholder when not enough eras -->
-        <div v-else class="era-carousel-placeholder">
-          <div class="placeholder-message">
-            <svg xmlns="http://www.w3.org/2000/svg" class="placeholder-icon" viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" />
-            </svg>
-            <p>Loading eras...</p>
-            <p class="placeholder-subtext">Please wait while we prepare your music collection.</p>
+          </div>
+          <div class="era-emoji" v-if="currentEra">
+            {{ getEraEmoji(currentEra) }}
           </div>
         </div>
-        
-        <div class="carousel-controls">
-          <button 
-            class="control-button prev-button" 
-            @click="prevSlide"
-            aria-label="Previous era"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-            </svg>
-          </button>
-          
-          <button 
-            class="control-button rank-button" 
-            @click="addToRanking(currentEra)"
-            :disabled="!currentEra || isEraRanked(currentEra)"
-          >
-            {{ isEraRanked(currentEra) ? 'Already Ranked' : 'Add to Ranking' }}
-          </button>
-          
-          <button 
-            class="control-button next-button" 
-            @click="nextSlide"
-            aria-label="Next era"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-            </svg>
+      </div>
+
+      <!-- Middle Section: Ranked Eras List -->
+      <div class="middle-section" :class="{ 'expanded': showRankedList }">
+        <div class="section-header" @click="toggleRankedList">
+          <h2>Your Ranked Eras</h2>
+          <button class="toggle-button">
+            {{ showRankedList ? '▲ Hide' : '▼ Show' }}
           </button>
         </div>
         
-        <div class="bottom-actions">
-          <button 
-            @click="saveRankings"
-            class="bottom-action-button save-button"
-            :disabled="rankedEras.length === 0 || !userStore.isLoggedInSimulation">
-            <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 20 20" fill="currentColor">
-              <path d="M7.707 10.293a1 1 0 10-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 11.586V6h1a2 2 0 012 2v7a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h1v5.586l-1.293-1.293z" />
-            </svg>
-            <span>Save Rankings</span>
-          </button>
+        <transition name="slide">
+          <div class="ranked-eras-container" v-if="showRankedList">
+            <div class="empty-state" v-if="rankedEras.length === 0">
+              <p>You haven't ranked any eras yet. Use the carousel below to start ranking!</p>
+            </div>
+            <draggable 
+              v-else
+              v-model="rankedEras" 
+              item-key="id"
+              class="ranked-eras-list"
+              handle=".drag-handle"
+              @end="saveRankings"
+            >
+              <template #item="{ element, index }">
+                <div 
+                  class="ranked-era-card" 
+                  :style="{ 
+                    '--era-color': element.color || '#333',
+                    '--era-gradient': `linear-gradient(135deg, ${element.color || '#333'}, transparent)`
+                  }"
+                >
+                  <div class="rank-number">{{ index + 1 }}</div>
+                  <div class="era-thumbnail">
+                    <img :src="element.coverImageUrl" :alt="element.title">
+                  </div>
+                  <div class="era-info">
+                    <div class="era-title">{{ element.title }}</div>
+                    <div class="era-year">{{ element.year }}</div>
+                  </div>
+                  <div class="era-actions">
+                    <button class="drag-handle" aria-label="Drag to reorder">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16" />
+                      </svg>
+                    </button>
+                    <button @click="removeFromRanking(element)" class="remove-button" aria-label="Remove from ranking">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </template>
+            </draggable>
+          </div>
+        </transition>
+      </div>
+
+      <!-- Bottom Section: Era Carousel -->
+      <div class="bottom-section">
+        <div class="carousel-container">
+          <!-- Only render Swiper when we have enough eras -->
+          <template v-if="rankingStore.availableEras.length >= 3">
+            <swiper
+              class="era-carousel"
+              :modules="swiperModules"
+              :effect="'coverflow'"
+              :grab-cursor="true"
+              :centered-slides="true"
+              :slides-per-view="'auto'"
+              :loop="true"
+              :coverflow-effect="{
+                rotate: 30,
+                stretch: 0,
+                depth: 100,
+                modifier: 1,
+                slideShadows: true
+              }"
+              @swiper="onSwiper"
+              @slideChange="onSlideChange"
+            >
+              <swiper-slide 
+                v-for="era in rankingStore.availableEras" 
+                :key="era.id"
+                class="era-slide"
+                :class="{ 'ranked': isEraRanked(era) }"
+              >
+                <div 
+                  class="era-card"
+                  :style="{ 
+                    '--era-color': era.color || '#333',
+                    '--era-shadow-color': era.color || 'rgba(0,0,0,0.3)'
+                  }"
+                >
+                  <img 
+                    :src="getEraImageUrl(era)" 
+                    :alt="era.title" 
+                    class="era-cover"
+                    loading="lazy"
+                  />
+                  <div class="era-title-overlay">{{ era.title }}</div>
+                  <div v-if="isEraRanked(era)" class="ranked-badge">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                      <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" />
+                    </svg>
+                  </div>
+                </div>
+              </swiper-slide>
+            </swiper>
+          </template>
           
-          <button 
-            @click="resetRankings"
-            class="bottom-action-button reset-button"
-            :disabled="rankedEras.length === 0">
-            <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 110-2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd" />
-            </svg>
-            <span>Reset Rankings</span>
-          </button>
+          <!-- Placeholder when not enough eras -->
+          <div v-else class="era-carousel-placeholder">
+            <div class="placeholder-message">
+              <svg xmlns="http://www.w3.org/2000/svg" class="placeholder-icon" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" />
+              </svg>
+              <p>Loading eras...</p>
+              <p class="placeholder-subtext">Please wait while we prepare your music collection.</p>
+            </div>
+          </div>
+          
+          <div class="carousel-controls">
+            <button 
+              class="control-button prev-button" 
+              @click="prevSlide"
+              aria-label="Previous era"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+            
+            <button 
+              class="control-button rank-button" 
+              @click="addToRanking(currentEra)"
+              :disabled="!currentEra || isEraRanked(currentEra)"
+            >
+              {{ isEraRanked(currentEra) ? 'Already Ranked' : 'Add to Ranking' }}
+            </button>
+            
+            <button 
+              class="control-button next-button" 
+              @click="nextSlide"
+              aria-label="Next era"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+          </div>
+          
+          <div class="bottom-actions">
+            <button 
+              @click="saveRankings"
+              class="bottom-action-button save-button"
+              :disabled="rankedEras.length === 0 || !userStore.isLoggedInSimulation">
+              <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 20 20" fill="currentColor">
+                <path d="M7.707 10.293a1 1 0 10-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 11.586V6h1a2 2 0 012 2v7a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h1v5.586l-1.293-1.293z" />
+              </svg>
+              <span>Save Rankings</span>
+            </button>
+            
+            <button 
+              @click="resetRankings"
+              class="bottom-action-button reset-button"
+              :disabled="rankedEras.length === 0">
+              <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 110-2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd" />
+              </svg>
+              <span>Reset Rankings</span>
+            </button>
+          </div>
         </div>
       </div>
     </div>
-  </div>
+  </BaseViewLayout>
 </template>
 
 <script setup>
@@ -225,6 +227,7 @@ import { Swiper, SwiperSlide } from 'swiper/vue';
 import { EffectCoverflow, Pagination } from 'swiper/modules';
 import draggable from 'vuedraggable';
 import { supabase } from '@/lib/supabase/client';
+import BaseViewLayout from '@/components/ui/BaseViewLayout.vue';
 
 // Import Swiper styles
 import 'swiper/css';
@@ -679,7 +682,7 @@ function showToast(title, message) {
 /* Middle Section */
 .middle-section {
   background-color: rgba(255, 255, 255, 0.9);
-  margin: 0.5rem;
+  margin: 0.5rem auto;
   border-radius: 0.5rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   overflow: hidden;
@@ -688,6 +691,8 @@ function showToast(title, message) {
   flex: 1;
   max-height: calc(67vh - 6rem); /* Ensure it doesn't overlap with carousel */
   overflow-y: auto;
+  max-width: 95%;
+  width: 100%;
 }
 
 .middle-section.expanded {
@@ -737,30 +742,18 @@ function showToast(title, message) {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  width: 100%;
 }
 
 .ranked-era-card {
   display: flex;
   align-items: center;
-  padding: 0.5rem;
+  padding: 0.75rem;
   background-color: white;
   border-radius: 0.375rem;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  border-left: 3px solid var(--era-color);
-  position: relative;
-  overflow: hidden;
-}
-
-.ranked-era-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: var(--era-gradient);
-  opacity: 0.1;
-  pointer-events: none;
+  border-left: 4px solid var(--era-color, #333);
+  width: 100%;
 }
 
 .rank-number {
@@ -769,7 +762,7 @@ function showToast(title, message) {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--era-color);
+  background-color: var(--era-color, #333);
   color: white;
   border-radius: 50%;
   font-weight: bold;

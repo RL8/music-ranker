@@ -1,10 +1,8 @@
 <template>
-  <MobilePageContainer>
-    <MobileHeader>
-      <template #title>
-        Welcome to your Swiftie Universe, <span class="text-green-600">{{ userStore.user?.username || 'Swiftie' }}</span>!
-      </template>
-    </MobileHeader>
+  <BaseViewLayout>
+    <template #header>
+      Welcome to your Swiftie Universe, <span class="text-green-600">{{ userStore.user?.username || 'Swiftie' }}</span>!
+    </template>
     
     <!-- View Toggle Buttons -->
     <div class="flex border border-gray-200 rounded-lg overflow-hidden shadow-sm">
@@ -84,7 +82,7 @@
         <ShareModal v-model="showShareModal" />
       </div>
     </div>
-  </MobilePageContainer>
+  </BaseViewLayout>
 </template>
 
 <script setup>
@@ -94,11 +92,10 @@ import { useRankingStore } from '@/store/rankingStore';
 import toastService from '@/services/toastService';
 import alertService from '@/services/alertService';
 import modalService from '@/services/modalService';
-import MobileHeader from '@/components/ui/MobileHeader.vue';
 import MobileButton from '@/components/ui/MobileButton.vue';
 import MobileSection from '@/components/ui/MobileSection.vue';
-import MobilePageContainer from '@/components/ui/MobilePageContainer.vue';
 import MobileSpacing from '@/components/ui/MobileSpacing.vue';
+import BaseViewLayout from '@/components/ui/BaseViewLayout.vue';
 import SunburstChart from '@/components/visualizations/SunburstChart.vue';
 import staticAlbumsData from '@/data/static-albums.json';
 import ShareModal from '@/components/modals/ShareModal.vue';
@@ -366,27 +363,7 @@ function getIncompleteRankings() {
 }
 
 onMounted(() => {
-  // Show welcome alert for new users
-  if (!userStore.user) {
-    alertService.info('Welcome to Swiftie Universe! Create an account to save your rankings and access all features.', 'Welcome');
-  }
-  
-  // Show incomplete rankings alert if user has started but not completed rankings
-  const incompleteRankings = getIncompleteRankings();
-  if (incompleteRankings.length > 0) {
-    alertService.warning(
-      `You have incomplete rankings for: ${incompleteRankings.join(', ')}. Continue ranking to see them in your visualizations.`,
-      'Incomplete Rankings',
-      { dismissible: true }
-    );
-  }
-  
-  // Show new feature alert
-  alertService.info(
-    'Try our new song ranking feature! Rank your favorite songs from each album.',
-    'New Feature',
-    { dismissible: true, id: 'new-feature-alert' }
-  );
+  // Notifications removed as they were not helpful to users
 });
 </script>
 

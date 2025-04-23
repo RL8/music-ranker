@@ -1,246 +1,248 @@
 <template>
-  <div class="song-ranking-carousel" :style="dynamicBackgroundStyle">
-    <!-- Top Section: Instructions and Status -->
-    <div class="top-section">
-      <div class="header-bar">
-        <h1 class="title">Song Ranker</h1>
-        <div class="navigation-actions">
-          <button 
-            @click="showToast('Song Ranking Help', 'Swipe through songs and rank them in your preferred order.')"
-            class="nav-button help-button"
-            aria-label="Help">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
-            </svg>
-          </button>
-          <button 
-            @click="toggleRankedList"
-            class="nav-button"
-            aria-label="Toggle ranked list">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-              <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
-              <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd" />
-            </svg>
-          </button>
-        </div>
-      </div>
-      
-      <!-- Era Selector -->
-      <div class="album-selector">
-        <div class="album-carousel">
-          <div 
-            v-for="era in rankingStore.availableEras" 
-            :key="era.id"
-            class="album-option"
-            :class="{ 'selected': selectedEraId === era.id }"
-            @click="selectEra(era.id)"
-            :style="{ 
-              '--album-color': era.color || '#333',
-              '--album-shadow-color': era.color || 'rgba(0,0,0,0.3)'
-            }"
-          >
-            <img :src="getEraImageUrl(era)" :alt="era.title" class="album-thumbnail">
-            <span class="album-name">{{ era.title }}</span>
+  <BaseViewLayout hideHeader>
+    <div class="song-ranking-carousel" :style="dynamicBackgroundStyle">
+      <!-- Top Section: Instructions and Status -->
+      <div class="top-section">
+        <div class="header-bar">
+          <h1 class="title">Song Ranker</h1>
+          <div class="navigation-actions">
+            <button 
+              @click="showToast('Song Ranking Help', 'Swipe through songs and rank them in your preferred order.')"
+              class="nav-button help-button"
+              aria-label="Help">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+              </svg>
+            </button>
+            <button 
+              @click="toggleRankedList"
+              class="nav-button"
+              aria-label="Toggle ranked list">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
+                <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd" />
+              </svg>
+            </button>
           </div>
         </div>
-      </div>
-      
-      <div class="status-bar" v-if="selectedEra">
-        <div class="progress-indicator">
-          <div class="progress-text">{{ rankedSongs.length }} of {{ totalSongs }} ranked</div>
-          <div class="progress-bar-container">
-            <div class="progress-bar" :style="{ width: progressPercentage + '%' }"></div>
-          </div>
-        </div>
-        <div class="album-info">
-          {{ selectedEra.title }}
-        </div>
-      </div>
-    </div>
-
-    <!-- Middle Section: Ranked Songs List -->
-    <div class="middle-section" :class="{ 'expanded': showRankedList }" v-if="selectedEra">
-      <div class="section-header" @click="toggleRankedList">
-        <h2>Your Ranked Songs</h2>
-        <button class="toggle-button">
-          {{ showRankedList ? '▲ Hide' : '▼ Show' }}
-        </button>
-      </div>
-      
-      <transition name="slide">
-        <div class="ranked-songs-container" v-if="showRankedList">
-          <div class="empty-state" v-if="rankedSongs.length === 0">
-            <p>You haven't ranked any songs yet. Use the carousel below to start ranking!</p>
-          </div>
-          <draggable 
-            v-else
-            v-model="rankedSongs" 
-            item-key="id"
-            class="ranked-songs-list"
-            handle=".drag-handle"
-            @end="updateRankings"
-          >
-            <template #item="{ element, index }">
-              <div 
-                class="ranked-song-card" 
-                :style="{ 
-                  '--song-color': selectedEra.color || '#333',
-                  '--song-gradient': `linear-gradient(135deg, ${selectedEra.color || '#333'}, transparent)`
-                }"
-              >
-                <div class="rank-number">{{ index + 1 }}</div>
-                <div class="song-info">
-                  <div class="song-title">{{ element.title }}</div>
-                  <div class="song-album">{{ selectedEra.title }}</div>
-                </div>
-                <div class="song-actions">
-                  <button class="drag-handle" aria-label="Drag to reorder">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16" />
-                    </svg>
-                  </button>
-                  <button @click="removeSongFromRanking(element.id)" class="remove-button" aria-label="Remove from ranking">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                  </button>
-                </div>
-              </div>
-            </template>
-          </draggable>
-        </div>
-      </transition>
-    </div>
-
-    <!-- Main Content: Song Carousel -->
-    <div class="main-content">
-      <!-- Song Carousel -->
-      <div class="carousel-container">
-        <swiper
-          class="song-carousel"
-          :modules="swiperModules"
-          :effect="'coverflow'"
-          :grab-cursor="true"
-          :centered-slides="true"
-          :slides-per-view="'auto'"
-          :loop="false"
-          :coverflow-effect="{
-            rotate: 30,
-            stretch: 0,
-            depth: 100,
-            modifier: 1,
-            slideShadows: true
-          }"
-          @swiper="onSwiper"
-          @slideChange="onSlideChange"
-          v-if="selectedEra && selectedEraSongs && selectedEraSongs.length > 0"
-        >
-          <swiper-slide 
-            v-for="song in (selectedEraSongs || [])" 
-            :key="song ? song.id : 'unknown'"
-            class="song-slide"
-            :class="{ 'ranked': song && isSongRanked(song) }"
-          >
+        
+        <!-- Era Selector -->
+        <div class="album-selector">
+          <div class="album-carousel">
             <div 
-              class="song-card"
+              v-for="era in rankingStore.availableEras" 
+              :key="era.id"
+              class="album-option"
+              :class="{ 'selected': selectedEraId === era.id }"
+              @click="selectEra(era.id)"
               :style="{ 
-                '--song-color': selectedEra.color || '#333',
-                '--song-shadow-color': selectedEra.color || 'rgba(0,0,0,0.3)'
+                '--album-color': era.color || '#333',
+                '--album-shadow-color': era.color || 'rgba(0,0,0,0.3)'
               }"
             >
-              <div class="song-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
-                </svg>
-              </div>
-              <div class="song-title-overlay">{{ song ? song.title : 'Unknown Song' }}</div>
-              <div v-if="song && isSongRanked(song)" class="ranked-badge">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                </svg>
-              </div>
+              <img :src="getEraImageUrl(era)" :alt="era.title" class="album-thumbnail">
+              <span class="album-name">{{ era.title }}</span>
             </div>
-          </swiper-slide>
-        </swiper>
-        
-        <!-- Fallback when no era is selected or no songs available -->
-        <div class="empty-state" v-else>
-          <p v-if="!selectedEra">Select an era above to see its songs</p>
-          <p v-else-if="!selectedEraSongs || selectedEraSongs.length === 0">No songs available for this era</p>
+          </div>
         </div>
         
-        <div class="carousel-controls" v-if="selectedEra && selectedEraSongs && selectedEraSongs.length > 0">
-          <button 
-            class="control-button prev-button" 
-            @click="prevSlide"
-            aria-label="Previous song"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-            </svg>
+        <div class="status-bar" v-if="selectedEra">
+          <div class="progress-indicator">
+            <div class="progress-text">{{ rankedSongs.length }} of {{ totalSongs }} ranked</div>
+            <div class="progress-bar-container">
+              <div class="progress-bar" :style="{ width: progressPercentage + '%' }"></div>
+            </div>
+          </div>
+          <div class="album-info">
+            {{ selectedEra.title }}
+          </div>
+        </div>
+      </div>
+
+      <!-- Middle Section: Ranked Songs List -->
+      <div class="middle-section" :class="{ 'expanded': showRankedList }" v-if="selectedEra">
+        <div class="section-header" @click="toggleRankedList">
+          <h2>Your Ranked Songs</h2>
+          <button class="toggle-button">
+            {{ showRankedList ? '▲ Hide' : '▼ Show' }}
           </button>
-          
-          <button 
-            class="action-button add-button"
-            @click="toggleSongInRanking(currentSong)"
-            :disabled="isSongRanked(currentSong)"
-            aria-label="Add to ranking"
+        </div>
+        
+        <transition name="slide">
+          <div class="ranked-songs-container" v-if="showRankedList">
+            <div class="empty-state" v-if="rankedSongs.length === 0">
+              <p>You haven't ranked any songs yet. Use the carousel below to start ranking!</p>
+            </div>
+            <draggable 
+              v-else
+              v-model="rankedSongs" 
+              item-key="id"
+              class="ranked-songs-list"
+              handle=".drag-handle"
+              @end="updateRankings"
+            >
+              <template #item="{ element, index }">
+                <div 
+                  class="ranked-song-card" 
+                  :style="{ 
+                    '--song-color': selectedEra.color || '#333',
+                    '--song-gradient': `linear-gradient(135deg, ${selectedEra.color || '#333'}, transparent)`
+                  }"
+                >
+                  <div class="rank-number">{{ index + 1 }}</div>
+                  <div class="song-info">
+                    <div class="song-title">{{ element.title }}</div>
+                    <div class="song-album">{{ selectedEra.title }}</div>
+                  </div>
+                  <div class="song-actions">
+                    <button class="drag-handle" aria-label="Drag to reorder">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16" />
+                      </svg>
+                    </button>
+                    <button @click="removeSongFromRanking(element.id)" class="remove-button" aria-label="Remove from ranking">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </template>
+            </draggable>
+          </div>
+        </transition>
+      </div>
+
+      <!-- Main Content: Song Carousel -->
+      <div class="main-content">
+        <!-- Song Carousel -->
+        <div class="carousel-container">
+          <swiper
+            class="song-carousel"
+            :modules="swiperModules"
+            :effect="'coverflow'"
+            :grab-cursor="true"
+            :centered-slides="true"
+            :slides-per-view="'auto'"
+            :loop="false"
+            :coverflow-effect="{
+              rotate: 30,
+              stretch: 0,
+              depth: 100,
+              modifier: 1,
+              slideShadows: true
+            }"
+            @swiper="onSwiper"
+            @slideChange="onSlideChange"
+            v-if="selectedEra && selectedEraSongs && selectedEraSongs.length > 0"
           >
-            <span v-if="isSongRanked(currentSong)">Already Ranked</span>
-            <span v-else>Add to Ranking</span>
-          </button>
+            <swiper-slide 
+              v-for="song in (selectedEraSongs || [])" 
+              :key="song ? song.id : 'unknown'"
+              class="song-slide"
+              :class="{ 'ranked': song && isSongRanked(song) }"
+            >
+              <div 
+                class="song-card"
+                :style="{ 
+                  '--song-color': selectedEra.color || '#333',
+                  '--song-shadow-color': selectedEra.color || 'rgba(0,0,0,0.3)'
+                }"
+              >
+                <div class="song-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
+                  </svg>
+                </div>
+                <div class="song-title-overlay">{{ song ? song.title : 'Unknown Song' }}</div>
+                <div v-if="song && isSongRanked(song)" class="ranked-badge">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                  </svg>
+                </div>
+              </div>
+            </swiper-slide>
+          </swiper>
           
+          <!-- Fallback when no era is selected or no songs available -->
+          <div class="empty-state" v-else>
+            <p v-if="!selectedEra">Select an era above to see its songs</p>
+            <p v-else-if="!selectedEraSongs || selectedEraSongs.length === 0">No songs available for this era</p>
+          </div>
+          
+          <div class="carousel-controls" v-if="selectedEra && selectedEraSongs && selectedEraSongs.length > 0">
+            <button 
+              class="control-button prev-button" 
+              @click="prevSlide"
+              aria-label="Previous song"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+            
+            <button 
+              class="action-button add-button"
+              @click="toggleSongInRanking(currentSong)"
+              :disabled="isSongRanked(currentSong)"
+              aria-label="Add to ranking"
+            >
+              <span v-if="isSongRanked(currentSong)">Already Ranked</span>
+              <span v-else>Add to Ranking</span>
+            </button>
+            
+            <button 
+              class="control-button next-button" 
+              @click="nextSlide"
+              aria-label="Next song"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons" v-if="selectedEra">
           <button 
-            class="control-button next-button" 
-            @click="nextSlide"
-            aria-label="Next song"
+            @click="saveRankings"
+            class="action-button save-button"
+            :disabled="rankedSongs.length === 0"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
             </svg>
+            Save Rankings
+          </button>
+          <button 
+            @click="resetRankings"
+            class="action-button reset-button"
+            :disabled="rankedSongs.length === 0"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd" />
+            </svg>
+            Reset
+          </button>
+          <button 
+            @click="randomizeRankings"
+            class="action-button randomize-button"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 01-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+            </svg>
+            Randomize
           </button>
         </div>
       </div>
 
-      <!-- Action Buttons -->
-      <div class="action-buttons" v-if="selectedEra">
-        <button 
-          @click="saveRankings"
-          class="action-button save-button"
-          :disabled="rankedSongs.length === 0"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-          </svg>
-          Save Rankings
-        </button>
-        <button 
-          @click="resetRankings"
-          class="action-button reset-button"
-          :disabled="rankedSongs.length === 0"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd" />
-          </svg>
-          Reset
-        </button>
-        <button 
-          @click="randomizeRankings"
-          class="action-button randomize-button"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 01-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
-          </svg>
-          Randomize
-        </button>
+      <!-- Placeholder for the rest of the components -->
+      <div v-if="selectedEra" v-show="false">
+        <!-- This section is now hidden and replaced with the song carousel -->
       </div>
     </div>
-
-    <!-- Placeholder for the rest of the components -->
-    <div v-if="selectedEra" v-show="false">
-      <!-- This section is now hidden and replaced with the song carousel -->
-    </div>
-  </div>
+  </BaseViewLayout>
 </template>
 
 <script>
@@ -252,6 +254,7 @@ import { EffectCoverflow, Navigation } from 'swiper/modules';
 import draggable from 'vuedraggable';
 import toastService from '@/services/toastService';
 import staticErasData from '@/data/static-eras.json';
+import BaseViewLayout from '@/components/ui/BaseViewLayout.vue';
 
 // Import Swiper styles
 import 'swiper/css';
@@ -263,7 +266,8 @@ export default {
   components: {
     Swiper,
     SwiperSlide,
-    draggable
+    draggable,
+    BaseViewLayout
   },
   setup() {
     const rankingStore = useRankingStore();
@@ -417,7 +421,6 @@ export default {
         const existingRankings = rankingStore.getSongRankingsForEra(selectedEra.value.id);
         if (existingRankings && existingRankings.length > 0) {
           rankedSongs.value = existingRankings;
-          showToast('Rankings Loaded', 'Your previous rankings for this era have been loaded.');
         } else {
           rankedSongs.value = [];
         }
@@ -431,7 +434,6 @@ export default {
       console.log(`Selecting era: ${eraId}`);
       selectedEraId.value = eraId;
       loadSongsForEra();
-      showToast('Era Selected', `Now ranking songs from ${selectedEra.value.title}`);
     }
     
     function onSwiper(swiperInstance) {
@@ -484,7 +486,6 @@ export default {
       if (!isSongRanked(song)) {
         rankedSongs.value.push({ ...song });
         updateRankings();
-        showToast('Song Added', `${song.title} added to your ranking.`);
       }
     }
     
@@ -495,7 +496,6 @@ export default {
         const removedSong = rankedSongs.value[index];
         rankedSongs.value.splice(index, 1);
         updateRankings();
-        showToast('Song Removed', `${removedSong.title} removed from your ranking.`);
       }
     }
     
@@ -523,7 +523,6 @@ export default {
         if (selectedEra.value) {
           rankingStore.updateSongRankingsTemp(selectedEra.value.id, []);
         }
-        showToast('Rankings Reset', 'Your song rankings have been reset.');
       }
     }
     
@@ -544,8 +543,6 @@ export default {
       const count = Math.max(3, Math.floor(Math.random() * allSongs.length));
       rankedSongs.value = allSongs.slice(0, count);
       updateRankings();
-      
-      showToast('Rankings Randomized', `Created a random ranking with ${count} songs.`);
     }
 
     // Lifecycle hooks

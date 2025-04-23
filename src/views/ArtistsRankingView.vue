@@ -1,7 +1,5 @@
 <template>
-  <div class="p-4">
-    <h1 class="text-2xl font-bold mb-6 pl-10 md:pl-0">Artists</h1>
-    
+  <BaseViewLayout title="Artists">
     <!-- Artist Search -->
     <div class="mb-6">
       <div class="relative">
@@ -77,11 +75,12 @@
         We're working on expanding our artist database. Check back soon for more artists and detailed profiles!
       </p>
     </div>
-  </div>
+  </BaseViewLayout>
 </template>
 
 <script setup>
 import { ref, computed } from 'vue';
+import BaseViewLayout from '@/components/ui/BaseViewLayout.vue';
 
 // Search functionality
 const searchQuery = ref('');

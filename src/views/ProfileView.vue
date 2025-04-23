@@ -1,9 +1,5 @@
 <template>
-  <div class="p-4">
-    <MobileHeader title="Profile">
-      <!-- Optional actions can be added here if needed -->
-    </MobileHeader>
-    
+  <BaseViewLayout title="Profile">    
     <!-- Not Logged In View -->
     <div v-if="!userStore.isLoggedInSimulation" class="flex flex-col items-center justify-center py-10">
       <div class="w-24 h-24 bg-gray-200 rounded-full mb-6 flex items-center justify-center">
@@ -434,13 +430,13 @@
         </div>
       </div>
     </div>
-  </div>
+  </BaseViewLayout>
 </template>
 
 <script setup>
 import { ref } from 'vue';
 import { useUserStore } from '@/store/userStore';
-import MobileHeader from '@/components/ui/MobileHeader.vue';
+import BaseViewLayout from '@/components/ui/BaseViewLayout.vue';
 import MobileButton from '@/components/ui/MobileButton.vue';
 import MobileInput from '@/components/ui/MobileInput.vue';
 import MobileTextarea from '@/components/ui/MobileTextarea.vue';

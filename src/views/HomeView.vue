@@ -1,5 +1,5 @@
 <template>
-  <div class="p-4">
+  <BaseViewLayout hideHeader>
     <h1 class="text-2xl font-bold mb-4">Taylor Swift Discography 
       <button 
         @click="showToast('Information', 'This visualization shows Taylor Swift\'s complete discography organized by albums and songs.')"
@@ -72,47 +72,37 @@
         Already have an account? Log in
       </button>
     </div>
-  </div>
+  </BaseViewLayout>
 </template>
 
-<script>
+<script setup>
+import { ref } from 'vue';
+import toastService from '@/services/toastService';
+import BaseViewLayout from '@/components/ui/BaseViewLayout.vue';
 import { useMusicStore } from '@/store'
 import { useUserStore } from '@/store/userStore'
-import toastService from '@/services/toastService'
 import { useRouter } from 'vue-router'
 
-export default {
-  name: 'HomeView',
-  setup() {
-    const musicStore = useMusicStore()
-    const userStore = useUserStore()
-    const router = useRouter()
-    
-    const showToast = (title, message) => {
-      toastService.show({
-        title,
-        message,
-        duration: 3000
-      });
-    };
-    
-    const login = () => {
-      userStore.setIsLoggedInSimulation(true);
-      showToast('Logged In', 'You are now logged in and will be redirected to your dashboard.');
-      // Redirect to dashboard after login
-      setTimeout(() => {
-        router.push('/music');
-      }, 1500);
-    };
-    
-    return { 
-      musicStore, 
-      userStore,
-      showToast,
-      login
-    }
-  }
-}
+const musicStore = useMusicStore()
+const userStore = useUserStore()
+const router = useRouter()
+
+const showToast = (title, message) => {
+  toastService.show({
+    title,
+    message,
+    duration: 3000
+  });
+};
+
+const login = () => {
+  userStore.setIsLoggedInSimulation(true);
+  showToast('Logged In', 'You are now logged in and will be redirected to your dashboard.');
+  // Redirect to dashboard after login
+  setTimeout(() => {
+    router.push('/music');
+  }, 1500);
+};
 </script>
 
 <style scoped>

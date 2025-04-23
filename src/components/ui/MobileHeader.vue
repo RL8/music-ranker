@@ -30,18 +30,21 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
+  padding: 1rem 1rem 1rem 3.5rem; /* Added left padding to make room for sidebar toggle */
+  border-bottom: 1px solid #f0f0f0;
+  background-color: white;
 }
 
 .header-title {
-  font-size: 1.5rem;
-  font-weight: bold;
-  padding-left: 2.5rem; /* Space for sidebar toggle */
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0;
+  flex: 1;
 }
 
-@media (min-width: 768px) {
-  .header-title {
-    padding-left: 0; /* No extra padding needed on larger screens */
-  }
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 </style>
